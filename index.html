@@ -3,16 +3,16 @@
 <html>
 
 <head>
-
 <title>Abyss Market</title>
 
 <style>
 
 body{
-background:#020617;
-color:white;
-font-family:Arial;
 margin:0;
+font-family:Arial;
+color:white;
+background:#020617;
+overflow-x:hidden;
 }
 
 /* galaxy background */
@@ -24,17 +24,21 @@ width:100%;
 height:200%;
 top:-50%;
 left:0;
+
 background:
 radial-gradient(white 1px,transparent 1px),
-radial-gradient(#60a5fa 1px,transparent 1px);
-background-size:120px 120px,200px 200px;
-animation:stars 90s linear infinite;
+radial-gradient(#60a5fa 1px,transparent 1px),
+radial-gradient(#3b82f6 2px,transparent 2px);
+
+background-size:120px 120px,200px 200px,300px 300px;
+animation:galaxy 100s linear infinite;
+
 z-index:-1;
 }
 
-@keyframes stars{
+@keyframes galaxy{
 from{transform:translateY(0)}
-to{transform:translateY(1500px)}
+to{transform:translateY(2000px)}
 }
 
 /* header */
@@ -47,76 +51,75 @@ color:#60a5fa;
 text-shadow:0 0 15px #3b82f6;
 }
 
-/* navigation */
-
-nav{
-text-align:center;
-margin-bottom:30px;
-}
-
-nav a{
-color:#38bdf8;
-margin:12px;
-text-decoration:none;
-font-size:18px;
-}
-
-/* sections */
-
-section{
-max-width:1100px;
-margin:auto;
-padding:40px 20px;
-}
-
-/* product grid */
+/* grid */
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
 gap:20px;
+max-width:1100px;
+margin:auto;
+padding:20px;
 }
 
 /* cards */
 
 .card{
-background:rgba(15,23,42,.8);
+background:#0f172a;
 border:1px solid #1e40af;
-border-radius:12px;
-padding:15px;
+border-radius:10px;
+padding:16px;
 cursor:pointer;
-transition:.3s;
+transition:.25s;
 }
 
 .card:hover{
 transform:scale(1.05);
-box-shadow:0 0 20px #3b82f6;
+box-shadow:0 0 15px #3b82f6;
 }
 
-.details{
+/* popup */
+
+.popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.85);
 display:none;
-margin-top:10px;
-font-size:14px;
+align-items:center;
+justify-content:center;
+z-index:1000;
+}
+
+.popupBox{
+background:#020617;
+border:1px solid #3b82f6;
+padding:30px;
+width:520px;
+border-radius:10px;
 }
 
 /* game */
 
-#gameUI{
-text-align:center;
-}
-
 #gameCanvas{
 background:black;
-border:2px solid #3b82f6;
 display:block;
-margin:20px auto;
+margin:auto;
+border:2px solid #3b82f6;
+}
+
+.gameButtons{
+text-align:center;
+margin:10px;
 }
 
 button{
+padding:10px 16px;
+margin:5px;
 background:#2563eb;
 border:none;
-padding:10px 16px;
-margin:6px;
 color:white;
 cursor:pointer;
 border-radius:6px;
@@ -124,6 +127,16 @@ border-radius:6px;
 
 button:hover{
 box-shadow:0 0 10px #60a5fa;
+}
+
+.adminPanel{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#111827;
+border:1px solid red;
+padding:15px;
+display:none;
 }
 
 </style>
@@ -134,225 +147,257 @@ box-shadow:0 0 10px #60a5fa;
 
 <header>Abyss Market</header>
 
-<nav>
-
-<a href="#snacks">Snacks</a> <a href="#roblox">Roblox</a> <a href="#game">Mini Game</a> <a href="#terms">Terms</a> <a href="#qa">Q&A</a>
-
-</nav>
-
-<!-- SNACKS -->
-
-<section id="snacks">
-
-<h2>Snacks</h2>
+<h2 style="text-align:center">Roblox Services</h2>
 
 <div class="grid">
 
-<div class="card" onclick="toggle(this)">
-Skittles
-<div class="details">
-23 Baht Each<br>
-Stock: 3 (none atm)
-</div>
-</div>
+<div class="card" onclick="showProduct('Anime Spirits')">Anime Spirits</div>
 
-<div class="card" onclick="toggle(this)">
-Chips
-<div class="details">
-16 Baht Each<br>
-Stock: 10 (none atm)
-</div>
-</div>
+<div class="card" onclick="showProduct('Verse Piece')">Verse Piece</div>
 
-<div class="card" onclick="toggle(this)">
-Chuppa Lollipop
-<div class="details">
-8 Baht Each<br>
-Stock: 10 (none atm)
-</div>
-</div>
+<div class="card" onclick="showProduct('Case Paradise')">Case Paradise</div>
 
-<div class="card" onclick="toggle(this)">
-Beng Beng
-<div class="details">
-9 Baht Each<br>
-Stock: 10 (Monday)
-</div>
-</div>
+<div class="card" onclick="showProduct('Anime Vanguards')">Anime Vanguards</div>
+
+<div class="card" onclick="showProduct('Anime Paradox')">Anime Paradox</div>
+
+<div class="card" onclick="showProduct('99 Nights')">99 Nights In The Forest</div>
+
+<div class="card" onclick="showProduct('Rangers')">Re:Rangers X</div>
+
+<div class="card" onclick="showProduct('Flee')">Flee The Facility</div>
+
+<div class="card" onclick="showProduct('Rivals')">Rivals</div>
 
 </div>
 
-</section>
+<!-- product popup -->
 
-<!-- ROBLOX -->
+<div id="productPopup" class="popup">
 
-<section id="roblox">
+<div class="popupBox">
 
-<h2>Roblox Services</h2>
+<h2 id="productTitle"></h2>
 
-<p>Anime Spirits • Verse Piece • Case Paradise • Anime Vanguards • Anime Paradox • 99 Nights In The Forest • Re:Rangers X • Your Bizarre Adventure • Ninja Legends • Flee The Facility • Rivals</p>
+<div id="productText"></div>
 
-</section>
+<br>
 
-<!-- MINI GAME -->
+<button onclick="closeProduct()">Close</button>
 
-<section id="game">
+</div>
 
-<h2>Asteroid Dodger</h2>
+</div>
 
-<div id="gameUI">
+<h2 style="text-align:center">Mini Game</h2>
 
+<div class="gameButtons">
+
+<button onclick="startGame()">Play</button>
+
+<button onclick="openShop()">Shop</button>
+
+</div>
+
+<p style="text-align:center">
+
+Score: <span id="score">0</span> |
 Coins: <span id="coins">0</span>
-Highscore: <span id="highscore">0</span>
+
+</p>
 
 <canvas id="gameCanvas" width="600" height="420"></canvas>
 
-<div>
+<!-- shop -->
 
-<button onclick="startGame()">Start</button> <button onclick="openShop()">Shop</button> <button onclick="openSettings()">Settings</button>
+<div id="shopPopup" class="popup">
+
+<div class="popupBox">
+
+<h2>Game Shop</h2>
+
+<p>Red Skin - 200 Coins</p>
+<p>Green Skin - 200 Coins</p>
+<p>Purple Skin - 200 Coins</p>
+<p>Galaxy Skin - 1,000,000 Coins (DEV)</p>
+
+<button onclick="closeShop()">Close</button>
 
 </div>
 
 </div>
 
-</section>
+<!-- admin -->
 
-<!-- TERMS -->
+<div id="adminPanel" class="adminPanel">
 
-<section id="terms">
+<h4>Admin Panel</h4>
 
-<h2>Terms Of Use</h2>
+<button onclick="addCoins()">Give Coins</button>
 
-<p>You can choose to add me or get an account with the item you'd like to purchase.</p>
-
-</section>
-
-<!-- Q&A -->
-
-<section id="qa">
-
-<h2>Q&A</h2>
-
-<p>Refunds will be given when the product does not go through.</p>
-<p>This does NOT apply to snacks.</p>
-<p>Account name: Tpbuno</p>
-<p>Account login details will be sent through Google Chat.</p>
-
-</section>
+</div>
 
 <script>
 
-/* toggle product details */
+/* PRODUCTS */
 
-function toggle(card){
+const products={
 
-let details=card.querySelector(".details")
+"Anime Spirits":`
+Best Soul/Sword/Spec Carry
+Price: 100 Baht
+`,
 
-details.style.display=
-details.style.display==="block" ? "none" : "block"
+"Verse Piece":`
+2X Drop GP - 230 Baht [Stock:5]
+Unlimited Bag GP - 100 Baht [Stock:4]
+2X Drop Luck - 50 Baht [Stock:2]
+Ainz Sets - 10 Baht [Stock:80]
+Homura Sets - 8 Baht [Stock:5]
+Madoka Sets - 8 Baht [Stock:2]
+`,
+
+"Case Paradise":`
+Dragon Lore FN - 100 Baht
+Emerald Web Gloves - 90 Baht
+AWP Gungnir - 75 Baht
+Extra Skins - 15 Baht
+`,
+
+"Anime Vanguards":`
+Story Stage - 5 Baht
+Challenge Stage - 10 Baht
+Raid Stage - 15 Baht
+30 Min Carry - 30 Baht
+1 Hour Carry - 50 Baht
+5 Hour Carry - 200 Baht
+10 Hour Carry - 350 Baht
+24 Hour Carry - 600 Baht
+
+WoU - 25 Baht
+Dio - 50 Baht
+Shiny Dio - 100 Baht
+`,
+
+"Anime Paradox":`
+Story Stage - 5 Baht
+Challenge Stage - 10 Baht
+Raid Stage - 15 Baht
+Sukuna Portal Carry - 120 Baht
+Gojo Portal Carry - 100 Baht
+`,
+
+"99 Nights":`
+100 Days Carry - 32 Baht
+250 Days Carry - 60 Baht
+500 Days Carry - 100 Baht
+1K Days Carry - 249 Baht
+`,
+
+"Rangers":`
+3x Speed GP - 400 Baht
+Fast Summons - ???
+Auto Trait - ???
+`,
+
+"Flee":`
+Nuclear Waste - 60 Baht
+Ancient Trident - 145 Baht
+Chromatic Phoenix - 130 Baht
+`,
+
+"Rivals":`
+Skin Case 1 - 150 Baht
+Skin Case 2 - 150 Baht
+Skin Case 3 - 150 Baht
+Starter Bundle - 30 Baht
+Medkit Bundle - 165 Baht
+Heavy Duty Bundle - 1000 Baht
+`
 
 }
 
-/* game */
+function showProduct(name){
+
+document.getElementById("productPopup").style.display="flex"
+
+document.getElementById("productTitle").innerText=name
+
+document.getElementById("productText").innerText=products[name]
+
+}
+
+function closeProduct(){
+
+document.getElementById("productPopup").style.display="none"
+
+}
+
+/* GAME */
 
 const canvas=document.getElementById("gameCanvas")
+
 const ctx=canvas.getContext("2d")
 
-let player={x:280,y:380,w:40,h:20}
-
-let asteroids=[]
-let score=0
 let playing=false
+let score=0
 
 let coins=parseInt(localStorage.getItem("coins"))||0
-let highscore=parseInt(localStorage.getItem("highscore"))||0
 
 document.getElementById("coins").innerText=coins
-document.getElementById("highscore").innerText=highscore
-
-document.addEventListener("keydown",e=>{
-
-if(e.key==="ArrowLeft") player.x-=20
-if(e.key==="ArrowRight") player.x+=20
-
-})
 
 function startGame(){
 
 playing=true
 score=0
-asteroids=[]
 
 }
 
-function spawn(){
-
-asteroids.push({
-x:Math.random()*580,
-y:-20,
-size:20,
-speed:3+Math.random()*2
-})
-
-}
-
-setInterval(spawn,900)
-
-function update(){
-
-ctx.clearRect(0,0,600,420)
+setInterval(()=>{
 
 if(playing){
 
-ctx.fillStyle="cyan"
-ctx.fillRect(player.x,player.y,player.w,player.h)
+score++
 
-ctx.fillStyle="white"
+document.getElementById("score").innerText=score
 
-for(let a of asteroids){
-
-a.y+=a.speed
-
-ctx.fillRect(a.x,a.y,a.size,a.size)
-
-if(
-a.x<player.x+player.w &&
-a.x+a.size>player.x &&
-a.y<player.y+player.h &&
-a.y+a.size>player.y
-){
-
-playing=false
-
-coins+=Math.floor(score/4)
-
-if(score>highscore){
-highscore=score
 }
 
-localStorage.setItem("coins",coins)
-localStorage.setItem("highscore",highscore)
+},1000)
+
+/* shop */
+
+function openShop(){
+
+document.getElementById("shopPopup").style.display="flex"
+
+}
+
+function closeShop(){
+
+document.getElementById("shopPopup").style.display="none"
+
+}
+
+/* admin */
+
+let key=prompt("Admin key? Leave blank if not admin")
+
+if(key==="abyssadmin"){
+
+document.getElementById("adminPanel").style.display="block"
+
+}
+
+function addCoins(){
+
+coins+=100000
 
 document.getElementById("coins").innerText=coins
-document.getElementById("highscore").innerText=highscore
 
-alert("Game Over Score: "+score)
-
-}
-
-if(a.y>420){
-score++
-}
+localStorage.setItem("coins",coins)
 
 }
-
-}
-
-requestAnimationFrame(update)
-
-}
-
-update()
 
 </script>
 

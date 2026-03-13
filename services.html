@@ -21,24 +21,19 @@ color:white;
 overflow-x:hidden;
 }
 
-/* STAR BACKGROUND */
+/* animated stars */
 
 .stars{
 position:fixed;
 width:100%;
 height:200%;
 top:-100%;
-left:0;
-
 background:
 radial-gradient(white 1px, transparent 1px),
-radial-gradient(#60a5fa 1px, transparent 1px);
-
-background-size:120px 120px,200px 200px;
-
+radial-gradient(#38bdf8 1px, transparent 1px);
+background-size:140px 140px,200px 200px;
 animation:starsMove 120s linear infinite;
-
-z-index:-2;
+z-index:-1;
 }
 
 @keyframes starsMove{
@@ -46,7 +41,7 @@ from{transform:translateY(0)}
 to{transform:translateY(2000px)}
 }
 
-/* HEADER */
+/* header */
 
 .header{
 text-align:center;
@@ -57,7 +52,7 @@ background:linear-gradient(90deg,#38bdf8,#6366f1,#9333ea);
 color:transparent;
 }
 
-/* GAME GRID */
+/* category grid */
 
 .grid{
 max-width:1100px;
@@ -68,23 +63,24 @@ gap:30px;
 padding:40px;
 }
 
-.game{
+.card{
 background:#0f172a;
 border:1px solid #1e3a8a;
 border-radius:14px;
 padding:30px;
 cursor:pointer;
-transition:.3s;
 text-align:center;
+transition:.3s;
+font-size:22px;
 }
 
-.game:hover{
-transform:scale(1.07);
+.card:hover{
+transform:scale(1.08);
 border-color:#38bdf8;
 box-shadow:0 0 20px #2563eb;
 }
 
-/* GAME PANEL */
+/* side panel */
 
 .panel{
 position:fixed;
@@ -95,8 +91,8 @@ height:100%;
 background:#020617;
 border-left:1px solid #2563eb;
 padding:30px;
-transition:.4s;
 overflow-y:auto;
+transition:.4s;
 z-index:1000;
 }
 
@@ -104,7 +100,7 @@ z-index:1000;
 right:0;
 }
 
-/* ITEM */
+/* items */
 
 .item{
 background:#0f172a;
@@ -121,7 +117,7 @@ transform:scale(1.05);
 border-color:#38bdf8;
 }
 
-/* ITEM DETAILS */
+/* details popup */
 
 .details{
 position:fixed;
@@ -163,30 +159,29 @@ color:white;
 ABYSSAL MARKET SERVICES
 </div>
 
-<!-- STEP 1: GAME SELECT -->
+<!-- STEP 1: CATEGORY -->
 
 <div class="grid">
 
-<div class="game" onclick="openGame('spirits')">Anime Spirits</div>
-<div class="game" onclick="openGame('verse')">Verse Piece</div>
-<div class="game" onclick="openGame('case')">Case Paradise</div>
-<div class="game" onclick="openGame('vanguard')">Anime Vanguards</div>
-<div class="game" onclick="openGame('paradox')">Anime Paradox</div>
-<div class="game" onclick="openGame('forest')">99 Nights In The Forest</div>
-<div class="game" onclick="openGame('ftf')">Flee The Facility</div>
-<div class="game" onclick="openGame('rivals')">Rivals</div>
+<div class="card" onclick="openCategory('snacks')">
+Snacks
+</div>
+
+<div class="card" onclick="openCategory('roblox')">
+Roblox Services
+</div>
 
 </div>
 
-<!-- ITEM PANEL -->
+<!-- PANEL -->
 
 <div class="panel" id="panel">
 
-<h2 id="gameTitle"></h2>
+<h2 id="panelTitle"></h2>
 
-<div id="itemList"></div>
+<div id="panelList"></div>
 
-<button class="closeBtn" onclick="closeGame()">Close</button>
+<button class="closeBtn" onclick="closePanel()">Close</button>
 
 </div>
 
@@ -195,11 +190,8 @@ ABYSSAL MARKET SERVICES
 <div class="details" id="details">
 
 <h3 id="itemName"></h3>
-
 <p id="itemPrice"></p>
-
 <p id="itemStock"></p>
-
 <p id="itemDesc"></p>
 
 <button class="closeBtn" onclick="closeItem()">Close</button>
@@ -208,115 +200,60 @@ ABYSSAL MARKET SERVICES
 
 <script>
 
-/* SHOP DATABASE */
+/* DATABASE */
 
 const shop={
 
-spirits:{
-title:"Anime Spirits",
+snacks:{
+title:"Snacks",
 items:[
-{name:"All Limited Items",price:"Varies",stock:"Limited",desc:"Any limited item available in Anime Spirits."},
-{name:"Full Carry Service",price:"100 Baht",stock:"Service",desc:"Best soul, sword, fighting style and spec carry."}
+
+{name:"Skittles",price:"23 Baht",stock:"3",desc:"Currently unavailable"},
+{name:"Chips",price:"16 Baht",stock:"10",desc:"Currently unavailable"},
+{name:"Chuppa Lollipop",price:"8 Baht",stock:"10",desc:"Currently unavailable"},
+{name:"Beng Beng",price:"9 Baht",stock:"10",desc:"Available Monday"}
+
 ]
 },
 
-verse:{
-title:"Verse Piece",
+roblox:{
+title:"Roblox Games",
 items:[
-{name:"2X Drop Gamepass",price:"230 Baht",stock:"5",desc:"Permanent drop boost."},
-{name:"Unlimited Bag Gamepass",price:"100 Baht",stock:"4",desc:"Extra inventory space."},
-{name:"2X Drop Luck",price:"50 Baht",stock:"2",desc:"Improves rare drop chances."},
-{name:"Ainz Set",price:"10 Baht",stock:"80",desc:"Ainz character item set."},
-{name:"Homura Set",price:"8 Baht",stock:"5",desc:"Homura character item set."},
-{name:"Madoka Set",price:"8 Baht",stock:"2",desc:"Madoka character item set."}
-]
-},
 
-case:{
-title:"Case Paradise",
-items:[
-{name:"AWP Dragon Lore",price:"100 Baht",stock:"1",desc:"Factory New."},
-{name:"Emerald Web Gloves",price:"90 Baht",stock:"1",desc:"Factory New."},
-{name:"AWP Gungnir",price:"75 Baht",stock:"1",desc:"Field Tested."},
-{name:"Extra Skins",price:"15 Baht",stock:"Each",desc:"Additional skins available."}
-]
-},
+{name:"Anime Spirits",price:"Open",stock:"Services Available",desc:"Click to view Anime Spirits services"},
+{name:"Verse Piece",price:"Open",stock:"Services Available",desc:"Click to view Verse Piece products"},
+{name:"Case Paradise",price:"Open",stock:"Services Available",desc:"Click to view Case Paradise items"},
+{name:"Anime Vanguards",price:"Open",stock:"Services Available",desc:"Click to view Anime Vanguards services"},
+{name:"Anime Paradox",price:"Open",stock:"Services Available",desc:"Click to view Anime Paradox services"},
+{name:"99 Nights In The Forest",price:"Open",stock:"Services Available",desc:"Click to view carry services"},
+{name:"Flee The Facility",price:"Open",stock:"Items Available",desc:"Click to view hammer and gemstone skins"},
+{name:"Rivals",price:"Open",stock:"Bundles Available",desc:"Click to view weapon bundles"}
 
-vanguard:{
-title:"Anime Vanguards",
-items:[
-{name:"Story Stage Carry",price:"5 Baht",stock:"Service",desc:"Complete one story stage."},
-{name:"Challenge Stage Carry",price:"10 Baht",stock:"Service",desc:"Complete one challenge stage."},
-{name:"Raid Stage Carry",price:"15 Baht",stock:"Service",desc:"Complete one raid stage."},
-{name:"WoU Unit",price:"25 Baht",stock:"10",desc:"Level 50 required to trade."},
-{name:"Dio Unit",price:"50 Baht",stock:"6",desc:"Level 50 required to trade."},
-{name:"Shiny Dio",price:"100 Baht",stock:"5",desc:"Rare shiny unit."}
-]
-},
-
-paradox:{
-title:"Anime Paradox",
-items:[
-{name:"Story Stage Carry",price:"5 Baht",stock:"Service",desc:"Complete story stage."},
-{name:"Challenge Stage Carry",price:"10 Baht",stock:"Service",desc:"Complete challenge stage."},
-{name:"Raid Stage Carry",price:"15 Baht",stock:"Service",desc:"Complete raid stage."},
-{name:"Sukuna Portal Carry",price:"120 Baht",stock:"5",desc:"Portal boss carry."},
-{name:"Gojo Portal Carry",price:"100 Baht",stock:"3",desc:"Portal boss carry."}
-]
-},
-
-forest:{
-title:"99 Nights In The Forest",
-items:[
-{name:"100 Days Carry",price:"32 Baht",stock:"Service",desc:"Carry to 100 days."},
-{name:"250 Days Carry",price:"60 Baht",stock:"Service",desc:"Carry to 250 days."},
-{name:"500 Days Carry",price:"100 Baht",stock:"Service",desc:"Carry to 500 days."},
-{name:"1000 Days Carry",price:"249 Baht",stock:"Service",desc:"Carry to 1000 days."}
-]
-},
-
-ftf:{
-title:"Flee The Facility",
-items:[
-{name:"Ancient Trident",price:"145 Baht",stock:"1",desc:"Rare hammer skin."},
-{name:"Ancient Portal",price:"135 Baht",stock:"1",desc:"Portal hammer."},
-{name:"Lunar Witch Broom",price:"130 Baht",stock:"1",desc:"Limited hammer."},
-{name:"Chromatic Phoenix",price:"130 Baht",stock:"1",desc:"Phoenix hammer."}
-]
-},
-
-rivals:{
-title:"Rivals",
-items:[
-{name:"Skin Case",price:"150 Baht",stock:"INF",desc:"Weapon skin case."},
-{name:"Starter Bundle",price:"30 Baht",stock:"INF",desc:"Starter weapons."},
-{name:"Medkit Bundle",price:"165 Baht",stock:"INF",desc:"Medical pack bundle."},
-{name:"Energy Bundle",price:"650 Baht",stock:"INF",desc:"Energy weapon set."}
 ]
 }
 
 }
 
-/* OPEN GAME PANEL */
+/* OPEN CATEGORY */
 
-function openGame(game){
+function openCategory(cat){
 
 const panel=document.getElementById("panel")
-const title=document.getElementById("gameTitle")
-const list=document.getElementById("itemList")
+const title=document.getElementById("panelTitle")
+const list=document.getElementById("panelList")
 
 panel.classList.add("active")
 
-title.innerText=shop[game].title
+title.innerText=shop[cat].title
 
 list.innerHTML=""
 
-shop[game].items.forEach(item=>{
+shop[cat].items.forEach(item=>{
 
 list.innerHTML+=`
 <div class="item" onclick="viewItem('${item.name}','${item.price}','${item.stock}','${item.desc}')">
 <b>${item.name}</b><br>
-Click to view
+Click to view details
 </div>
 `
 
@@ -324,9 +261,9 @@ Click to view
 
 }
 
-/* CLOSE GAME */
+/* CLOSE PANEL */
 
-function closeGame(){
+function closePanel(){
 document.getElementById("panel").classList.remove("active")
 }
 
@@ -334,14 +271,12 @@ document.getElementById("panel").classList.remove("active")
 
 function viewItem(name,price,stock,desc){
 
-const box=document.getElementById("details")
-
 document.getElementById("itemName").innerText=name
 document.getElementById("itemPrice").innerText="Price: "+price
 document.getElementById("itemStock").innerText="Stock: "+stock
 document.getElementById("itemDesc").innerText=desc
 
-box.classList.add("active")
+document.getElementById("details").classList.add("active")
 
 }
 

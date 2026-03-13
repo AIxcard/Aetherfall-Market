@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
@@ -7,11 +8,16 @@
 
 <style>
 
-body{
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
 background:#020617;
 color:white;
-font-family:Arial;
 overflow:hidden;
 }
 
@@ -26,12 +32,14 @@ left:0;
 
 background:
 radial-gradient(white 1px, transparent 1px),
-radial-gradient(#60a5fa 1px, transparent 1px);
+radial-gradient(#60a5fa 1px, transparent 1px),
+radial-gradient(#3b82f6 2px, transparent 2px);
 
-background-size:120px 120px,200px 200px;
+background-size:120px 120px,200px 200px,300px 300px;
 
 animation:starsMove 120s linear infinite;
-z-index:-1;
+
+z-index:-2;
 }
 
 @keyframes starsMove{
@@ -39,7 +47,7 @@ from{transform:translateY(0)}
 to{transform:translateY(2000px)}
 }
 
-/* CENTER */
+/* CENTER CONTAINER */
 
 .center{
 
@@ -53,6 +61,8 @@ justify-content:center;
 
 text-align:center;
 
+animation:fadeUp 1.6s ease;
+
 }
 
 /* LOGO */
@@ -60,17 +70,20 @@ text-align:center;
 .logo{
 
 font-size:80px;
-
-letter-spacing:8px;
+letter-spacing:10px;
+font-weight:bold;
 
 background:linear-gradient(90deg,#38bdf8,#6366f1,#9333ea);
 
 -webkit-background-clip:text;
 color:transparent;
 
-text-shadow:0 0 30px rgba(147,51,234,.5);
+text-shadow:
+0 0 10px rgba(147,51,234,.5),
+0 0 20px rgba(147,51,234,.4),
+0 0 40px rgba(99,102,241,.4);
 
-animation:fadeIn 2s ease;
+margin-bottom:20px;
 
 }
 
@@ -78,11 +91,9 @@ animation:fadeIn 2s ease;
 
 .tag{
 
-margin-top:15px;
-font-size:20px;
+font-size:22px;
 color:#94a3b8;
-
-animation:fadeIn 3s ease;
+letter-spacing:2px;
 
 }
 
@@ -92,21 +103,21 @@ animation:fadeIn 3s ease;
 
 margin-top:40px;
 
-padding:18px 40px;
+padding:18px 45px;
 
 font-size:20px;
 
-border-radius:10px;
+border-radius:12px;
 
 background:#2563eb;
 
-text-decoration:none;
+border:none;
 
 color:white;
 
-transition:.25s;
+cursor:pointer;
 
-animation:fadeIn 4s ease;
+transition:.25s;
 
 }
 
@@ -118,7 +129,38 @@ box-shadow:0 0 20px #2563eb;
 
 }
 
-@keyframes fadeIn{
+/* FADE TRANSITION */
+
+#fade{
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:#020617;
+
+opacity:0;
+
+pointer-events:none;
+
+transition:opacity .8s ease;
+
+z-index:9999;
+
+}
+
+#fade.active{
+opacity:1;
+pointer-events:auto;
+}
+
+/* ANIMATIONS */
+
+@keyframes fadeUp{
 
 from{
 opacity:0;
@@ -140,20 +182,43 @@ transform:translateY(0);
 
 <div class="stars"></div>
 
+<div id="fade"></div>
+
 <div class="center">
 
-<div class="logo">ABYSSAL MARKET</div>
+<div class="logo">
+ABYSSAL MARKET
+</div>
 
 <div class="tag">
 Roblox Services • Game Items • Snacks
 </div>
 
-<a class="enter" href="market.html">
+<button class="enter" onclick="enterMarket()">
 ENTER MARKET
-</a>
+</button>
 
 </div>
 
-</body>
+<script>
 
+/* ENTER TRANSITION */
+
+function enterMarket(){
+
+const fade=document.getElementById("fade")
+
+fade.classList.add("active")
+
+setTimeout(function(){
+
+window.location.href="market.html"
+
+},700)
+
+}
+
+</script>
+
+</body>
 </html>

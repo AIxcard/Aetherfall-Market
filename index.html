@@ -220,7 +220,7 @@ margin-top:50px;
 
 <a href="#snacks">Snacks</a> <a href="#games">Roblox Services</a> <a href="#terms">Terms</a> <a href="#qa">Q&A</a>
 
-<input class="searchBox" id="search" placeholder="Search Products...">
+<input class="searchBox" id="searchInput" placeholder="Search Products...">
 <button class="resetBtn" onclick="resetSearch()">Reset</button>
 
 </nav>
@@ -399,16 +399,16 @@ function closeSettings(){
 document.getElementById("settings").style.display="none"
 }
 
-const searchInput=document.getElementById("search")
-const cards=document.querySelectorAll("#games .card")
+const searchInput=document.getElementById("searchInput")
+const gameCards=document.querySelectorAll("#games .card")
 
-searchInput.addEventListener("keypress",function(e){
+searchInput.addEventListener("keydown",function(e){
 
 if(e.key==="Enter"){
 
 let text=searchInput.value.toLowerCase()
 
-cards.forEach(card=>{
+gameCards.forEach(card=>{
 
 if(card.innerText.toLowerCase().includes(text)){
 card.style.display="block"
@@ -426,7 +426,7 @@ function resetSearch(){
 
 searchInput.value=""
 
-cards.forEach(card=>{
+gameCards.forEach(card=>{
 card.style.display="block"
 })
 

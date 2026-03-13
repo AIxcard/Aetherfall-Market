@@ -2,17 +2,11 @@
 
 <html>
 <head>
-
 <title>Abyss Market</title>
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial}
 
 body{
 background:#020617;
@@ -20,7 +14,7 @@ color:white;
 overflow-x:hidden;
 }
 
-/* GALAXY BACKGROUND */
+/* galaxy background */
 
 .stars{
 position:fixed;
@@ -28,65 +22,41 @@ width:100%;
 height:200%;
 top:-100%;
 left:0;
+
 background:
-radial-gradient(white 1px, transparent 1px),
-radial-gradient(#60a5fa 1px, transparent 1px),
-radial-gradient(#3b82f6 2px, transparent 2px);
+radial-gradient(white 1px,transparent 1px),
+radial-gradient(#60a5fa 1px,transparent 1px),
+radial-gradient(#3b82f6 2px,transparent 2px);
+
 background-size:120px 120px,200px 200px,300px 300px;
-animation:starScroll 120s linear infinite;
-z-index:-3;
-}
+animation:scroll 120s linear infinite;
 
-@keyframes starScroll{
-from{transform:translateY(0);}
-to{transform:translateY(2000px);}
-}
-
-/* SHOOTING STARS */
-
-.shooting{
-position:fixed;
-width:3px;
-height:100px;
-background:linear-gradient(white,transparent);
-top:-100px;
-left:50%;
-opacity:.7;
-animation:shoot 8s linear infinite;
 z-index:-2;
 }
 
-@keyframes shoot{
-0%{transform:translate(0,0) rotate(45deg);}
-100%{transform:translate(-1200px,1200px) rotate(45deg);}
+@keyframes scroll{
+from{transform:translateY(0)}
+to{transform:translateY(2000px)}
 }
-
-/* HEADER */
 
 header{
 text-align:center;
-font-size:48px;
+font-size:46px;
 padding:50px;
-background:rgba(2,6,23,.7);
 text-shadow:0 0 15px #3b82f6;
 }
-
-/* NAV */
 
 nav{
 text-align:center;
 padding:20px;
-background:rgba(2,6,23,.6);
 }
 
 nav a{
-margin:20px;
+margin:15px;
 color:#38bdf8;
 text-decoration:none;
 font-size:18px;
 }
-
-/* SECTIONS */
 
 section{
 max-width:900px;
@@ -95,61 +65,60 @@ padding:60px 20px;
 }
 
 h2{
-margin-bottom:25px;
 color:#60a5fa;
+margin-bottom:25px;
 border-bottom:2px solid #1e40af;
 padding-bottom:10px;
 }
 
-/* CARDS */
+/* cards */
 
 .card{
 background:rgba(15,23,42,.8);
 border:1px solid #1e3a8a;
-border-radius:12px;
-padding:15px;
-margin:12px 0;
+border-radius:10px;
+padding:14px;
+margin:10px 0;
+cursor:pointer;
 transition:.3s;
 }
 
 .card:hover{
 transform:scale(1.03);
-border-color:#38bdf8;
 box-shadow:0 0 15px #2563eb;
 }
 
-/* DROPDOWNS */
+/* product popup */
 
-details{
-background:rgba(15,23,42,.8);
+.popup{
+display:none;
+background:#0f172a;
 border:1px solid #1e3a8a;
-border-radius:12px;
-margin:15px 0;
-padding:18px;
+padding:15px;
+margin-top:10px;
+border-radius:10px;
 }
 
-summary{
-cursor:pointer;
-font-size:20px;
-color:#38bdf8;
-font-weight:bold;
-}
-
-/* MINI GAME */
+/* game */
 
 #gameCanvas{
 background:black;
-border:2px solid #3b82f6;
 display:block;
 margin:auto;
-margin-top:20px;
+border:2px solid #3b82f6;
 }
 
-footer{
-text-align:center;
-padding:40px;
-background:rgba(2,6,23,.8);
-margin-top:50px;
+button{
+padding:10px 15px;
+background:#2563eb;
+border:none;
+color:white;
+margin:5px;
+cursor:pointer;
+}
+
+.shopItem{
+margin:8px 0;
 }
 
 </style>
@@ -159,111 +128,194 @@ margin-top:50px;
 <body>
 
 <div class="stars"></div>
-<div class="shooting"></div>
 
-<header>
-Abyss Market
-</header>
+<header>Abyss Market</header>
 
 <nav>
-<a href="#snacks">Snacks</a>
 <a href="#games">Games</a>
 <a href="#game">Mini Game</a>
-<a href="#terms">Terms</a>
-<a href="#qa">Q&A</a>
+<a href="#shop">Shop</a>
 </nav>
-
-<section id="snacks">
-
-<h2>Snacks</h2>
-
-<div class="card">Skittles — 23 Baht — Stock: 0</div>
-<div class="card">Chips — 16 Baht — Stock: 0</div>
-<div class="card">Chuppa Lollipop — 8 Baht — Stock: 0</div>
-<div class="card">Beng Beng — 9 Baht — Restock Monday</div>
-
-</section>
 
 <section id="games">
 
-<h2>Games</h2>
+<h2>Anime Vanguards</h2>
 
-<details>
-<summary>Anime Vanguards</summary>
-<div class="card">Story Stage — 5 Baht</div>
-<div class="card">Challenge Stage — 10 Baht</div>
-<div class="card">Raid Stage — 15 Baht</div>
-<div class="card">1 Hour Carry — 50 Baht</div>
-<div class="card">24 Hour Carry — 600 Baht</div>
-<div class="card">WoU — 25 Baht — Stock: 10</div>
-<div class="card">Dio — 50 Baht — Stock: 6</div>
-<div class="card">Shiny Dio — 100 Baht — Stock: 5</div>
-</details>
+<div class="card" onclick="toggle('dio')">
+Dio
+<div id="dio" class="popup">
+Price: 50 Baht<br>
+Stock Left: 6
+</div>
+</div>
 
-<details>
-<summary>Verse Piece</summary>
-<div class="card">2X Drop GP — 230 Baht — Stock: 5</div>
-<div class="card">Unlimited Bag GP — 100 Baht — Stock: 4</div>
-<div class="card">2X Drop Luck GP — 50 Baht — Stock: 2</div>
-<div class="card">Ainz Sets — 10 Baht — Stock: 80</div>
-<div class="card">Homura Sets — 8 Baht — Stock: 5</div>
-<div class="card">Madoka Sets — 8 Baht — Stock: 2</div>
-</details>
+<div class="card" onclick="toggle('shinyDio')">
+Shiny Dio
+<div id="shinyDio" class="popup">
+Price: 100 Baht<br>
+Stock Left: 5
+</div>
+</div>
 
-<details>
-<summary>99 Nights In The Forest</summary>
-<div class="card">100 Days Carry — 32 Baht</div>
-<div class="card">250 Days Carry — 60 Baht</div>
-<div class="card">500 Days Carry — 100 Baht</div>
-<div class="card">1K Days Carry — 249 Baht</div>
-</details>
+<h2>Verse Piece</h2>
+
+<div class="card" onclick="toggle('dropgp')">
+2X Drop GP
+<div id="dropgp" class="popup">
+Price: 230 Baht<br>
+Stock Left: 5
+</div>
+</div>
+
+<div class="card" onclick="toggle('baggp')">
+Unlimited Bag GP
+<div id="baggp" class="popup">
+Price: 100 Baht<br>
+Stock Left: 4
+</div>
+</div>
+
+<h2>99 Nights In The Forest</h2>
+
+<div class="card" onclick="toggle('100d')">
+100 Days Carry
+<div id="100d" class="popup">
+Price: 32 Baht
+</div>
+</div>
+
+<div class="card" onclick="toggle('1k')">
+1K Days Carry
+<div id="1k" class="popup">
+Price: 249 Baht
+</div>
+</div>
 
 </section>
 
 <section id="game">
 
-<h2>Mini Game: Asteroid Dodger</h2>
+<h2>Asteroid Dodger</h2>
 
-<p style="text-align:center">Use LEFT and RIGHT arrows to dodge asteroids.</p>
+<p style="text-align:center">
+Coins: <span id="coins">0</span> |
+High Score: <span id="highscore">0</span>
+</p>
+
+<div style="text-align:center">
+<button onclick="startGame()">Start</button>
+<button onclick="openShop()">Shop</button>
+<button onclick="openSettings()">Settings</button>
+</div>
 
 <canvas id="gameCanvas" width="500" height="400"></canvas>
 
 </section>
 
-<section id="terms">
+<section id="shop">
 
-<h2>Terms Of Use</h2>
+<h2>Color Shop</h2>
 
-<div class="card">You may add the seller or receive an account with the purchased item.</div>
-<div class="card">Refunds only apply if the service fails.</div>
+<div class="shopItem">
+Red (50 coins)
+<button onclick="buyColor('red',50)">Buy</button>
+</div>
+
+<div class="shopItem">
+Green (50 coins)
+<button onclick="buyColor('green',50)">Buy</button>
+</div>
+
+<div class="shopItem">
+Yellow (50 coins)
+<button onclick="buyColor('yellow',50)">Buy</button>
+</div>
+
+<div class="shopItem">
+Purple (50 coins)
+<button onclick="buyColor('purple',50)">Buy</button>
+</div>
+
+<div class="shopItem">
+Cyan (50 coins)
+<button onclick="buyColor('cyan',50)">Buy</button>
+</div>
+
+<div class="shopItem">
+Orange (50 coins)
+<button onclick="buyColor('orange',50)">Buy</button>
+</div>
+
+<div class="shopItem">
+White (50 coins)
+<button onclick="buyColor('white',50)">Buy</button>
+</div>
+
+<div class="shopItem">
+Rainbow (unlock by buying all colors)
+</div>
 
 </section>
-
-<section id="qa">
-
-<h2>Q&A</h2>
-
-<div class="card"><b>Refunds?</b><br>Refunds are given if the service fails.</div>
-<div class="card"><b>Account to add?</b><br>Tpbuno</div>
-
-</section>
-
-<footer>
-
-Abyss Market © 2026
-
-</footer>
 
 <script>
+
+/* product toggle */
+
+function toggle(id){
+let el=document.getElementById(id);
+el.style.display = el.style.display=="block" ? "none":"block";
+}
+
+/* saved data */
+
+let coins=parseInt(localStorage.getItem("coins"))||0;
+let highscore=parseInt(localStorage.getItem("highscore"))||0;
+
+document.getElementById("coins").innerText=coins;
+document.getElementById("highscore").innerText=highscore;
+
+/* colors */
+
+let owned=JSON.parse(localStorage.getItem("colors"))||["cyan"];
+let currentColor=localStorage.getItem("currentColor")||"cyan";
+
+/* shop */
+
+function buyColor(color,price){
+
+if(coins>=price){
+
+coins-=price;
+owned.push(color);
+
+localStorage.setItem("coins",coins);
+localStorage.setItem("colors",JSON.stringify(owned));
+
+updateUI();
+
+}else{
+alert("Not enough coins");
+}
+
+}
+
+function updateUI(){
+document.getElementById("coins").innerText=coins;
+}
+
+/* game */
 
 const canvas=document.getElementById("gameCanvas");
 const ctx=canvas.getContext("2d");
 
 let player={x:230,y:360,w:40,h:20};
+
 let asteroids=[];
 let score=0;
+let playing=false;
 
 function spawnAsteroid(){
+
 asteroids.push({
 x:Math.random()*480,
 y:-20,
@@ -271,20 +323,31 @@ w:20,
 h:20,
 speed:3+Math.random()*2
 });
+
 }
 
 setInterval(spawnAsteroid,1000);
 
 document.addEventListener("keydown",e=>{
-if(e.key==="ArrowLeft")player.x-=20;
-if(e.key==="ArrowRight")player.x+=20;
+
+if(e.key=="ArrowLeft")player.x-=20;
+if(e.key=="ArrowRight")player.x+=20;
+
 });
+
+function startGame(){
+playing=true;
+score=0;
+asteroids=[];
+}
 
 function update(){
 
 ctx.clearRect(0,0,500,400);
 
-ctx.fillStyle="cyan";
+if(playing){
+
+ctx.fillStyle=currentColor;
 ctx.fillRect(player.x,player.y,player.w,player.h);
 
 ctx.fillStyle="white";
@@ -303,19 +366,36 @@ a.x+a.w>player.x &&
 a.y<player.y+player.h &&
 a.y+a.h>player.y
 ){
+
+playing=false;
+
+coins+=Math.floor(score/5);
+
+if(score>highscore){
+highscore=score;
+localStorage.setItem("highscore",highscore);
+}
+
+localStorage.setItem("coins",coins);
+
+updateUI();
+
 alert("Game Over! Score: "+score);
-asteroids=[];
-score=0;
+
 }
 
 if(a.y>400){
+
 asteroids.splice(i,1);
 score++;
+
 }
 
 }
 
 ctx.fillText("Score: "+score,10,20);
+
+}
 
 requestAnimationFrame(update);
 

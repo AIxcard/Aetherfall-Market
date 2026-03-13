@@ -4,19 +4,40 @@
 
 <head>
 
-<title>Aetherfall Market Services</title>
-
-<link rel="stylesheet" href="style.css">
+<title>Aetherfall Market</title>
 
 <style>
+
+body{
+margin:0;
+font-family:Arial;
+color:white;
+transition:background 0.6s;
+}
+
+/* BACKGROUNDS */
+
+body.bg1{
+background:linear-gradient(160deg,#020617,#1e3a8a);
+}
+
+body.bg2{
+background:linear-gradient(160deg,#020617,#4c1d95);
+}
+
+body.bg3{
+background:linear-gradient(160deg,#020617,#134e4a);
+}
+
+/* HEADER */
 
 .header{
 
 text-align:center;
 
-font-size:60px;
+font-size:55px;
 
-margin-top:40px;
+margin-top:30px;
 
 background:linear-gradient(90deg,#38bdf8,#6366f1,#9333ea);
 
@@ -26,135 +47,117 @@ color:transparent;
 
 }
 
-/* category grid */
+/* SETTINGS */
 
-.categoryGrid{
+.settings{
 
-max-width:1000px;
+position:fixed;
 
-margin:auto;
+top:20px;
 
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-
-gap:40px;
-
-padding:60px;
-
-}
-
-.category{
+right:20px;
 
 background:#0f172a;
 
-border-radius:18px;
+padding:15px;
+
+border-radius:10px;
+
+border:1px solid #1e3a8a;
+
+}
+
+.settings button{
+
+margin-top:5px;
+
+width:100%;
+
+}
+
+/* CATEGORY */
+
+.categoryGrid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+gap:30px;
+
+max-width:900px;
+
+margin:50px auto;
+
+}
+
+.card{
+
+background:#0f172a;
 
 padding:40px;
 
 text-align:center;
 
-border:1px solid #1e3a8a;
+border-radius:15px;
 
 cursor:pointer;
+
+border:1px solid #1e3a8a;
 
 transition:.3s;
 
 }
 
-.category:hover{
+.card:hover{
 
-transform:scale(1.1);
+transform:scale(1.08);
 
-box-shadow:0 0 30px #2563eb;
-
-border-color:#38bdf8;
+box-shadow:0 0 25px #2563eb;
 
 }
 
-/* game list */
+/* LISTS */
 
-.gameList{
+.list{
 
 max-width:900px;
 
-margin:auto;
-
-padding:40px;
+margin:30px auto;
 
 display:none;
 
 }
 
-.game{
+.entry{
 
 background:#0f172a;
-
-border-radius:12px;
-
-padding:20px;
-
-margin-top:15px;
-
-border:1px solid #1e3a8a;
-
-cursor:pointer;
-
-transition:.25s;
-
-}
-
-.game:hover{
-
-border-color:#38bdf8;
-
-transform:scale(1.05);
-
-}
-
-/* item list */
-
-.itemList{
-
-max-width:900px;
-
-margin:auto;
-
-padding:40px;
-
-display:none;
-
-}
-
-.item{
-
-background:#0f172a;
-
-border-radius:12px;
 
 padding:15px;
 
 margin-top:10px;
 
-border:1px solid #1e3a8a;
+border-radius:10px;
 
 cursor:pointer;
 
-transition:.25s;
+border:1px solid #1e3a8a;
+
+transition:.2s;
 
 }
 
-.item:hover{
+.entry:hover{
 
 border-color:#38bdf8;
 
-transform:scale(1.05);
+transform:scale(1.04);
 
 }
 
-/* detail box */
+/* DETAIL BOX */
 
-.detailBox{
+.detail{
 
 max-width:500px;
 
@@ -162,9 +165,9 @@ margin:40px auto;
 
 background:#0f172a;
 
-padding:30px;
+padding:25px;
 
-border-radius:16px;
+border-radius:15px;
 
 border:1px solid #38bdf8;
 
@@ -176,72 +179,128 @@ display:none;
 
 </head>
 
-<body>
+<body class="bg1">
 
-<div class="stars"></div>
+<div class="settings">
+
+<b>Settings</b><br>
+
+Background:
+
+<button onclick="setBG('bg1')">Cosmic</button>
+
+<button onclick="setBG('bg2')">Nebula</button>
+
+<button onclick="setBG('bg3')">Aether</button>
+
+</div>
 
 <h1 class="header">AETHERFALL MARKET</h1>
 
-<!-- STEP 1 CATEGORY -->
+<!-- CATEGORY -->
 
-<div class="categoryGrid">
+<div id="categories" class="categoryGrid">
 
-<div class="category" onclick="openRoblox()">
+<div class="card" onclick="openRoblox()">
+
 Roblox Services
+
 </div>
 
-<div class="category" onclick="openSnacks()">
+<div class="card" onclick="openSnacks()">
+
 Snacks
-</div>
 
 </div>
 
-<!-- STEP 2 GAMES -->
+</div>
 
-<div id="gameList" class="gameList">
+<!-- ROBLOX GAMES -->
+
+<div id="games" class="list">
 
 <h2>Roblox Games</h2>
 
-<div class="game" onclick="openItems('spirits')">Anime Spirits</div>
+<div class="entry" onclick="openGame('spirits')">Anime Spirits</div>
 
-<div class="game" onclick="openItems('verse')">Verse Piece</div>
+<div class="entry" onclick="openGame('verse')">Verse Piece</div>
 
-<div class="game" onclick="openItems('case')">Case Paradise</div>
+<div class="entry" onclick="openGame('case')">Case Paradise</div>
 
-<div class="game" onclick="openItems('vanguard')">Anime Vanguards</div>
+<div class="entry" onclick="openGame('vanguard')">Anime Vanguards</div>
 
-<div class="game" onclick="openItems('paradox')">Anime Paradox</div>
+<div class="entry" onclick="openGame('paradox')">Anime Paradox</div>
 
-<div class="game" onclick="openItems('forest')">99 Nights In The Forest</div>
+<div class="entry" onclick="openGame('forest')">99 Nights In The Forest</div>
 
-<div class="game" onclick="openItems('ftf')">Flee The Facility</div>
+<div class="entry" onclick="openGame('ftf')">Flee The Facility</div>
 
-<div class="game" onclick="openItems('rivals')">Rivals</div>
+<div class="entry" onclick="openGame('rivals')">Rivals</div>
 
 </div>
 
-<!-- STEP 3 ITEMS -->
+<!-- ITEMS -->
 
-<div id="itemList" class="itemList"></div>
+<div id="items" class="list"></div>
 
-<!-- ITEM DETAILS -->
+<!-- DETAIL -->
 
-<div id="detailBox" class="detailBox"></div>
+<div id="detail" class="detail"></div>
 
 <script>
 
-/* OPEN ROBLOX */
+/* BACKGROUND */
 
-function openRoblox(){
+function setBG(bg){
 
-document.getElementById("gameList").style.display="block"
-
-document.getElementById("itemList").style.display="none"
+document.body.className=bg
 
 }
 
-/* OPEN SNACKS */
+/* CATEGORY */
+
+function openRoblox(){
+
+hideAll()
+
+document.getElementById("games").style.display="block"
+
+}
 
 function openSnacks(){
 
-const list=document.
+hideAll()
+
+let items=document.getElementById("items")
+
+items.style.display="block"
+
+items.innerHTML=`
+
+<div class="entry" onclick="showDetail('Skittles','23 Baht','3','Currently unavailable')">Skittles</div>
+
+<div class="entry" onclick="showDetail('Chips','16 Baht','10','Currently unavailable')">Chips</div>
+
+<div class="entry" onclick="showDetail('Chuppa Lollipop','8 Baht','10','Currently unavailable')">Chuppa Lollipop</div>
+
+<div class="entry" onclick="showDetail('Beng Beng','9 Baht','10','Available Monday')">Beng Beng</div>
+
+`
+
+}
+
+/* GAMES */
+
+function openGame(game){
+
+hideDetail()
+
+let items=document.getElementById("items")
+
+items.style.display="block"
+
+if(game==="verse"){
+
+items.innerHTML=`
+
+<div class="entry" onclick="showDetail('2X Drop GP','230 Baht','5','Permanent drop

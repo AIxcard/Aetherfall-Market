@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<title>Abyss Market</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#020617;
+color:white;
+overflow-x:hidden;
+}
+
+/* GALAXY BACKGROUND */
+
+.stars{
+position:fixed;
+width:100%;
+height:200%;
+top:-100%;
+left:0;
+background:
+radial-gradient(white 1px, transparent 1px),
+radial-gradient(#60a5fa 1px, transparent 1px),
+radial-gradient(#3b82f6 2px, transparent 2px);
+background-size:120px 120px,200px 200px,300px 300px;
+animation:starScroll 120s linear infinite;
+z-index:-3;
+}
+
+@keyframes starScroll{
+from{transform:translateY(0);}
+to{transform:translateY(2000px);}
+}
+
+/* HEADER */
+
+header{
+text-align:center;
+font-size:48px;
+padding:50px;
+background:rgba(2,6,23,.7);
+text-shadow:0 0 15px #3b82f6;
+}
+
+/* NAV */
+
+nav{
+text-align:center;
+padding:20px;
+background:rgba(2,6,23,.6);
+}
+
+nav a{
+margin:20px;
+color:#38bdf8;
+text-decoration:none;
+font-size:18px;
+}
+
+/* SECTIONS */
+
+section{
+max-width:900px;
+margin:auto;
+padding:60px 20px;
+}
+
+h2{
+margin-bottom:25px;
+color:#60a5fa;
+border-bottom:2px solid #1e40af;
+padding-bottom:10px;
+}
+
+/* CARDS */
+
+.card{
+background:rgba(15,23,42,.8);
+border:1px solid #1e3a8a;
+border-radius:12px;
+padding:15px;
+margin:12px 0;
+transition:.3s;
+}
+
+.card:hover{
+transform:scale(1.03);
+border-color:#38bdf8;
+box-shadow:0 0 15px #2563eb;
+}
+
+/* GAME DROPDOWNS */
+
+details{
+background:rgba(15,23,42,.8);
+border:1px solid #1e3a8a;
+border-radius:12px;
+margin:15px 0;
+padding:18px;
+}
+
+summary{
+cursor:pointer;
+font-size:20px;
+color:#38bdf8;
+font-weight:bold;
+}
+
+/* FOOTER */
+
+footer{
+text-align:center;
+padding:40px;
+background:rgba(2,6,23,.8);
+margin-top:50px;
+}
+
+/* SETTINGS BUTTON */
+
+.settingsBtn{
+position:fixed;
+bottom:20px;
+right:20px;
+font-size:28px;
+background:rgba(15,23,42,.9);
+border:1px solid #1e40af;
+border-radius:12px;
+padding:12px 16px;
+cursor:pointer;
+box-shadow:0 0 10px #2563eb;
+z-index:1000;
+}
+
+.settingsBtn:hover{
+transform:scale(1.1);
+}
+
+/* SETTINGS PANEL */
+
+.settingsPanel{
+position:fixed;
+bottom:80px;
+right:20px;
+width:260px;
+background:rgba(2,6,23,.95);
+border:1px solid #1e40af;
+border-radius:12px;
+padding:20px;
+display:none;
+box-shadow:0 0 20px #2563eb;
+z-index:1000;
+}
+
+.settingsPanel h3{
+margin-bottom:15px;
+color:#60a5fa;
+}
+
+.settingsPanel input{
+width:100%;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="stars"></div>
+
+<header>
+Abyss Market
+</header>
+
+<nav>
+<a href="#snacks">Snacks</a>
+<a href="#games">Games</a>
+<a href="#terms">Terms</a>
+<a href="#qa">Q&A</a>
+</nav>
+
+<!-- MUSIC -->
+
+<audio id="bgMusic" loop>
+<source src="blood-red-commander-march.mp3" type="audio/mpeg">
+</audio>
+
+<section id="snacks">
+<h2>Snacks</h2>
+
+<details>
+<summary>Skittles</summary>
+<div class="card">Stock: 10</div>
+</details>
+
+<details>
+<summary>Chips</summary>
+<div class="card">Stock: 10</div>
+</details>
+
+<details>
+<summary>Chuppa Lollipop</summary>
+<div class="card">Stock: 10</div>
+</details>
+
+<details>
+<summary>Beng Beng</summary>
+<div class="card">Stock: 10</div>
+</details>
+
+</section>
+
+<section id="games">
+
+<h2>Games</h2>
+
+<!-- your existing games section stays unchanged -->
+
+</section>
+
+<section id="terms">
+<h2>Terms Of Use</h2>
+
+<div class="card">You may add the seller or receive an account with the purchased item.</div>
+<div class="card">Refunds only apply if the service fails.</div>
+<div class="card">Snack purchases are not refundable.</div>
+
+</section>
+
+<section id="qa">
+<h2>Q&A</h2>
+
+<div class="card"><b>How do we get refunds?</b><br>Refunds are given if the product fails to complete.</div>
+<div class="card"><b>Will there be more products?</b><br>Yes, more will be added later.</div>
+<div class="card"><b>What account do we add?</b><br>Tpbuno</div>
+<div class="card"><b>How do we receive account info?</b><br>Sent through Google Chat.</div>
+
+</section>
+
+<footer>
+Abyss Market © 2026
+</footer>
+
+<!-- SETTINGS -->
+
+<div class="settingsBtn" onclick="toggleSettings()">⚙️</div>
+
+<div class="settingsPanel" id="settingsPanel">
+
+<h3>Audio Settings</h3>
+
+<input type="range" min="0" max="100" value="50" id="volumeSlider">
+
+<p id="volumeValue">50%</p>
+
+</div>
+
+<script>
+
+const music = document.getElementById("bgMusic");
+
+document.addEventListener("click",function(){
+music.play();
+},{once:true});
+
+function toggleSettings(){
+const panel=document.getElementById("settingsPanel");
+panel.style.display=
+panel.style.display==="block"?"none":"block";
+}
+
+const slider=document.getElementById("volumeSlider");
+const volumeText=document.getElementById("volumeValue");
+
+slider.addEventListener("input",function(){
+
+let volume=slider.value/100;
+
+music.volume=volume;
+
+volumeText.innerText=slider.value+"%";
+
+});
+
+</script>
+
+</body>
+</html>

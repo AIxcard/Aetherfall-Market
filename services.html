@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Abyssal Market - Services</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#020617;
+color:white;
+overflow-x:hidden;
+}
+
+/* STAR BACKGROUND */
+
+.stars{
+position:fixed;
+width:100%;
+height:200%;
+top:-100%;
+left:0;
+
+background:
+radial-gradient(white 1px, transparent 1px),
+radial-gradient(#60a5fa 1px, transparent 1px);
+
+background-size:120px 120px,200px 200px;
+
+animation:starsMove 120s linear infinite;
+
+z-index:-2;
+}
+
+@keyframes starsMove{
+from{transform:translateY(0)}
+to{transform:translateY(2000px)}
+}
+
+/* HEADER */
+
+.header{
+text-align:center;
+font-size:48px;
+padding:40px;
+background:linear-gradient(90deg,#38bdf8,#6366f1,#9333ea);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+/* GAME GRID */
+
+.grid{
+max-width:1100px;
+margin:auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:30px;
+padding:40px;
+}
+
+.game{
+background:#0f172a;
+border:1px solid #1e3a8a;
+border-radius:14px;
+padding:30px;
+cursor:pointer;
+transition:.3s;
+text-align:center;
+}
+
+.game:hover{
+transform:scale(1.07);
+border-color:#38bdf8;
+box-shadow:0 0 20px #2563eb;
+}
+
+/* GAME PANEL */
+
+.panel{
+position:fixed;
+top:0;
+right:-100%;
+width:420px;
+height:100%;
+background:#020617;
+border-left:1px solid #2563eb;
+padding:30px;
+transition:.4s;
+overflow-y:auto;
+z-index:1000;
+}
+
+.panel.active{
+right:0;
+}
+
+/* ITEM */
+
+.item{
+background:#0f172a;
+border:1px solid #1e3a8a;
+border-radius:10px;
+padding:14px;
+margin-top:12px;
+cursor:pointer;
+transition:.25s;
+}
+
+.item:hover{
+transform:scale(1.05);
+border-color:#38bdf8;
+}
+
+/* ITEM DETAILS */
+
+.details{
+position:fixed;
+bottom:-100%;
+left:50%;
+transform:translateX(-50%);
+width:420px;
+background:#0f172a;
+border:1px solid #2563eb;
+border-radius:14px;
+padding:25px;
+transition:.4s;
+z-index:2000;
+}
+
+.details.active{
+bottom:40px;
+}
+
+.closeBtn{
+margin-top:15px;
+padding:8px 16px;
+background:#2563eb;
+border:none;
+border-radius:8px;
+cursor:pointer;
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="stars"></div>
+
+<div class="header">
+ABYSSAL MARKET SERVICES
+</div>
+
+<!-- STEP 1: GAME SELECT -->
+
+<div class="grid">
+
+<div class="game" onclick="openGame('spirits')">Anime Spirits</div>
+<div class="game" onclick="openGame('verse')">Verse Piece</div>
+<div class="game" onclick="openGame('case')">Case Paradise</div>
+<div class="game" onclick="openGame('vanguard')">Anime Vanguards</div>
+<div class="game" onclick="openGame('paradox')">Anime Paradox</div>
+<div class="game" onclick="openGame('forest')">99 Nights In The Forest</div>
+<div class="game" onclick="openGame('ftf')">Flee The Facility</div>
+<div class="game" onclick="openGame('rivals')">Rivals</div>
+
+</div>
+
+<!-- ITEM PANEL -->
+
+<div class="panel" id="panel">
+
+<h2 id="gameTitle"></h2>
+
+<div id="itemList"></div>
+
+<button class="closeBtn" onclick="closeGame()">Close</button>
+
+</div>
+
+<!-- ITEM DETAILS -->
+
+<div class="details" id="details">
+
+<h3 id="itemName"></h3>
+
+<p id="itemPrice"></p>
+
+<p id="itemStock"></p>
+
+<p id="itemDesc"></p>
+
+<button class="closeBtn" onclick="closeItem()">Close</button>
+
+</div>
+
+<script>
+
+/* SHOP DATABASE */
+
+const shop={
+
+spirits:{
+title:"Anime Spirits",
+items:[
+{name:"All Limited Items",price:"Varies",stock:"Limited",desc:"Any limited item available in Anime Spirits."},
+{name:"Full Carry Service",price:"100 Baht",stock:"Service",desc:"Best soul, sword, fighting style and spec carry."}
+]
+},
+
+verse:{
+title:"Verse Piece",
+items:[
+{name:"2X Drop Gamepass",price:"230 Baht",stock:"5",desc:"Permanent drop boost."},
+{name:"Unlimited Bag Gamepass",price:"100 Baht",stock:"4",desc:"Extra inventory space."},
+{name:"2X Drop Luck",price:"50 Baht",stock:"2",desc:"Improves rare drop chances."},
+{name:"Ainz Set",price:"10 Baht",stock:"80",desc:"Ainz character item set."},
+{name:"Homura Set",price:"8 Baht",stock:"5",desc:"Homura character item set."},
+{name:"Madoka Set",price:"8 Baht",stock:"2",desc:"Madoka character item set."}
+]
+},
+
+case:{
+title:"Case Paradise",
+items:[
+{name:"AWP Dragon Lore",price:"100 Baht",stock:"1",desc:"Factory New."},
+{name:"Emerald Web Gloves",price:"90 Baht",stock:"1",desc:"Factory New."},
+{name:"AWP Gungnir",price:"75 Baht",stock:"1",desc:"Field Tested."},
+{name:"Extra Skins",price:"15 Baht",stock:"Each",desc:"Additional skins available."}
+]
+},
+
+vanguard:{
+title:"Anime Vanguards",
+items:[
+{name:"Story Stage Carry",price:"5 Baht",stock:"Service",desc:"Complete one story stage."},
+{name:"Challenge Stage Carry",price:"10 Baht",stock:"Service",desc:"Complete one challenge stage."},
+{name:"Raid Stage Carry",price:"15 Baht",stock:"Service",desc:"Complete one raid stage."},
+{name:"WoU Unit",price:"25 Baht",stock:"10",desc:"Level 50 required to trade."},
+{name:"Dio Unit",price:"50 Baht",stock:"6",desc:"Level 50 required to trade."},
+{name:"Shiny Dio",price:"100 Baht",stock:"5",desc:"Rare shiny unit."}
+]
+},
+
+paradox:{
+title:"Anime Paradox",
+items:[
+{name:"Story Stage Carry",price:"5 Baht",stock:"Service",desc:"Complete story stage."},
+{name:"Challenge Stage Carry",price:"10 Baht",stock:"Service",desc:"Complete challenge stage."},
+{name:"Raid Stage Carry",price:"15 Baht",stock:"Service",desc:"Complete raid stage."},
+{name:"Sukuna Portal Carry",price:"120 Baht",stock:"5",desc:"Portal boss carry."},
+{name:"Gojo Portal Carry",price:"100 Baht",stock:"3",desc:"Portal boss carry."}
+]
+},
+
+forest:{
+title:"99 Nights In The Forest",
+items:[
+{name:"100 Days Carry",price:"32 Baht",stock:"Service",desc:"Carry to 100 days."},
+{name:"250 Days Carry",price:"60 Baht",stock:"Service",desc:"Carry to 250 days."},
+{name:"500 Days Carry",price:"100 Baht",stock:"Service",desc:"Carry to 500 days."},
+{name:"1000 Days Carry",price:"249 Baht",stock:"Service",desc:"Carry to 1000 days."}
+]
+},
+
+ftf:{
+title:"Flee The Facility",
+items:[
+{name:"Ancient Trident",price:"145 Baht",stock:"1",desc:"Rare hammer skin."},
+{name:"Ancient Portal",price:"135 Baht",stock:"1",desc:"Portal hammer."},
+{name:"Lunar Witch Broom",price:"130 Baht",stock:"1",desc:"Limited hammer."},
+{name:"Chromatic Phoenix",price:"130 Baht",stock:"1",desc:"Phoenix hammer."}
+]
+},
+
+rivals:{
+title:"Rivals",
+items:[
+{name:"Skin Case",price:"150 Baht",stock:"INF",desc:"Weapon skin case."},
+{name:"Starter Bundle",price:"30 Baht",stock:"INF",desc:"Starter weapons."},
+{name:"Medkit Bundle",price:"165 Baht",stock:"INF",desc:"Medical pack bundle."},
+{name:"Energy Bundle",price:"650 Baht",stock:"INF",desc:"Energy weapon set."}
+]
+}
+
+}
+
+/* OPEN GAME PANEL */
+
+function openGame(game){
+
+const panel=document.getElementById("panel")
+const title=document.getElementById("gameTitle")
+const list=document.getElementById("itemList")
+
+panel.classList.add("active")
+
+title.innerText=shop[game].title
+
+list.innerHTML=""
+
+shop[game].items.forEach(item=>{
+
+list.innerHTML+=`
+<div class="item" onclick="viewItem('${item.name}','${item.price}','${item.stock}','${item.desc}')">
+<b>${item.name}</b><br>
+Click to view
+</div>
+`
+
+})
+
+}
+
+/* CLOSE GAME */
+
+function closeGame(){
+document.getElementById("panel").classList.remove("active")
+}
+
+/* VIEW ITEM */
+
+function viewItem(name,price,stock,desc){
+
+const box=document.getElementById("details")
+
+document.getElementById("itemName").innerText=name
+document.getElementById("itemPrice").innerText="Price: "+price
+document.getElementById("itemStock").innerText="Stock: "+stock
+document.getElementById("itemDesc").innerText=desc
+
+box.classList.add("active")
+
+}
+
+function closeItem(){
+document.getElementById("details").classList.remove("active")
+}
+
+</script>
+
+</body>
+</html>

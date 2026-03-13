@@ -1,376 +1,19 @@
-<!DOCTYPE html>
-
-<html>
-
-<head>
-<title>Abyssal Market</title>
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
-body{
-background:#020617;
-color:white;
-overflow-x:hidden;
-}
-
-/* STARS */
-
-.stars{
-position:fixed;
-width:100%;
-height:200%;
-top:-100%;
-left:0;
-
-background:
-radial-gradient(white 1px, transparent 1px),
-radial-gradient(#60a5fa 1px, transparent 1px),
-radial-gradient(#3b82f6 2px, transparent 2px);
-
-background-size:120px 120px,200px 200px,300px 300px;
-animation:starsMove 120s linear infinite;
-z-index:-2;
-}
-
-@keyframes starsMove{
-from{transform:translateY(0)}
-to{transform:translateY(2000px)}
-}
-
-/* BACKGROUNDS */
-
-.nebula{
-background:
-radial-gradient(circle at 20% 30%,#9333ea 0%,transparent 50%),
-radial-gradient(circle at 80% 70%,#2563eb 0%,transparent 50%),
-radial-gradient(circle at 50% 50%,#ec4899 0%,transparent 60%),
-#020617;
-}
-
-.singularity{
-background:
-radial-gradient(circle at center,#7e22ce 0%,#000000 70%),
-radial-gradient(circle at center,rgba(168,85,247,.5) 0%,transparent 40%);
-}
-
-.abyss{
-background:
-radial-gradient(circle at 50% 120%,#0ea5e9 0%,transparent 60%),
-radial-gradient(circle at 20% 80%,#1e40af 0%,transparent 60%),
-radial-gradient(circle at 80% 90%,#0f172a 0%,transparent 70%),
-#020617;
-}
-
-.grid{
-background:
-linear-gradient(#0f172a 1px,transparent 1px),
-linear-gradient(90deg,#0f172a 1px,transparent 1px);
-background-size:50px 50px;
-background-color:#020617;
-}
-
-/* HERO */
-
-.hero{
-width:100%;
-height:180px;
-display:flex;
-align-items:center;
-justify-content:center;
-background:linear-gradient(270deg,#000000,#4c1d95,#000000,#7e22ce,#000000);
-background-size:600% 600%;
-animation:gradientFlow 15s ease infinite;
-}
-
-@keyframes gradientFlow{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
-
-.hero h1{
-font-size:64px;
-font-weight:bold;
-letter-spacing:6px;
-background:linear-gradient(90deg,#60a5fa,#38bdf8,#2563eb);
--webkit-background-clip:text;
-color:transparent;
-}
-
-/* NAV */
-
-nav{
-text-align:center;
-padding:20px;
-background:rgba(2,6,23,.65);
-}
-
-nav a{
-margin:20px;
-color:#38bdf8;
-text-decoration:none;
-font-size:18px;
-}
-
-/* SECTIONS */
-
-section{
-max-width:950px;
-margin:auto;
-padding:60px 20px;
-}
-
-h2{
-margin-bottom:25px;
-color:#60a5fa;
-border-bottom:2px solid #1e40af;
-padding-bottom:10px;
-}
-
-/* CARDS */
-
-.card{
-background:rgba(15,23,42,.85);
-border:1px solid #1e3a8a;
-border-radius:12px;
-padding:15px;
-margin:12px 0;
-transition:.25s;
-cursor:pointer;
-}
-
-.card:hover{
-transform:scale(1.03);
-border-color:#38bdf8;
-box-shadow:0 0 15px #2563eb;
-}
-
-/* DROPDOWN */
-
-details{
-background:rgba(15,23,42,.8);
-border:1px solid #1e3a8a;
-border-radius:12px;
-margin:15px 0;
-padding:18px;
-}
-
-summary{
-cursor:pointer;
-font-size:20px;
-color:#38bdf8;
-font-weight:bold;
-}
-
-/* SETTINGS */
-
-.settingsBtn{
-position:fixed;
-bottom:20px;
-right:20px;
-font-size:28px;
-background:#020617;
-border:1px solid #2563eb;
-border-radius:12px;
-padding:12px 18px;
-cursor:pointer;
-z-index:999;
-}
-
-.settingsPanel{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#020617;
-display:none;
-z-index:2000;
-padding:60px;
-}
-
-.settingsRow{
-display:flex;
-gap:30px;
-}
-
-.settingBox{
-flex:1;
-background:#0f172a;
-border:1px solid #2563eb;
-padding:25px;
-border-radius:12px;
-}
-
-.bgControls{
-display:flex;
-align-items:center;
-gap:10px;
-margin-top:10px;
-}
-
-.closeSettings{
-margin-top:40px;
-padding:12px 20px;
-background:#2563eb;
-border:none;
-border-radius:8px;
-cursor:pointer;
-color:white;
-}
-
-footer{
-text-align:center;
-padding:40px;
-background:rgba(2,6,23,.8);
-margin-top:50px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="stars"></div>
-
-<div class="hero">
-<h1>ABYSSAL MARKET</h1>
-</div>
-
-<nav>
-
-<a href="#snacks">Snacks</a> <a href="#games">Roblox Services</a> <a href="#terms">Terms</a> <a href="#qa">Q&A</a> <a href="reviews.html">Reviews</a>
-
-</nav>
-
-<audio id="music" loop>
-<source src="The Blood-Red Commanders March (Anime Vanguards OST).mp3" type="audio/mpeg">
-</audio>
-
-<section id="snacks">
-
-<h2>Snacks</h2>
-
-<div class="card">Skittles — 23 Baht | Stock 3</div>
-<div class="card">Chips — 16 Baht | Stock 10</div>
-<div class="card">Chuppa Lollipop — 8 Baht | Stock 10</div>
-<div class="card">Beng Beng — 9 Baht | Stock 10</div>
-
-</section>
-
-<section id="games">
-
-<h2>Roblox Services</h2>
-
-<details>
-<summary>Anime Spirits</summary>
-<div class="card">All Limited In Game — Price Varies</div>
-<div class="card">Best Soul Sword FS Spec Carry — 100 Baht</div>
-</details>
-
-<details>
-<summary>Verse Piece</summary>
-<div class="card">2X Drop GP — 230 Baht</div>
-<div class="card">Unlimited Bag GP — 100 Baht</div>
-<div class="card">2X Drop Luck GP — 50 Baht</div>
-</details>
-
-<details>
-<summary>Anime Vanguards</summary>
-<div class="card">Story Stage — 5 Baht</div>
-<div class="card">Raid Stage — 15 Baht</div>
-<div class="card">1 Hour Carry — 50 Baht</div>
-</details>
-
-<details>
-<summary>Anime Paradox</summary>
-<div class="card">Story Stage — 5 Baht</div>
-<div class="card">Raid Stage — 15 Baht</div>
-<div class="card">Gojo Portal Carry — 100 Baht</div>
-</details>
-
-</section>
-
-<section id="terms">
-<h2>Terms Of Use</h2>
-<div class="card">
-You can choose to add me or get an account with the item you'd like to purchase.
-</div>
-</section>
-
-<section id="qa">
-
-<h2>Q&A</h2>
-
-<div class="card">Refunds given if service fails. Snacks not refundable.</div>
-<div class="card">More products coming later.</div>
-<div class="card">Account to add: Tpbuno</div>
-
-</section>
-
-<footer>
-Abyssal Market © 2026
-</footer>
-
-<div class="settingsBtn" onclick="openSettings()">⚙</div>
-
-<div class="settingsPanel" id="settings">
-
-<h2>Settings</h2>
-
-<div class="settingsRow">
-
-<div class="settingBox">
-
-Music Volume
-
-<input type="range" min="0" max="100" value="50" id="vol">
-
-</div>
-
-<div class="settingBox">
-
-Background
-
-<div class="bgControls">
-
-<button onclick="prevBG()">◀</button>
-
-<div id="bgName">Stellar</div>
-
-<button onclick="nextBG()">▶</button>
-
-</div>
-
-</div>
-
-</div>
-
-<button class="closeSettings" onclick="closeSettings()">Close</button>
-
-</div>
-
 <script>
 
-document.addEventListener("DOMContentLoaded", () => {
+/* ---------- ELEMENTS ---------- */
 
 const music = document.getElementById("music")
 const volumeSlider = document.getElementById("vol")
 const stars = document.querySelector(".stars")
 const title = document.querySelector(".hero h1")
 const bgName = document.getElementById("bgName")
+const settingsPanel = document.getElementById("settings")
 
-const backgrounds=["stellar","nebula","singularity","abyss","grid"]
+/* ---------- BACKGROUND DATA ---------- */
 
-const names={
+const backgrounds = ["stellar","nebula","singularity","abyss","grid"]
+
+const backgroundNames = {
 stellar:"Stellar",
 nebula:"Nebula Storm",
 singularity:"Singularity",
@@ -378,7 +21,7 @@ abyss:"Abyssal Depths",
 grid:"Cyber Grid"
 }
 
-const titleThemes={
+const titleThemes = {
 stellar:"linear-gradient(90deg,#60a5fa,#38bdf8,#2563eb)",
 nebula:"linear-gradient(90deg,#ec4899,#9333ea,#6366f1)",
 singularity:"linear-gradient(90deg,#a855f7,#7e22ce,#000000)",
@@ -386,70 +29,90 @@ abyss:"linear-gradient(90deg,#0ea5e9,#1e40af,#020617)",
 grid:"linear-gradient(90deg,#22d3ee,#06b6d4,#0891b2)"
 }
 
-let currentBG=0
+let currentBG = 0
+
+/* ---------- APPLY BACKGROUND ---------- */
 
 function applyBG(){
 
-const bg=backgrounds[currentBG]
+let bg = backgrounds[currentBG]
 
 document.body.classList.remove("nebula","singularity","abyss","grid")
 
-if(bg==="stellar"){
-stars.style.display="block"
+if(bg === "stellar"){
+stars.style.display = "block"
 }else{
-stars.style.display="none"
+stars.style.display = "none"
 document.body.classList.add(bg)
 }
 
-bgName.textContent=names[bg]
+bgName.textContent = backgroundNames[bg]
 
-title.style.background=titleThemes[bg]
-title.style.webkitBackgroundClip="text"
-title.style.color="transparent"
+title.style.background = titleThemes[bg]
+title.style.webkitBackgroundClip = "text"
+title.style.color = "transparent"
 
-localStorage.setItem("abyss_bg",currentBG)
+localStorage.setItem("abyss_bg", currentBG)
 
 }
 
-window.nextBG=()=>{
+/* ---------- CHANGE BACKGROUND ---------- */
+
+function nextBG(){
+
 currentBG++
-if(currentBG>=backgrounds.length){currentBG=0}
-applyBG()
+
+if(currentBG >= backgrounds.length){
+currentBG = 0
 }
 
-window.prevBG=()=>{
+applyBG()
+
+}
+
+function prevBG(){
+
 currentBG--
-if(currentBG<0){currentBG=backgrounds.length-1}
+
+if(currentBG < 0){
+currentBG = backgrounds.length - 1
+}
+
 applyBG()
+
 }
 
-window.openSettings=()=>{
-document.getElementById("settings").style.display="block"
+/* ---------- SETTINGS ---------- */
+
+function openSettings(){
+settingsPanel.style.display = "block"
 }
 
-window.closeSettings=()=>{
-document.getElementById("settings").style.display="none"
+function closeSettings(){
+settingsPanel.style.display = "none"
 }
 
-volumeSlider.addEventListener("input",()=>{
-music.volume=volumeSlider.value/100
-})
+/* ---------- MUSIC ---------- */
 
-document.addEventListener("click",()=>{
-music.volume=volumeSlider.value/100
+document.addEventListener("click", function(){
+
+music.volume = volumeSlider.value / 100
 music.play()
-},{once:true})
 
-let saved=localStorage.getItem("abyss_bg")
-if(saved!==null){
-currentBG=parseInt(saved)
+},{ once:true })
+
+volumeSlider.addEventListener("input", function(){
+music.volume = this.value / 100
+})
+
+/* ---------- LOAD SAVED BACKGROUND ---------- */
+
+let saved = localStorage.getItem("abyss_bg")
+
+if(saved !== null){
+currentBG = parseInt(saved)
 }
 
 applyBG()
-
-})
 
 </script>
-
-</body>
-</html>

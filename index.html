@@ -15,8 +15,6 @@ color:white;
 overflow-x:hidden;
 }
 
-/* galaxy background */
-
 .stars{
 position:fixed;
 width:100%;
@@ -28,16 +26,14 @@ radial-gradient(white 1px, transparent 1px),
 radial-gradient(#60a5fa 1px, transparent 1px),
 radial-gradient(#3b82f6 2px, transparent 2px);
 background-size:120px 120px,200px 200px,300px 300px;
-animation:scrollStars 120s linear infinite;
+animation:starScroll 120s linear infinite;
 z-index:-1;
 }
 
-@keyframes scrollStars{
+@keyframes starScroll{
 from{transform:translateY(0)}
 to{transform:translateY(2000px)}
 }
-
-/* header */
 
 header{
 text-align:center;
@@ -46,8 +42,6 @@ padding:50px;
 background:rgba(2,6,23,.7);
 text-shadow:0 0 15px #3b82f6;
 }
-
-/* nav */
 
 nav{
 text-align:center;
@@ -62,8 +56,6 @@ text-decoration:none;
 font-size:18px;
 }
 
-/* section */
-
 section{
 max-width:950px;
 margin:auto;
@@ -76,8 +68,6 @@ color:#60a5fa;
 border-bottom:2px solid #1e40af;
 padding-bottom:10px;
 }
-
-/* cards */
 
 .card{
 background:rgba(15,23,42,.8);
@@ -95,8 +85,6 @@ border-color:#38bdf8;
 box-shadow:0 0 15px #2563eb;
 }
 
-/* dropdown */
-
 details{
 background:rgba(15,23,42,.8);
 border:1px solid #1e3a8a;
@@ -112,8 +100,6 @@ color:#38bdf8;
 font-weight:bold;
 }
 
-/* popup */
-
 .popup{
 position:fixed;
 top:50%;
@@ -124,7 +110,7 @@ border:1px solid #2563eb;
 padding:30px;
 border-radius:12px;
 display:none;
-width:320px;
+width:340px;
 text-align:center;
 box-shadow:0 0 20px #2563eb;
 }
@@ -138,8 +124,6 @@ color:white;
 border-radius:8px;
 cursor:pointer;
 }
-
-/* settings */
 
 .settingsBtn{
 position:fixed;
@@ -188,7 +172,7 @@ margin-top:50px;
 
 <nav>
 <a href="#snacks">Snacks</a>
-<a href="#games">Games</a>
+<a href="#games">Roblox Services</a>
 <a href="#terms">Terms</a>
 <a href="#qa">Q&A</a>
 </nav>
@@ -201,10 +185,10 @@ margin-top:50px;
 
 <h2>Snacks</h2>
 
-<div class="card" onclick="showItem('Skittles','Stock: 10')">Skittles</div>
-<div class="card" onclick="showItem('Chips','Stock: 10')">Chips</div>
-<div class="card" onclick="showItem('Chuppa Lollipop','Stock: 10')">Chuppa Lollipop</div>
-<div class="card" onclick="showItem('Beng Beng','Stock: 10')">Beng Beng</div>
+<div class="card" onclick="showItem('Skittles','23 Baht | Stock 3')">Skittles</div>
+<div class="card" onclick="showItem('Chips','16 Baht | Stock 10')">Chips</div>
+<div class="card" onclick="showItem('Chuppa Lollipop','8 Baht | Stock 10')">Chuppa Lollipop</div>
+<div class="card" onclick="showItem('Beng Beng','9 Baht | Stock Monday')">Beng Beng</div>
 
 </section>
 
@@ -214,7 +198,8 @@ margin-top:50px;
 
 <details>
 <summary>Anime Spirits</summary>
-<div class="card" onclick="showItem('Best Soul / Sword / FS / Spec Carry','Price: 100 Baht')">Best Soul / Sword / FS Carry</div>
+<div class="card" onclick="showItem('All Limited Items','Price varies')">All Limited In Game</div>
+<div class="card" onclick="showItem('Best Soul / Sword / FS / Spec Carry','100 Baht')">Best Carry</div>
 </details>
 
 <details>
@@ -228,13 +213,55 @@ margin-top:50px;
 </details>
 
 <details>
+<summary>Case Paradise</summary>
+<div class="card" onclick="showItem('Dragon Lore Factory New','100 Baht | Stock 1')">Dragon Lore</div>
+<div class="card" onclick="showItem('Emerald Web Gloves','90 Baht | Stock 1')">Emerald Web Gloves</div>
+<div class="card" onclick="showItem('AWP Gungnir','75 Baht | Stock 1')">AWP Gungnir</div>
+<div class="card" onclick="showItem('Extra Skins','15 Baht each')">Extra Skins</div>
+</details>
+
+<details>
 <summary>Anime Vanguards</summary>
-<div class="card" onclick="showItem('Story Stage Carry','5 Baht')">Story Stage</div>
-<div class="card" onclick="showItem('Challenge Stage Carry','10 Baht')">Challenge Stage</div>
-<div class="card" onclick="showItem('Raid Stage Carry','15 Baht')">Raid Stage</div>
+<div class="card" onclick="showItem('Story Stage','5 Baht')">Story Stage</div>
+<div class="card" onclick="showItem('Challenge Stage','10 Baht')">Challenge Stage</div>
+<div class="card" onclick="showItem('Raid Stage','15 Baht')">Raid Stage</div>
+<div class="card" onclick="showItem('30 Minute Carry','30 Baht')">30 Minute Carry</div>
+<div class="card" onclick="showItem('1 Hour Carry','50 Baht')">1 Hour Carry</div>
+<div class="card" onclick="showItem('5 Hour Carry','200 Baht')">5 Hour Carry</div>
+<div class="card" onclick="showItem('10 Hour Carry','350 Baht')">10 Hour Carry</div>
+<div class="card" onclick="showItem('24 Hour Carry','600 Baht')">24 Hour Carry</div>
 <div class="card" onclick="showItem('WoU Unit','25 Baht | Stock 10')">WoU</div>
 <div class="card" onclick="showItem('Dio Unit','50 Baht | Stock 6')">Dio</div>
 <div class="card" onclick="showItem('Shiny Dio','100 Baht | Stock 5')">Shiny Dio</div>
+</details>
+
+<details>
+<summary>Anime Paradox</summary>
+<div class="card" onclick="showItem('Story Stage','5 Baht')">Story Stage</div>
+<div class="card" onclick="showItem('Challenge Stage','10 Baht')">Challenge Stage</div>
+<div class="card" onclick="showItem('Raid Stage','15 Baht')">Raid Stage</div>
+<div class="card" onclick="showItem('30 Minute Carry','30 Baht')">30 Minute Carry</div>
+<div class="card" onclick="showItem('1 Hour Carry','50 Baht')">1 Hour Carry</div>
+<div class="card" onclick="showItem('5 Hour Carry','200 Baht')">5 Hour Carry</div>
+<div class="card" onclick="showItem('10 Hour Carry','350 Baht')">10 Hour Carry</div>
+<div class="card" onclick="showItem('24 Hour Carry','600 Baht')">24 Hour Carry</div>
+<div class="card" onclick="showItem('Sukuna Portal','120 Baht | Stock 5')">Sukuna Portal Carry</div>
+<div class="card" onclick="showItem('Gojo Portal','100 Baht | Stock 3')">Gojo Portal Carry</div>
+</details>
+
+<details>
+<summary>99 Nights In The Forest</summary>
+<div class="card" onclick="showItem('100 Days Carry','32 Baht')">100 Days</div>
+<div class="card" onclick="showItem('250 Days Carry','60 Baht')">250 Days</div>
+<div class="card" onclick="showItem('500 Days Carry','100 Baht')">500 Days</div>
+<div class="card" onclick="showItem('1K Days Carry','249 Baht')">1K Days</div>
+</details>
+
+<details>
+<summary>Re:Rangers X</summary>
+<div class="card" onclick="showItem('3x Speed GP','400 Baht | Stock 1')">3x Speed GP</div>
+<div class="card" onclick="showItem('Fast Summons','Price TBD')">Fast Summons</div>
+<div class="card" onclick="showItem('Auto Trait','Price TBD')">Auto Trait</div>
 </details>
 
 <details>
@@ -247,9 +274,16 @@ margin-top:50px;
 
 <details>
 <summary>Rivals</summary>
+<div class="card" onclick="showItem('Skin Case 1','150 Baht | INF Stock')">Skin Case 1</div>
+<div class="card" onclick="showItem('Skin Case 2','150 Baht | INF Stock')">Skin Case 2</div>
+<div class="card" onclick="showItem('Skin Case 3','150 Baht | INF Stock')">Skin Case 3</div>
 <div class="card" onclick="showItem('Starter Bundle','30 Baht | INF Stock')">Starter Bundle</div>
 <div class="card" onclick="showItem('Medkit Bundle','165 Baht | INF Stock')">Medkit Bundle</div>
 <div class="card" onclick="showItem('Pixel Bundle','450 Baht | INF Stock')">Pixel Bundle</div>
+<div class="card" onclick="showItem('Standard Weapons Bundle','500 Baht | INF Stock')">Standard Weapons</div>
+<div class="card" onclick="showItem('Classic Bundle','550 Baht | INF Stock')">Classic Bundle</div>
+<div class="card" onclick="showItem('Energy Bundle','650 Baht | INF Stock')">Energy Bundle</div>
+<div class="card" onclick="showItem('Heavy Duty Bundle','1000 Baht | INF Stock')">Heavy Duty Bundle</div>
 </details>
 
 </section>
@@ -270,12 +304,12 @@ You can choose to add the seller or receive an account with the item you purchas
 
 <div class="card">
 <b>How do we get refunds?</b><br>
-Refunds are given when the product fails to complete. Snacks are not refundable.
+Refunds are given if the product fails to complete. Snacks are not refundable.
 </div>
 
 <div class="card">
-<b>Will there be more products?</b><br>
-Yes. More will be added later.
+<b>Will there be more stuff?</b><br>
+Yes, more will be added later.
 </div>
 
 <div class="card">
@@ -284,8 +318,8 @@ Tpbuno
 </div>
 
 <div class="card">
-<b>How do we get account info?</b><br>
-Sent through Google Chat by the owner or an employee.
+<b>How do we receive account info?</b><br>
+Sent via Google Chat.
 </div>
 
 </section>
@@ -314,10 +348,8 @@ music.volume=0.5
 music.play()
 },{once:true})
 
-const slider=document.getElementById("vol")
-
-slider.addEventListener("input",function(){
-music.volume=slider.value/100
+document.getElementById("vol").addEventListener("input",function(){
+music.volume=this.value/100
 })
 
 function toggleSettings(){

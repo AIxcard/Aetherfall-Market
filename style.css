@@ -1,0 +1,101 @@
+body{
+margin:0;
+font-family:Arial;
+background:#020617;
+color:white;
+overflow:hidden;
+}
+
+/* STAR BACKGROUND */
+
+.stars{
+position:fixed;
+width:100%;
+height:200%;
+background:
+radial-gradient(white 1px, transparent 1px),
+radial-gradient(#38bdf8 1px, transparent 1px);
+background-size:120px 120px,200px 200px;
+animation:starsMove 120s linear infinite;
+z-index:-1;
+}
+
+@keyframes starsMove{
+from{transform:translateY(0)}
+to{transform:translateY(2000px)}
+}
+
+/* CENTER PAGE */
+
+.center{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+/* MAIN TITLE */
+
+.logo{
+font-size:70px;
+letter-spacing:4px;
+
+background:linear-gradient(
+90deg,
+#38bdf8,
+#6366f1,
+#9333ea,
+#38bdf8
+);
+
+background-size:300%;
+
+-webkit-background-clip:text;
+color:transparent;
+
+animation:gradientMove 8s linear infinite;
+}
+
+@keyframes gradientMove{
+0%{background-position:0%}
+100%{background-position:300%}
+}
+
+.subtitle{
+opacity:0.8;
+margin-top:10px;
+}
+
+/* ENTER BUTTON */
+
+.enterBtn{
+
+margin-top:40px;
+
+padding:14px 40px;
+
+border-radius:10px;
+
+background:#1e293b;
+
+border:1px solid #38bdf8;
+
+text-decoration:none;
+
+color:white;
+
+font-size:18px;
+
+transition:0.3s;
+
+}
+
+.enterBtn:hover{
+
+transform:scale(1.1);
+
+box-shadow:0 0 20px #38bdf8;
+
+}

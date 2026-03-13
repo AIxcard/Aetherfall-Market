@@ -1,166 +1,8 @@
-<!DOCTYPE html>
-
-<html>
-
-<head>
-<title>Abyssal Market Reviews</title>
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
-body{
-background:#020617;
-color:white;
-overflow-x:hidden;
-}
-
-/* galaxy background */
-
-.stars{
-position:fixed;
-width:100%;
-height:200%;
-top:-100%;
-left:0;
-
-background:
-radial-gradient(white 1px, transparent 1px),
-radial-gradient(#60a5fa 1px, transparent 1px),
-radial-gradient(#3b82f6 2px, transparent 2px);
-
-background-size:120px 120px,200px 200px,300px 300px;
-
-animation:starsMove 120s linear infinite;
-
-z-index:-2;
-}
-
-@keyframes starsMove{
-from{transform:translateY(0)}
-to{transform:translateY(2000px)}
-}
-
-/* title */
-
-.header{
-text-align:center;
-padding:40px;
-font-size:42px;
-font-weight:bold;
-color:#60a5fa;
-
-text-shadow:
-0 0 10px #2563eb,
-0 0 20px #2563eb,
-0 0 40px #1e40af;
-}
-
-/* review box */
-
-.container{
-max-width:900px;
-margin:auto;
-padding:20px;
-}
-
-.reviewBox{
-background:#0f172a;
-border:1px solid #2563eb;
-border-radius:12px;
-padding:20px;
-margin-bottom:20px;
-}
-
-.reviewName{
-font-weight:bold;
-color:#38bdf8;
-margin-bottom:8px;
-}
-
-.reviewStars{
-color:#facc15;
-margin-bottom:10px;
-}
-
-.reviewText{
-color:#cbd5f5;
-}
-
-/* form */
-
-.formBox{
-background:#0f172a;
-border:1px solid #2563eb;
-border-radius:12px;
-padding:20px;
-margin-bottom:30px;
-}
-
-input, textarea, select{
-width:100%;
-margin-top:10px;
-margin-bottom:15px;
-padding:10px;
-border-radius:6px;
-border:none;
-}
-
-button{
-padding:10px 20px;
-background:#2563eb;
-border:none;
-border-radius:8px;
-color:white;
-cursor:pointer;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="stars"></div>
-
-<div class="header">
-ABYSSAL MARKET REVIEWS
-</div>
-
-<div class="container">
-
-<div class="formBox">
-
-<h2>Leave a Review</h2>
-
-<input id="name" placeholder="Your name">
-
-<select id="stars">
-<option value="★★★★★">★★★★★</option>
-<option value="★★★★">★★★★</option>
-<option value="★★★">★★★</option>
-<option value="★★">★★</option>
-<option value="★">★</option>
-</select>
-
-<textarea id="review" placeholder="Write your review"></textarea>
-
-<button onclick="postReview()">Post Review</button>
-
-</div>
-
-<div id="reviews"></div>
-
-</div>
-
 <script>
 
 let reviews = JSON.parse(localStorage.getItem("abyssReviews")) || []
+
+let adminMode = localStorage.getItem("abyssAdmin") === "true"
 
 function displayReviews(){
 
@@ -168,9 +10,9 @@ let container=document.getElementById("reviews")
 
 container.innerHTML=""
 
-reviews.reverse().forEach(r=>{
+reviews.slice().reverse().forEach((r,index)=>{
 
-container.innerHTML+=`
+container.innerHTML += `
 
 <div class="reviewBox">
 
@@ -179,6 +21,10 @@ container.innerHTML+=`
 <div class="reviewStars">${r.stars}</div>
 
 <div class="reviewText">${r.text}</div>
+
+${adminMode ? `<button onclick="deleteReview(${reviews.length-1-index})">Delete</button>` : ""}
+
+${adminMode ? `<button onclick="editReview(${reviews.length-1-index})">Edit</button>` : ""}
 
 </div>
 
@@ -199,6 +45,14 @@ alert("Fill everything")
 return
 }
 
+if(text.includes("#ABYSSADMIN")){
+
+adminMode=true
+localStorage.setItem("abyssAdmin","true")
+alert("Admin mode activated")
+
+}
+
 reviews.push({name,stars,text})
 
 localStorage.setItem("abyssReviews",JSON.stringify(reviews))
@@ -210,10 +64,32 @@ displayReviews()
 
 }
 
+function deleteReview(i){
+
+reviews.splice(i,1)
+
+localStorage.setItem("abyssReviews",JSON.stringify(reviews))
+
+displayReviews()
+
+}
+
+function editReview(i){
+
+let newText = prompt("Edit review:", reviews[i].text)
+
+if(newText){
+
+reviews[i].text = newText
+
+localStorage.setItem("abyssReviews",JSON.stringify(reviews))
+
+displayReviews()
+
+}
+
+}
+
 displayReviews()
 
 </script>
-
-</body>
-
-</html>

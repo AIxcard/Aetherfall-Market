@@ -20,7 +20,7 @@ color:white;
 overflow-x:hidden;
 }
 
-/* galaxy */
+/* GALAXY BACKGROUND */
 
 .stars{
 position:fixed;
@@ -46,37 +46,48 @@ from{transform:translateY(0)}
 to{transform:translateY(2000px)}
 }
 
-/* hero */
+/* HERO VIDEO */
 
 .hero{
-text-align:center;
-padding:60px 20px;
+position:relative;
+width:100%;
+height:420px;
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
-.hero img{
-width:260px;
-border-radius:12px;
-box-shadow:0 0 40px #2563eb;
-margin-bottom:20px;
+.hero video{
+position:absolute;
+width:100%;
+height:100%;
+object-fit:cover;
+filter:brightness(.6);
 }
 
 .hero h1{
-font-size:60px;
+position:relative;
+font-size:64px;
 font-weight:bold;
-letter-spacing:4px;
+letter-spacing:6px;
 color:#60a5fa;
+
 text-shadow:
 0 0 10px #2563eb,
 0 0 20px #2563eb,
-0 0 40px #1e40af;
+0 0 40px #1e40af,
+0 0 80px #1e40af;
+
+z-index:2;
 }
 
-/* nav */
+/* NAVBAR */
 
 nav{
 text-align:center;
 padding:20px;
-background:rgba(2,6,23,.6);
+background:rgba(2,6,23,.65);
 }
 
 nav a{
@@ -86,7 +97,7 @@ text-decoration:none;
 font-size:18px;
 }
 
-/* sections */
+/* SECTIONS */
 
 section{
 max-width:950px;
@@ -101,7 +112,7 @@ border-bottom:2px solid #1e40af;
 padding-bottom:10px;
 }
 
-/* cards */
+/* CARDS */
 
 .card{
 background:rgba(15,23,42,.85);
@@ -109,8 +120,8 @@ border:1px solid #1e3a8a;
 border-radius:12px;
 padding:15px;
 margin:12px 0;
-cursor:pointer;
 transition:.25s;
+cursor:pointer;
 }
 
 .card:hover{
@@ -119,7 +130,7 @@ border-color:#38bdf8;
 box-shadow:0 0 15px #2563eb;
 }
 
-/* dropdown */
+/* DROPDOWN */
 
 details{
 background:rgba(15,23,42,.8);
@@ -136,35 +147,7 @@ color:#38bdf8;
 font-weight:bold;
 }
 
-/* popup */
-
-.popup{
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-background:#020617;
-border:1px solid #2563eb;
-padding:30px;
-border-radius:12px;
-display:none;
-width:340px;
-text-align:center;
-box-shadow:0 0 20px #2563eb;
-z-index:1000;
-}
-
-.popup button{
-margin-top:15px;
-padding:10px 20px;
-background:#2563eb;
-border:none;
-border-radius:8px;
-color:white;
-cursor:pointer;
-}
-
-/* settings button */
+/* SETTINGS BUTTON */
 
 .settingsBtn{
 position:fixed;
@@ -179,7 +162,7 @@ cursor:pointer;
 z-index:999;
 }
 
-/* settings panel */
+/* SETTINGS PANEL */
 
 .settingsPanel{
 position:fixed;
@@ -221,7 +204,7 @@ cursor:pointer;
 color:white;
 }
 
-/* footer */
+/* FOOTER */
 
 footer{
 text-align:center;
@@ -240,7 +223,9 @@ margin-top:50px;
 
 <div class="hero">
 
-<img src="https://sololeveling-anime.net/assets/img/top/visual2.jpg">
+<video autoplay muted loop>
+<source src="sjw-animation.mp4" type="video/mp4">
+</video>
 
 <h1>ABYSSAL MARKET</h1>
 
@@ -260,10 +245,10 @@ margin-top:50px;
 
 <h2>Snacks</h2>
 
-<div class="card" onclick="showItem('Skittles','23 Baht | Stock 3')">Skittles</div>
-<div class="card" onclick="showItem('Chips','16 Baht | Stock 10')">Chips</div>
-<div class="card" onclick="showItem('Chuppa Lollipop','8 Baht | Stock 10')">Chuppa Lollipop</div>
-<div class="card" onclick="showItem('Beng Beng','9 Baht | Stock 10')">Beng Beng</div>
+<div class="card">Skittles — 23 Baht | Stock 3</div>
+<div class="card">Chips — 16 Baht | Stock 10</div>
+<div class="card">Chuppa Lollipop — 8 Baht | Stock 10</div>
+<div class="card">Beng Beng — 9 Baht | Stock 10</div>
 
 </section>
 
@@ -352,26 +337,12 @@ margin-top:50px;
 <div class="card">Sunrise — 40 Baht | Stock 1</div>
 </details>
 
-<details>
-<summary>Rivals</summary>
-<div class="card">Skin Case 1 — 150 Baht | INF</div>
-<div class="card">Skin Case 2 — 150 Baht | INF</div>
-<div class="card">Skin Case 3 — 150 Baht | INF</div>
-<div class="card">Starter Bundle — 30 Baht</div>
-<div class="card">Medkit Bundle — 165 Baht</div>
-<div class="card">Pixel Bundle — 450 Baht</div>
-<div class="card">Standard Weapons Bundle — 500 Baht</div>
-<div class="card">Classic Bundle — 550 Baht</div>
-<div class="card">Energy Bundle — 650 Baht</div>
-<div class="card">Heavy Duty Bundle — 1000 Baht</div>
-</details>
-
 </section>
 
 <section id="terms">
 <h2>Terms Of Use</h2>
 <div class="card">
-You can choose to add me or get an account with the item you’d like to purchase.
+You can choose to add me or get an account with the item you'd like to purchase.
 </div>
 </section>
 
@@ -380,12 +351,12 @@ You can choose to add me or get an account with the item you’d like to purchas
 
 <div class="card">
 How do we get refunds?<br>
-Refunds given if the service fails. Snacks not refundable.
+Refunds given if service fails. Snacks not refundable.
 </div>
 
 <div class="card">
-Will there be more products?<br>
-Yes, more will be added later.
+Will there be more stuff?<br>
+Yes, more products later.
 </div>
 
 <div class="card">
@@ -394,8 +365,8 @@ Tpbuno
 </div>
 
 <div class="card">
-How do we get the account?<br>
-Owner or employee sends it through Google Chat.
+How do we receive the account?<br>
+Sent through Google Chat.
 </div>
 
 </section>

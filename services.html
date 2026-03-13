@@ -4,147 +4,172 @@
 
 <head>
 
-<title>Abyssal Market - Services</title>
+<title>Aetherfall Market Services</title>
+
+<link rel="stylesheet" href="style.css">
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
-body{
-background:#020617;
-color:white;
-overflow-x:hidden;
-}
-
-/* animated stars */
-
-.stars{
-position:fixed;
-width:100%;
-height:200%;
-top:-100%;
-background:
-radial-gradient(white 1px, transparent 1px),
-radial-gradient(#38bdf8 1px, transparent 1px);
-background-size:140px 140px,200px 200px;
-animation:starsMove 120s linear infinite;
-z-index:-1;
-}
-
-@keyframes starsMove{
-from{transform:translateY(0)}
-to{transform:translateY(2000px)}
-}
-
-/* header */
-
 .header{
+
 text-align:center;
-font-size:48px;
-padding:40px;
+
+font-size:60px;
+
+margin-top:40px;
+
 background:linear-gradient(90deg,#38bdf8,#6366f1,#9333ea);
+
 -webkit-background-clip:text;
+
 color:transparent;
+
 }
 
 /* category grid */
 
-.grid{
-max-width:1100px;
+.categoryGrid{
+
+max-width:1000px;
+
 margin:auto;
+
 display:grid;
+
 grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:30px;
-padding:40px;
+
+gap:40px;
+
+padding:60px;
+
 }
 
-.card{
+.category{
+
 background:#0f172a;
-border:1px solid #1e3a8a;
-border-radius:14px;
-padding:30px;
-cursor:pointer;
+
+border-radius:18px;
+
+padding:40px;
+
 text-align:center;
+
+border:1px solid #1e3a8a;
+
+cursor:pointer;
+
 transition:.3s;
-font-size:22px;
+
 }
 
-.card:hover{
-transform:scale(1.08);
+.category:hover{
+
+transform:scale(1.1);
+
+box-shadow:0 0 30px #2563eb;
+
 border-color:#38bdf8;
-box-shadow:0 0 20px #2563eb;
+
 }
 
-/* side panel */
+/* game list */
 
-.panel{
-position:fixed;
-top:0;
-right:-100%;
-width:420px;
-height:100%;
-background:#020617;
-border-left:1px solid #2563eb;
-padding:30px;
-overflow-y:auto;
-transition:.4s;
-z-index:1000;
+.gameList{
+
+max-width:900px;
+
+margin:auto;
+
+padding:40px;
+
+display:none;
+
 }
 
-.panel.active{
-right:0;
+.game{
+
+background:#0f172a;
+
+border-radius:12px;
+
+padding:20px;
+
+margin-top:15px;
+
+border:1px solid #1e3a8a;
+
+cursor:pointer;
+
+transition:.25s;
+
 }
 
-/* items */
+.game:hover{
+
+border-color:#38bdf8;
+
+transform:scale(1.05);
+
+}
+
+/* item list */
+
+.itemList{
+
+max-width:900px;
+
+margin:auto;
+
+padding:40px;
+
+display:none;
+
+}
 
 .item{
+
 background:#0f172a;
+
+border-radius:12px;
+
+padding:15px;
+
+margin-top:10px;
+
 border:1px solid #1e3a8a;
-border-radius:10px;
-padding:14px;
-margin-top:12px;
+
 cursor:pointer;
+
 transition:.25s;
+
 }
 
 .item:hover{
-transform:scale(1.05);
+
 border-color:#38bdf8;
+
+transform:scale(1.05);
+
 }
 
-/* details popup */
+/* detail box */
 
-.details{
-position:fixed;
-bottom:-100%;
-left:50%;
-transform:translateX(-50%);
-width:420px;
+.detailBox{
+
+max-width:500px;
+
+margin:40px auto;
+
 background:#0f172a;
-border:1px solid #2563eb;
-border-radius:14px;
-padding:25px;
-transition:.4s;
-z-index:2000;
-}
 
-.details.active{
-bottom:40px;
-}
+padding:30px;
 
-.closeBtn{
-margin-top:15px;
-padding:8px 16px;
-background:#2563eb;
-border:none;
-border-radius:8px;
-cursor:pointer;
-color:white;
+border-radius:16px;
+
+border:1px solid #38bdf8;
+
+display:none;
+
 }
 
 </style>
@@ -155,136 +180,68 @@ color:white;
 
 <div class="stars"></div>
 
-<div class="header">
-ABYSSAL MARKET SERVICES
-</div>
+<h1 class="header">AETHERFALL MARKET</h1>
 
-<!-- STEP 1: CATEGORY -->
+<!-- STEP 1 CATEGORY -->
 
-<div class="grid">
+<div class="categoryGrid">
 
-<div class="card" onclick="openCategory('snacks')">
-Snacks
-</div>
-
-<div class="card" onclick="openCategory('roblox')">
+<div class="category" onclick="openRoblox()">
 Roblox Services
 </div>
 
+<div class="category" onclick="openSnacks()">
+Snacks
 </div>
 
-<!-- PANEL -->
+</div>
 
-<div class="panel" id="panel">
+<!-- STEP 2 GAMES -->
 
-<h2 id="panelTitle"></h2>
+<div id="gameList" class="gameList">
 
-<div id="panelList"></div>
+<h2>Roblox Games</h2>
 
-<button class="closeBtn" onclick="closePanel()">Close</button>
+<div class="game" onclick="openItems('spirits')">Anime Spirits</div>
+
+<div class="game" onclick="openItems('verse')">Verse Piece</div>
+
+<div class="game" onclick="openItems('case')">Case Paradise</div>
+
+<div class="game" onclick="openItems('vanguard')">Anime Vanguards</div>
+
+<div class="game" onclick="openItems('paradox')">Anime Paradox</div>
+
+<div class="game" onclick="openItems('forest')">99 Nights In The Forest</div>
+
+<div class="game" onclick="openItems('ftf')">Flee The Facility</div>
+
+<div class="game" onclick="openItems('rivals')">Rivals</div>
 
 </div>
+
+<!-- STEP 3 ITEMS -->
+
+<div id="itemList" class="itemList"></div>
 
 <!-- ITEM DETAILS -->
 
-<div class="details" id="details">
-
-<h3 id="itemName"></h3>
-<p id="itemPrice"></p>
-<p id="itemStock"></p>
-<p id="itemDesc"></p>
-
-<button class="closeBtn" onclick="closeItem()">Close</button>
-
-</div>
+<div id="detailBox" class="detailBox"></div>
 
 <script>
 
-/* DATABASE */
+/* OPEN ROBLOX */
 
-const shop={
+function openRoblox(){
 
-snacks:{
-title:"Snacks",
-items:[
+document.getElementById("gameList").style.display="block"
 
-{name:"Skittles",price:"23 Baht",stock:"3",desc:"Currently unavailable"},
-{name:"Chips",price:"16 Baht",stock:"10",desc:"Currently unavailable"},
-{name:"Chuppa Lollipop",price:"8 Baht",stock:"10",desc:"Currently unavailable"},
-{name:"Beng Beng",price:"9 Baht",stock:"10",desc:"Available Monday"}
-
-]
-},
-
-roblox:{
-title:"Roblox Games",
-items:[
-
-{name:"Anime Spirits",price:"Open",stock:"Services Available",desc:"Click to view Anime Spirits services"},
-{name:"Verse Piece",price:"Open",stock:"Services Available",desc:"Click to view Verse Piece products"},
-{name:"Case Paradise",price:"Open",stock:"Services Available",desc:"Click to view Case Paradise items"},
-{name:"Anime Vanguards",price:"Open",stock:"Services Available",desc:"Click to view Anime Vanguards services"},
-{name:"Anime Paradox",price:"Open",stock:"Services Available",desc:"Click to view Anime Paradox services"},
-{name:"99 Nights In The Forest",price:"Open",stock:"Services Available",desc:"Click to view carry services"},
-{name:"Flee The Facility",price:"Open",stock:"Items Available",desc:"Click to view hammer and gemstone skins"},
-{name:"Rivals",price:"Open",stock:"Bundles Available",desc:"Click to view weapon bundles"}
-
-]
-}
+document.getElementById("itemList").style.display="none"
 
 }
 
-/* OPEN CATEGORY */
+/* OPEN SNACKS */
 
-function openCategory(cat){
+function openSnacks(){
 
-const panel=document.getElementById("panel")
-const title=document.getElementById("panelTitle")
-const list=document.getElementById("panelList")
-
-panel.classList.add("active")
-
-title.innerText=shop[cat].title
-
-list.innerHTML=""
-
-shop[cat].items.forEach(item=>{
-
-list.innerHTML+=`
-<div class="item" onclick="viewItem('${item.name}','${item.price}','${item.stock}','${item.desc}')">
-<b>${item.name}</b><br>
-Click to view details
-</div>
-`
-
-})
-
-}
-
-/* CLOSE PANEL */
-
-function closePanel(){
-document.getElementById("panel").classList.remove("active")
-}
-
-/* VIEW ITEM */
-
-function viewItem(name,price,stock,desc){
-
-document.getElementById("itemName").innerText=name
-document.getElementById("itemPrice").innerText="Price: "+price
-document.getElementById("itemStock").innerText="Stock: "+stock
-document.getElementById("itemDesc").innerText=desc
-
-document.getElementById("details").classList.add("active")
-
-}
-
-function closeItem(){
-document.getElementById("details").classList.remove("active")
-}
-
-</script>
-
-</body>
-</html>
+const list=document.

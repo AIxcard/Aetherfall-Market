@@ -1,14 +1,10 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <title>Aetherfall Market</title>
 
 <style>
-
-/* PAGE BACKGROUND */
 
 body{
 margin:0;
@@ -17,106 +13,62 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-font-family:Arial, Helvetica, sans-serif;
+font-family:Arial, sans-serif;
 text-align:center;
 color:white;
 
-background:linear-gradient(
--45deg,
-#6d28d9,
-#9333ea,
-#ffffff,
-#7c3aed
-);
-
+background:linear-gradient(-45deg,#6d28d9,#9333ea,#ffffff,#7c3aed);
 background-size:400% 400%;
-animation:gradientMove 12s ease infinite;
+animation:bgMove 12s ease infinite;
 }
 
-@keyframes gradientMove{
+@keyframes bgMove{
 0%{background-position:0% 50%;}
 50%{background-position:100% 50%;}
 100%{background-position:0% 50%;}
 }
 
-/* TITLE */
-
 .logo{
-
 font-size:100px;
 letter-spacing:8px;
-margin-bottom:10px;
 
-background:linear-gradient(
-90deg,
-#ffffff,
-#c084fc,
-#7c3aed,
-#ffffff
-);
-
+background:linear-gradient(90deg,#ffffff,#c084fc,#7c3aed,#ffffff);
 background-size:300%;
-
 -webkit-background-clip:text;
 color:transparent;
 
-animation:titleMove 7s linear infinite;
+animation:textMove 7s linear infinite;
 
-text-shadow:
-0 0 25px rgba(255,255,255,0.6),
-0 0 45px rgba(147,51,234,0.7);
-
+text-shadow:0 0 25px rgba(255,255,255,0.6),0 0 45px rgba(147,51,234,0.7);
 }
 
-@keyframes titleMove{
-0%{background-position:0%}
-100%{background-position:300%}
+@keyframes textMove{
+0%{background-position:0%;}
+100%{background-position:300%;}
 }
-
-/* TAGLINE */
 
 .tagline{
-
-font-size:18px;
+margin-top:20px;
+font-size:20px;
 max-width:650px;
-opacity:0.95;
-margin-top:15px;
 letter-spacing:1px;
-
 }
 
-/* ENTER BUTTON */
-
 .enterBtn{
-
-margin-top:45px;
-
+margin-top:50px;
 padding:16px 65px;
-
 font-size:18px;
-
 border-radius:12px;
-
-background:#0b0b0b;
-
+background:#111;
 border:2px solid white;
-
 color:white;
-
 text-decoration:none;
-
 transition:0.3s;
-
 }
 
 .enterBtn:hover{
-
 transform:scale(1.15);
-
-box-shadow:
-0 0 20px white,
-0 0 45px #9333ea;
-
+box-shadow:0 0 20px white,0 0 45px #9333ea;
 }
 
 </style>
@@ -128,12 +80,10 @@ box-shadow:
 <h1 class="logo">AETHERFALL MARKET</h1>
 
 <div class="tagline">
-Buy roblox services and snacks here.
+Premium snacks and gaming services for players who want the best.
 </div>
 
 <a href="market.html" class="enterBtn">ENTER</a>
 
 </body>
-
 </html>
-```

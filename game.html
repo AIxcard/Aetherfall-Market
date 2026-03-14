@@ -14,6 +14,8 @@ color:white;
 overflow:hidden;
 }
 
+/* HEADER */
+
 header{
 text-align:center;
 font-size:32px;
@@ -22,20 +24,39 @@ color:#a855f7;
 letter-spacing:3px;
 }
 
+/* STATS BAR */
+
+#statsBar{
+display:flex;
+justify-content:center;
+gap:35px;
+margin-bottom:10px;
+}
+
+.statBox{
+background:#0f172a;
+padding:10px 18px;
+border-radius:10px;
+border:1px solid #1e3a8a;
+text-align:center;
+min-width:90px;
+font-size:14px;
+}
+
+/* LAYOUT */
+
 #layout{
 display:grid;
 grid-template-columns:320px 1fr 320px;
-height:calc(100vh - 70px);
+height:calc(100vh - 120px);
 }
-
-/* PANELS */
 
 .panel{
 padding:20px;
 overflow:auto;
 }
 
-/* MISSIONS */
+/* STORY + MISSIONS */
 
 .mission{
 background:#0f172a;
@@ -46,7 +67,7 @@ border:1px solid #1e3a8a;
 }
 
 .bar{
-height:14px;
+height:16px;
 background:#1e293b;
 border-radius:6px;
 overflow:hidden;
@@ -61,6 +82,14 @@ display:flex;
 align-items:center;
 justify-content:center;
 font-size:11px;
+}
+
+.percent{
+position:absolute;
+width:100%;
+text-align:center;
+font-size:11px;
+top:1px;
 }
 
 /* CENTER */
@@ -104,14 +133,6 @@ animation:floatUp 1s forwards;
 100%{opacity:0;transform:translateY(-70px)}
 }
 
-/* STATS */
-
-#stats{
-margin-top:20px;
-text-align:center;
-font-size:18px;
-}
-
 /* SHOP */
 
 .shopItem{
@@ -132,15 +153,27 @@ color:white;
 cursor:pointer;
 }
 
-/* SETTINGS */
+/* ICON MENU */
 
-#settingsBtn{
-position:absolute;
-top:15px;
-right:20px;
-cursor:pointer;
-font-size:18px;
+#menuIcons{
+margin-top:20px;
+display:flex;
+gap:30px;
+justify-content:center;
 }
+
+.iconBtn{
+text-align:center;
+cursor:pointer;
+}
+
+.iconBtn span{
+display:block;
+margin-top:4px;
+font-size:13px;
+}
+
+/* SETTINGS */
 
 .modal{
 display:none;
@@ -167,57 +200,106 @@ cursor:pointer;
 
 <body>
 
-<header>
-AETHERFALL CLICK GAME
-<span id="settingsBtn" onclick="openSettings()">⚙</span>
-</header>
+<header>AETHERFALL CLICK GAME</header>
+
+<!-- STATS -->
+
+<div id="statsBar">
+
+<div class="statBox">
+Clicks
+<div id="clicks">0</div>
+</div>
+
+<div class="statBox">
+Coins
+<div id="coins">0</div>
+</div>
+
+<div class="statBox">
+Fragments
+<div id="fragments">0</div>
+</div>
+
+<div class="statBox">
+Combo
+<div>x<span id="combo">1</span></div>
+</div>
+
+</div>
+
 
 <div id="layout">
 
+<!-- LEFT PANEL -->
+
 <div class="panel">
 
-<h3>Missions</h3>
+<h3>Storyline</h3>
 
 <div class="mission">
-5,000 Clicks — 50 Coins
-<div class="bar"><div id="m1" class="fill">0%</div></div>
+★ Storyline 1 — Reward: 50 Coins
+<div class="bar">
+<div id="story1" class="fill"></div>
+<span class="percent" id="p1">0%</span>
 </div>
-
-<div class="mission">
-25,000 Clicks — 200 Coins
-<div class="bar"><div id="m2" class="fill">0%</div></div>
 </div>
 
 <div class="mission">
-100,000 Clicks — 900 Coins
-<div class="bar"><div id="m3" class="fill">0%</div></div>
+★ Storyline 2 — Reward: 200 Coins
+<div class="bar">
+<div id="story2" class="fill"></div>
+<span class="percent" id="p2">0%</span>
 </div>
-
-<h3>Daily Challenge</h3>
+</div>
 
 <div class="mission">
-Reach 2000 clicks today — 60 Coins
-<div class="bar"><div id="daily" class="fill">0%</div></div>
+★ Storyline 3 — Reward: 900 Coins
+<div class="bar">
+<div id="story3" class="fill"></div>
+<span class="percent" id="p3">0%</span>
+</div>
+</div>
+
+<h3>Daily Mission</h3>
+
+<div class="mission">
+★ 2000 Clicks — Reward: 60 Coins
+<div class="bar">
+<div id="daily" class="fill"></div>
+<span class="percent" id="pd">0%</span>
+</div>
 </div>
 
 </div>
 
+
+<!-- CENTER -->
 
 <div id="center">
 
 <img id="sword" src="Final_game_icon.png">
 
-<div id="stats">
+<div id="menuIcons">
 
-Clicks: <span id="clicks">0</span><br>
-Coins: <span id="coins">0</span><br>
-Fragments: <span id="fragments">0</span><br>
-Combo: x<span id="combo">1</span>
+<div class="iconBtn" onclick="openLore()">📘
+<span>Lore</span>
+</div>
 
+<div class="iconBtn" onclick="openGuide()">❓
+<span>Guide</span>
+</div>
+
+<div class="iconBtn" onclick="openSettings()">⚙
+<span>Settings</span>
 </div>
 
 </div>
 
+</div>
+
+
+<!-- RIGHT PANEL -->
 
 <div class="panel">
 
@@ -239,6 +321,26 @@ Cost: 400 coins<br>
 Spirit Flame (+10% crit)<br>
 Cost: 700 coins<br>
 <button onclick="critUpgrade()">Buy</button>
+</div>
+
+<h3>Fragment Shop</h3>
+
+<div class="shopItem">
+Fragment Booster<br>
+Cost: 20 Fragments<br>
+<button onclick="fragmentUpgrade(20)">Buy</button>
+</div>
+
+<div class="shopItem">
+Ancient Core<br>
+Cost: 60 Fragments<br>
+<button onclick="fragmentUpgrade(60)">Buy</button>
+</div>
+
+<div class="shopItem">
+Aether Relic<br>
+Cost: 120 Fragments<br>
+<button onclick="fragmentUpgrade(120)">Buy</button>
 </div>
 
 <h3>Coupon Shop</h3>
@@ -266,6 +368,8 @@ Cost: 1500 coins<br>
 </div>
 
 
+<!-- SETTINGS -->
+
 <div id="settings" class="modal">
 
 <div class="close" onclick="closeSettings()">X</div>
@@ -274,15 +378,72 @@ Cost: 1500 coins<br>
 
 <label>
 <input type="checkbox" id="animToggle" checked>
-Animations
+Click Effects
 </label>
 
 <br><br>
 
-<label>UI Scale</label><br>
-<input type="range" min="80" max="120" value="100" id="scale">
+Background<br>
+<select id="bg">
+<option value="#070b1f">Dark</option>
+<option value="#020617">Night</option>
+<option value="#0f172a">Aether</option>
+</select>
+
+<br><br>
+
+Music<br>
+<select id="musicSelect">
+<option value="placeholder.mp3">Default</option>
+</select>
 
 </div>
+
+
+<!-- LORE -->
+
+<div id="lore" class="modal">
+
+<div class="close" onclick="closeLore()">X</div>
+
+<h3>Lore</h3>
+
+The Aetherfall blade was discovered deep within an abandoned facility.  
+Each strike extracts unstable energy fragments from its core.
+
+Researchers once tried to stabilize the blade’s power — but failed.
+
+Now the blade responds only to repeated strikes.
+
+The more energy extracted, the stronger the rewards become.
+
+</div>
+
+
+<!-- GUIDE -->
+
+<div id="guide" class="modal">
+
+<div class="close" onclick="closeGuide()">X</div>
+
+<h3>Guide</h3>
+
+Click the blade to gain energy.
+
+Energy converts into clicks and coins.
+
+Coins unlock upgrades and coupons.
+
+Fragments unlock rare upgrades.
+
+Maintain combos by clicking continuously.
+
+</div>
+
+
+<audio id="music" loop>
+<source src="placeholder.mp3">
+</audio>
 
 
 <script>
@@ -303,7 +464,9 @@ let now=Date.now()
 
 if(now-lastClick<400){
 combo++
-}else{
+}
+
+if(now-lastClick>3000){
 combo=1
 }
 
@@ -357,7 +520,6 @@ if(coins<cost)return alert("Not enough coins")
 
 coins-=cost
 clickPower+=power
-
 update()
 
 }
@@ -368,7 +530,16 @@ if(coins<700)return alert("Not enough coins")
 
 coins-=700
 critChance+=0.10
+update()
 
+}
+
+function fragmentUpgrade(cost){
+
+if(fragments<cost)return alert("Not enough fragments")
+
+fragments-=cost
+critChance+=0.02
 update()
 
 }
@@ -392,36 +563,35 @@ document.getElementById("coins").innerText=coins
 document.getElementById("fragments").innerText=fragments
 document.getElementById("combo").innerText=combo
 
-updateMission("m1",5000)
-updateMission("m2",25000)
-updateMission("m3",100000)
-updateMission("daily",2000)
+updateBar("story1","p1",5000)
+updateBar("story2","p2",25000)
+updateBar("story3","p3",100000)
+updateBar("daily","pd",2000)
 
 save()
 
 }
 
-function updateMission(id,goal){
+function updateBar(id,pid,goal){
 
 let percent=Math.min(100,(clicks/goal)*100)
 
-let bar=document.getElementById(id)
-
-bar.style.width=percent+"%"
-bar.innerText=Math.floor(percent)+"%"
+document.getElementById(id).style.width=percent+"%"
+document.getElementById(pid).innerText=Math.floor(percent)+"%"
 
 }
 
-function openSettings(){
-document.getElementById("settings").style.display="block"
-}
+function openSettings(){document.getElementById("settings").style.display="block"}
+function closeSettings(){document.getElementById("settings").style.display="none"}
 
-function closeSettings(){
-document.getElementById("settings").style.display="none"
-}
+function openGuide(){document.getElementById("guide").style.display="block"}
+function closeGuide(){document.getElementById("guide").style.display="none"}
 
-document.getElementById("scale").oninput=function(){
-document.body.style.transform="scale("+this.value/100+")"
+function openLore(){document.getElementById("lore").style.display="block"}
+function closeLore(){document.getElementById("lore").style.display="none"}
+
+document.getElementById("bg").onchange=function(){
+document.body.style.background=this.value
 }
 
 function save(){

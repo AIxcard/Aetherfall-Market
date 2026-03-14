@@ -3,29 +3,28 @@ window.addEventListener("pageshow", () => {
 document.body.style.opacity = "1"
 })
 
-// Hide default cursor
+// Hide normal cursor
 const style = document.createElement("style")
 style.innerHTML = `
 *{cursor:none!important;}
 
 #aetherCursor{
 position:fixed;
-width:36px;
-height:36px;
+width:40px;
+height:40px;
 pointer-events:none;
 z-index:9999;
-transform:translate(-3px,-2px);
+transform:translate(-4px,-3px);
 }
 `
 document.head.appendChild(style)
 
-// Create cursor container
+// Create cursor
 const cursor = document.createElement("div")
 cursor.id = "aetherCursor"
 
-// Improved balanced arrow
 cursor.innerHTML = `
-<svg viewBox="0 0 24 24" width="36" height="36">
+<svg viewBox="0 0 32 32" width="40" height="40">
 <defs>
 <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
 <stop offset="0%" stop-color="#38bdf8"/>
@@ -35,23 +34,23 @@ cursor.innerHTML = `
 
 <path d="
 M2 2
-L2 22
-L9 16
-L12 22
-L15 21
-L12 14
-L21 14
+L2 28
+L10 20
+L14 30
+L18 28
+L14 18
+L28 18
 Z"
 fill="url(#grad)"
 stroke="white"
-stroke-width="1.6"
+stroke-width="2"
 />
 </svg>
 `
 
 document.body.appendChild(cursor)
 
-// Cursor movement
+// Move cursor
 document.addEventListener("mousemove", e => {
 cursor.style.left = e.clientX + "px"
 cursor.style.top = e.clientY + "px"

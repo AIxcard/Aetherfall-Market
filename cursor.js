@@ -1,4 +1,4 @@
-// Fix blank page when going back
+// Fix blank page when returning with back button
 window.addEventListener("pageshow", () => {
 document.body.style.opacity = "1"
 })
@@ -10,66 +10,97 @@ style.innerHTML = `
 
 #aetherCursor{
 position:fixed;
-width:34px;
-height:34px;
+width:46px;
+height:46px;
 pointer-events:none;
 z-index:9999;
-transform:translate(-6px,-4px) rotate(12deg);
+transform:translate(-8px,-6px) rotate(14deg);
 }
 
 #aetherCursor .arrow{
+
 position:absolute;
 width:100%;
 height:100%;
 
+/* balanced arrow */
+clip-path:polygon(
+0 0,
+100% 48%,
+60% 58%,
+68% 100%,
+0 0
+);
+
 background:linear-gradient(135deg,#38bdf8,#9333ea);
 
-clip-path:polygon(0 0,100% 50%,55% 62%,62% 100%,0 0);
-
 box-shadow:
-0 0 8px #38bdf8,
-0 0 18px #9333ea;
+0 0 10px #38bdf8,
+0 0 22px #9333ea;
+
 }
 
-#aetherCursor .core{
+/* crystal core */
+
+#aetherCursor .crystal{
+
 position:absolute;
-left:12px;
-top:11px;
 
-width:8px;
-height:8px;
+left:19px;
+top:18px;
 
-border-radius:50%;
+width:10px;
+height:10px;
 
-background:linear-gradient(135deg,#60a5fa,#c084fc);
+background:linear-gradient(135deg,#7dd3fc,#c084fc);
+
+clip-path:polygon(
+50% 0%,
+100% 50%,
+50% 100%,
+0% 50%
+);
 
 box-shadow:
-0 0 6px #60a5fa,
-0 0 10px #9333ea;
+0 0 8px #7dd3fc,
+0 0 14px #9333ea;
+
 }
+
+/* flame */
 
 #aetherCursor .flame{
+
 position:absolute;
-left:9px;
+
+left:15px;
 top:6px;
 
-width:14px;
-height:20px;
+width:24px;
+height:30px;
 
 opacity:0;
-pointer-events:none;
 
-background:radial-gradient(circle at 50% 80%,#ffffff 5%,#c084fc 35%,#9333ea 60%,transparent 70%);
+background:radial-gradient(
+circle at 50% 80%,
+#ffffff 5%,
+#c084fc 30%,
+#9333ea 60%,
+transparent 75%
+);
 
-filter:blur(1px);
+filter:blur(1.5px);
 
-animation:flameRise .6s ease forwards;
+transform:rotate(-14deg);
+
+animation:flameRise .7s ease forwards;
+
 }
 
 @keyframes flameRise{
 
 0%{
-transform:scale(.4) translateY(8px);
+transform:rotate(-14deg) scale(.5) translateY(12px);
 opacity:0;
 }
 
@@ -78,7 +109,7 @@ opacity:1;
 }
 
 100%{
-transform:scale(1.2) translateY(-8px);
+transform:rotate(-14deg) scale(1.4) translateY(-14px);
 opacity:0;
 }
 
@@ -93,11 +124,11 @@ cursor.id = "aetherCursor"
 const arrow = document.createElement("div")
 arrow.className = "arrow"
 
-const core = document.createElement("div")
-core.className = "core"
+const crystal = document.createElement("div")
+crystal.className = "crystal"
 
 cursor.appendChild(arrow)
-cursor.appendChild(core)
+cursor.appendChild(crystal)
 
 document.body.appendChild(cursor)
 
@@ -107,7 +138,7 @@ cursor.style.left = e.clientX + "px"
 cursor.style.top = e.clientY + "px"
 })
 
-// Flame effect every 10-15 seconds
+// Flame spawn
 function spawnFlame(){
 
 const flame = document.createElement("div")
@@ -117,7 +148,7 @@ cursor.appendChild(flame)
 
 setTimeout(()=>{
 flame.remove()
-},600)
+},700)
 
 }
 

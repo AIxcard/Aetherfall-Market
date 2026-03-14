@@ -11,61 +11,47 @@
 
 body{
 margin:0;
-background:#050816;
+background:#070b1f;
 color:white;
 font-family:Arial;
-overflow:hidden;
 cursor:none;
+overflow:hidden;
 }
 
 header{
 text-align:center;
 font-size:42px;
-padding:16px;
+padding:15px;
 font-family:'Orbitron';
 background:linear-gradient(90deg,#38bdf8,#9333ea);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 }
 
+#statsBar{
+display:flex;
+justify-content:center;
+gap:25px;
+padding:12px;
+}
+
+.stat{
+background:#0f172a;
+padding:12px 18px;
+border-radius:10px;
+border:1px solid #1e3a8a;
+font-weight:bold;
+}
+
 #layout{
 display:grid;
-grid-template-columns:330px 1fr 330px;
-height:calc(100vh - 70px);
+grid-template-columns:320px 1fr 320px;
+height:calc(100vh - 120px);
 }
 
 .panel{
 padding:20px;
 overflow:auto;
-}
-
-.quest{
-background:#0f172a;
-padding:12px;
-border-radius:10px;
-border:1px solid #1e3a8a;
-}
-
-.bar{
-height:16px;
-background:#1e293b;
-border-radius:8px;
-position:relative;
-overflow:hidden;
-}
-
-.fill{
-background:#22c55e;
-height:100%;
-width:0%;
-}
-
-.percent{
-position:absolute;
-width:100%;
-text-align:center;
-font-size:12px;
-line-height:16px;
 }
 
 #center{
@@ -83,27 +69,53 @@ transition:.15s;
 
 #sword:hover{
 transform:scale(1.05);
-filter:drop-shadow(0 0 15px #9333ea);
+filter:drop-shadow(0 0 20px #9333ea);
 }
 
-.shopItem{
+.questCard{
 background:#0f172a;
-padding:10px;
-border-radius:10px;
-margin-bottom:10px;
+border-radius:12px;
+padding:15px;
 border:1px solid #1e3a8a;
+margin-bottom:12px;
+}
+
+.bar{
+height:14px;
+background:#1e293b;
+border-radius:6px;
+position:relative;
+overflow:hidden;
+}
+
+.fill{
+background:#22c55e;
+height:100%;
+width:0%;
+}
+
+.percent{
+position:absolute;
+width:100%;
+text-align:center;
+font-size:12px;
 }
 
 button{
 background:#9333ea;
 border:none;
-padding:6px 10px;
+padding:8px 14px;
 border-radius:6px;
 color:white;
 cursor:pointer;
+margin-top:8px;
 }
 
-#popup{
+button:hover{
+background:#a855f7;
+}
+
+.modal{
 position:fixed;
 top:50%;
 left:50%;
@@ -112,54 +124,89 @@ background:#0f172a;
 padding:25px;
 border-radius:12px;
 border:1px solid #1e3a8a;
-width:400px;
+width:420px;
 display:none;
 z-index:1000;
 }
 
-#popupClose{
+.close{
 position:absolute;
-top:8px;
-right:10px;
+top:10px;
+right:12px;
 cursor:pointer;
+}
+
+.float{
+position:absolute;
+pointer-events:none;
+font-weight:bold;
+animation:floatUp 1s forwards;
+}
+
+@keyframes floatUp{
+0%{opacity:1;transform:translateY(0)}
+100%{opacity:0;transform:translateY(-60px)}
 }
 
 #aetherCursor{
 position:fixed;
-width:22px;
-height:22px;
+width:24px;
+height:24px;
 pointer-events:none;
 z-index:9999;
+filter:drop-shadow(0 0 6px #9333ea);
 }
 
 </style>
-
 </head>
 
 <body>
 
 <header>AETHERFALL CLICK GAME</header>
 
+<div id="statsBar">
+
+<div class="stat">Clicks: <span id="clicks">0</span></div>
+<div class="stat">Coins: <span id="coins">0</span></div>
+<div class="stat">Fragments: <span id="fragments">0</span></div>
+<div class="stat">Combo: <span id="combo">0</span></div>
+
+</div>
+
 <div id="layout">
 
 <div class="panel">
 
-<h3>Story Quest</h3>
+<div class="questCard">
 
-<div class="quest">
-
-<div id="questTitle"></div>
+<b>✦ Storyline 1</b>
 
 <div class="bar">
 <div class="fill" id="questFill"></div>
 <div class="percent" id="questPercent">0%</div>
 </div>
 
+<button id="claimBtn" onclick="claimQuest()" disabled>Claim Reward</button>
+
 </div>
 
-<br>
+<div class="questCard">
+
+<b>◆ Daily Challenge</b>
+
+Click 2000 times
+
+<div class="bar">
+<div class="fill" id="dailyFill"></div>
+<div class="percent" id="dailyPercent">0%</div>
+</div>
+
+<button onclick="claimDaily()">Claim</button>
+
+</div>
 
 <button onclick="openGuide()">How the Game Works</button>
+<button onclick="openSettings()">Settings</button>
 
 </div>
 
@@ -167,49 +214,48 @@ z-index:9999;
 
 <img id="sword" src="Final_game_icon.png">
 
-<br>
-
-Clicks: <span id="clicks">0</span><br>
-Coins: <span id="coins">0</span><br>
-Fragments: <span id="fragments">0</span><br>
-Combo: <span id="combo">0</span>
-
 </div>
 
 <div class="panel">
 
-<h3>Coupons</h3>
+<h3>Coupon Shop</h3>
 
-<div class="shopItem">5 Baht Coupon<br>Cost:300<br><button onclick="buyCoupon(300,5)">Buy</button></div>
-<div class="shopItem">10 Baht Coupon<br>Cost:700<br><button onclick="buyCoupon(700,10)">Buy</button></div>
-<div class="shopItem">20 Baht Coupon<br>Cost:1800<br><button onclick="buyCoupon(1800,20)">Buy</button></div>
-
-<h3>Permanent Upgrades</h3>
-
-<div class="shopItem"><button onclick="upgrade(8,1)">Sharper Blade (8 Fragments)</button></div>
-<div class="shopItem"><button onclick="upgrade(20,2)">Aether Channel (20 Fragments)</button></div>
+<button onclick="buyCoupon(300,5)">5 Baht Coupon</button>
+<button onclick="buyCoupon(700,10)">10 Baht Coupon</button>
+<button onclick="buyCoupon(1800,20)">20 Baht Coupon</button>
 
 </div>
 
 </div>
 
-<div id="popup">
+<div class="modal" id="guide">
 
-<div id="popupClose" onclick="closeGuide()">X</div>
+<div class="close" onclick="closeGuide()">X</div>
 
-<h3>How Aetherfall Works</h3>
+<h3>How the Game Works</h3>
 
-<p>
-Click the Aetherblade to gather energy.<br><br>
+Click the sword to gain clicks.
 
-Energy gives:<br>
-• Coins → used for store coupons<br>
-• Fragments → used for permanent upgrades<br><br>
+Clicks give coins and fragments.
 
-Complete quests to restore the kingdom.<br>
+Coins buy coupons for the store.
 
-Coupons are limited each week so use them wisely.
-</p>
+Fragments unlock upgrades.
+
+Daily challenges give extra rewards.
+
+</div>
+
+<div class="modal" id="settings">
+
+<div class="close" onclick="closeSettings()">X</div>
+
+<h3>Settings</h3>
+
+<label>
+<input type="checkbox" id="effectsToggle" checked>
+Enable Click Effects
+</label>
 
 </div>
 
@@ -221,69 +267,93 @@ let clicks=0
 let coins=0
 let fragments=0
 let combo=0
-let lastClick=0
-let clickPower=1
-let weeklyCoupons=0
 
-let questIndex=0
+let questGoal=100
+let questReward=10
 
-const quests=[
-{goal:100,reward:5,name:"Awakening"},
-{goal:500,reward:10,name:"First Energy"},
-{goal:2000,reward:20,name:"Aether Apprentice"},
-{goal:10000,reward:50,name:"Energy Harvester"},
-{goal:50000,reward:100,name:"Blade Master"},
-{goal:200000,reward:200,name:"Aether Knight"},
-{goal:500000,reward:300,name:"Kingdom Restorer"},
-{goal:1000000,reward:500,name:"Aether Legend"}
-]
+let dailyGoal=2000
+let dailyClaimed=false
 
-function updateQuest(){
+let effects=true
 
-let q=quests[questIndex]
+const sword=document.getElementById("sword")
 
-document.getElementById("questTitle").innerText=q.name+" — "+q.goal+" clicks"
+sword.onclick=e=>{
 
-let percent=Math.min(100,(clicks/q.goal)*100)
+clicks++
+combo++
 
-document.getElementById("questFill").style.width=percent+"%"
-document.getElementById("questPercent").innerText=Math.floor(percent)+"%"
+if(Math.random()<0.02)fragments++
 
-if(clicks>=q.goal){
+if(Math.random()<0.05)coins++
 
-coins+=q.reward
-questIndex++
+if(effects)spawnText(e,"+1","#38bdf8")
 
-alert("Quest Complete +"+q.reward+" coins")
-
-}
-
-}
-
-document.getElementById("sword").onclick=e=>{
-
-let now=Date.now()
-
-if(now-lastClick<1300)combo++
-else combo=0
-
-lastClick=now
-
-clicks+=clickPower
-
-if(Math.random()<0.015)fragments++
-
-updateQuest()
 update()
 
 }
 
-function upgrade(cost,power){
+function spawnText(e,text,color){
 
-if(fragments<cost)return
+let t=document.createElement("div")
 
-fragments-=cost
-clickPower+=power
+t.className="float"
+t.innerText=text
+t.style.color=color
+t.style.left=e.pageX+"px"
+t.style.top=e.pageY+"px"
+
+document.body.appendChild(t)
+
+setTimeout(()=>t.remove(),900)
+
+}
+
+function update(){
+
+document.getElementById("clicks").innerText=clicks
+document.getElementById("coins").innerText=coins
+document.getElementById("fragments").innerText=fragments
+document.getElementById("combo").innerText=combo
+
+let qPercent=Math.min(100,(clicks/questGoal)*100)
+
+document.getElementById("questFill").style.width=qPercent+"%"
+document.getElementById("questPercent").innerText=Math.floor(qPercent)+"%"
+
+if(clicks>=questGoal){
+document.getElementById("claimBtn").disabled=false
+}
+
+let dPercent=Math.min(100,(clicks/dailyGoal)*100)
+
+document.getElementById("dailyFill").style.width=dPercent+"%"
+document.getElementById("dailyPercent").innerText=Math.floor(dPercent)+"%"
+
+save()
+
+}
+
+function claimQuest(){
+
+coins+=questReward
+
+questGoal*=2
+
+document.getElementById("claimBtn").disabled=true
+
+}
+
+function claimDaily(){
+
+if(clicks>=dailyGoal && !dailyClaimed){
+
+coins+=40
+dailyClaimed=true
+
+alert("Daily reward claimed")
+
+}
 
 }
 
@@ -291,13 +361,7 @@ function buyCoupon(cost,val){
 
 if(coins<cost)return
 
-if(weeklyCoupons+val>100){
-alert("Weekly coupon limit reached")
-return
-}
-
 coins-=cost
-weeklyCoupons+=val
 
 let code="AETHER-"+Math.floor(Math.random()*9000)
 
@@ -311,15 +375,24 @@ alert("Coupon: "+code)
 
 }
 
-function update(){
+function openGuide(){
+document.getElementById("guide").style.display="block"
+}
 
-document.getElementById("clicks").innerText=clicks
-document.getElementById("coins").innerText=coins
-document.getElementById("fragments").innerText=fragments
-document.getElementById("combo").innerText=combo
+function closeGuide(){
+document.getElementById("guide").style.display="none"
+}
 
-save()
+function openSettings(){
+document.getElementById("settings").style.display="block"
+}
 
+function closeSettings(){
+document.getElementById("settings").style.display="none"
+}
+
+document.getElementById("effectsToggle").onchange=e=>{
+effects=e.target.checked
 }
 
 function save(){
@@ -327,7 +400,6 @@ function save(){
 localStorage.setItem("af_clicks",clicks)
 localStorage.setItem("af_coins",coins)
 localStorage.setItem("af_frag",fragments)
-localStorage.setItem("af_quest",questIndex)
 
 }
 
@@ -336,39 +408,27 @@ function load(){
 clicks=parseInt(localStorage.getItem("af_clicks"))||0
 coins=parseInt(localStorage.getItem("af_coins"))||0
 fragments=parseInt(localStorage.getItem("af_frag"))||0
-questIndex=parseInt(localStorage.getItem("af_quest"))||0
 
 update()
-updateQuest()
 
 }
 
 load()
 
-function openGuide(){
-document.getElementById("popup").style.display="block"
-}
-
-function closeGuide(){
-document.getElementById("popup").style.display="none"
-}
-
 const cursor=document.getElementById("aetherCursor")
 
 cursor.innerHTML=`
-<svg viewBox="0 0 32 32" width="22" height="22">
+<svg viewBox="0 0 32 32" width="24" height="24">
 <defs>
 <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
 <stop offset="0%" stop-color="#38bdf8"/>
 <stop offset="100%" stop-color="#9333ea"/>
 </linearGradient>
 </defs>
-
 <path d="M2 2 L2 28 L10 20 L14 30 L18 28 L14 18 L26 18 Z"
 fill="url(#grad)"
-stroke="white"
-stroke-width="2"
-stroke-linejoin="round"/>
+stroke="#a855f7"
+stroke-width="2"/>
 </svg>
 `
 

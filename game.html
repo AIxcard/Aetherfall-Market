@@ -1,78 +1,129 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Aetherfall Coin Game</title>
+<title>Abyssal Coin Game</title>
 
 <style>
 
 body{
+margin:0;
+font-family:Arial;
 background:#020617;
 color:white;
-font-family:Arial;
-margin:0;
+text-align:center;
 }
 
 header{
-text-align:center;
+font-size:38px;
 padding:25px;
-font-size:40px;
 color:#a855f7;
 box-shadow:0 0 20px #9333ea;
 }
 
-#container{
-display:flex;
-justify-content:center;
-gap:40px;
-padding:40px;
-flex-wrap:wrap;
+#mainArea{
+margin-top:40px;
 }
 
-.panel{
+#sword{
+width:220px;
+cursor:pointer;
+transition:.15s;
+}
+
+#sword:active{
+transform:scale(.9);
+}
+
+#stats{
+margin-top:15px;
+font-size:18px;
+}
+
+.progress{
+width:300px;
+height:12px;
+background:#1e293b;
+margin:10px auto;
+border-radius:6px;
+overflow:hidden;
+}
+
+.fill{
+height:100%;
+background:#38bdf8;
+width:0%;
+}
+
+#menu{
+margin-top:30px;
+}
+
+#menu button{
+margin:6px;
+padding:10px 16px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#2563eb;
+color:white;
+font-weight:bold;
+}
+
+.modal{
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
 background:#0f172a;
-padding:25px;
-border-radius:12px;
 border:1px solid #2563eb;
-width:280px;
-box-shadow:0 0 12px rgba(59,130,246,.4);
+border-radius:12px;
+width:400px;
+padding:20px;
+z-index:1000;
+box-shadow:0 0 20px rgba(59,130,246,.6);
 }
 
-.panel h2{
+.modal h2{
 margin-top:0;
 color:#38bdf8;
 }
 
-button{
-padding:10px 15px;
-border:none;
+.close{
+position:absolute;
+top:8px;
+right:12px;
+cursor:pointer;
+font-size:20px;
+}
+
+.shopItem{
+border:1px solid #1e3a8a;
+padding:12px;
 border-radius:8px;
 margin-top:10px;
-cursor:pointer;
-font-weight:bold;
 }
 
-.coinBtn{
-background:#2563eb;
-color:white;
-}
-
-.shopBtn{
+.shopItem button{
+margin-top:5px;
 background:#9333ea;
+border:none;
 color:white;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
 }
 
-.rewardBtn{
-background:#16a34a;
-color:white;
-}
-
-.stat{
-margin:6px 0;
+.mission{
+border:1px solid #1e3a8a;
+padding:10px;
+border-radius:8px;
+margin-top:10px;
 }
 
 #couponList{
+text-align:left;
 font-size:14px;
-margin-top:10px;
 }
 
 </style>
@@ -81,76 +132,135 @@ margin-top:10px;
 
 <body>
 
-<header>AETHERFALL COIN GAME</header>
+<header>ABYSSAL COIN GAME</header>
 
-<div id="container">
+<div id="mainArea">
 
-<div class="panel">
-<h2>Coins</h2>
-<div id="coinText">Coins: 0</div>
-<button class="coinBtn" onclick="collectCoin()">Collect Coin</button>
+<img src="Final_Game_Icon.png" id="sword">
+
+<div id="stats">
+Clicks: <span id="clicks">0</span><br>
+Coins: <span id="coins">0</span>
 </div>
 
-<div class="panel">
-<h2>Daily Rewards</h2>
-<div>Claim once per day</div>
-<button class="rewardBtn" onclick="dailyReward()">Claim Reward</button>
+<div class="progress">
+<div id="bar" class="fill"></div>
 </div>
 
-<div class="panel">
+<div>1000 clicks → 10 coins</div>
+
+</div>
+
+<div id="menu">
+
+<button onclick="openModal('missions')">Missions</button>
+<button onclick="openModal('shop')">Coupon Shop</button>
+<button onclick="openModal('coupons')">My Coupons</button>
+
+</div>
+
+
+<div id="missions" class="modal">
+
+<div class="close" onclick="closeModal('missions')">X</div>
+
 <h2>Missions</h2>
 
-<div class="stat">Advertise store → +30 coins</div>
-<button onclick="advertised()">Claim</button>
+<div class="mission">
+Reach 5,000 clicks<br>
+Reward: 30 coins<br>
+<button onclick="claimMission(5000,30)">Claim</button>
+</div>
 
-<div class="stat">Play 10 clicks → +20 coins</div>
-<button onclick="missionClicks()">Claim</button>
+<div class="mission">
+Reach 25,000 clicks<br>
+Reward: 90 coins<br>
+<button onclick="claimMission(25000,90)">Claim</button>
+</div>
+
+<div class="mission">
+Reach 100,000 clicks<br>
+Reward: 350 coins<br>
+<button onclick="claimMission(100000,350)">Claim</button>
+</div>
 
 </div>
 
-<div class="panel">
+
+<div id="shop" class="modal">
+
+<div class="close" onclick="closeModal('shop')">X</div>
+
 <h2>Coupon Shop</h2>
 
-<div>5 Baht Discount</div>
-<button class="shopBtn" onclick="buyCoupon(50,5)">Buy (50 coins)</button>
+<div class="shopItem">
+<b>5 Baht Discount</b><br>
+Cost: 150 coins<br>
+<button onclick="buyCoupon(150,5)">Buy</button>
+</div>
 
-<div>10 Baht Discount</div>
-<button class="shopBtn" onclick="buyCoupon(100,10)">Buy (100 coins)</button>
+<div class="shopItem">
+<b>10 Baht Discount</b><br>
+Cost: 320 coins<br>
+<button onclick="buyCoupon(320,10)">Buy</button>
+</div>
 
-<div>20 Baht Discount</div>
-<button class="shopBtn" onclick="buyCoupon(180,20)">Buy (180 coins)</button>
+<div class="shopItem">
+<b>20 Baht Discount</b><br>
+Cost: 650 coins<br>
+<button onclick="buyCoupon(650,20)">Buy</button>
+</div>
 
 </div>
 
-<div class="panel">
+
+<div id="coupons" class="modal">
+
+<div class="close" onclick="closeModal('coupons')">X</div>
+
 <h2>Your Coupons</h2>
+
 <div id="couponList"></div>
-</div>
-
-<div class="panel">
-<h2>Stats</h2>
-
-<div id="clickStat">Clicks: 0</div>
-<div id="missionStat">Mission Completed: 0</div>
-
-<button onclick="resetGame()">Reset Progress</button>
 
 </div>
 
-</div>
 
 <script>
 
-let coins=0
 let clicks=0
-let missions=0
+let coins=0
 let coupons=[]
+let lastClick=0
+
+const clickText=document.getElementById("clicks")
+const coinText=document.getElementById("coins")
+const bar=document.getElementById("bar")
+
+document.getElementById("sword").onclick=function(){
+
+let now=Date.now()
+
+if(now-lastClick<80)return
+
+lastClick=now
+
+clicks++
+
+if(clicks%1000===0){
+coins+=10
+}
+
+updateUI()
+
+}
 
 function updateUI(){
 
-document.getElementById("coinText").innerText="Coins: "+coins
-document.getElementById("clickStat").innerText="Clicks: "+clicks
-document.getElementById("missionStat").innerText="Mission Completed: "+missions
+clickText.innerText=clicks
+coinText.innerText=coins
+
+let progress=(clicks%1000)/10
+bar.style.width=progress+"%"
 
 let list=""
 
@@ -164,22 +274,11 @@ saveGame()
 
 }
 
-function collectCoin(){
-
-coins++
-clicks++
-
-updateUI()
-
-}
-
 function buyCoupon(cost,value){
 
 if(coins<cost){
-
 alert("Not enough coins")
 return
-
 }
 
 coins-=cost
@@ -192,91 +291,45 @@ updateUI()
 
 }
 
-function dailyReward(){
+function claimMission(req,reward){
 
-let last=localStorage.getItem("daily")
-
-let now=Date.now()
-
-if(last && now-last<86400000){
-
-alert("Already claimed today")
+if(clicks<req){
+alert("Mission not complete")
 return
-
 }
 
-coins+=20
-
-localStorage.setItem("daily",now)
-
+coins+=reward
 updateUI()
 
 }
 
-function advertised(){
-
-coins+=30
-missions++
-
-updateUI()
-
+function openModal(id){
+document.getElementById(id).style.display="block"
 }
 
-function missionClicks(){
-
-if(clicks<10){
-
-alert("Need 10 clicks")
-return
-
-}
-
-coins+=20
-missions++
-
-updateUI()
-
+function closeModal(id){
+document.getElementById(id).style.display="none"
 }
 
 function saveGame(){
 
-localStorage.setItem("coins",coins)
 localStorage.setItem("clicks",clicks)
-localStorage.setItem("missions",missions)
+localStorage.setItem("coins",coins)
 localStorage.setItem("coupons",JSON.stringify(coupons))
 
 }
 
 function loadGame(){
 
-let c=localStorage.getItem("coins")
-let cl=localStorage.getItem("clicks")
-let m=localStorage.getItem("missions")
+let c=localStorage.getItem("clicks")
+let co=localStorage.getItem("coins")
 let cp=localStorage.getItem("coupons")
 
-if(c)coins=parseInt(c)
-if(cl)clicks=parseInt(cl)
-if(m)missions=parseInt(m)
+if(c)clicks=parseInt(c)
+if(co)coins=parseInt(co)
 if(cp)coupons=JSON.parse(cp)
 
 updateUI()
-
-}
-
-function resetGame(){
-
-if(confirm("Reset all progress?")){
-
-localStorage.clear()
-
-coins=0
-clicks=0
-missions=0
-coupons=[]
-
-updateUI()
-
-}
 
 }
 

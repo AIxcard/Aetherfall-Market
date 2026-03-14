@@ -39,18 +39,19 @@ L10 20
 L14 30
 L18 28
 L14 18
-L28 18
+L26 18
 Z"
 fill="url(#grad)"
 stroke="white"
 stroke-width="2"
+stroke-linejoin="round"
 />
 </svg>
 `
 
 document.body.appendChild(cursor)
 
-// Move cursor
+// Cursor movement
 document.addEventListener("mousemove", e => {
 cursor.style.left = e.clientX + "px"
 cursor.style.top = e.clientY + "px"

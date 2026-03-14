@@ -13,8 +13,8 @@ body{
 margin:0;
 font-family:Arial;
 color:white;
-overflow:hidden;
 cursor:none;
+overflow:hidden;
 
 background:linear-gradient(
 -45deg,
@@ -61,7 +61,7 @@ from{transform:translateY(0);}
 to{transform:translateY(-1000px);}
 }
 
-/* CENTER */
+/* CENTER CONTENT */
 
 .center{
 height:100vh;
@@ -70,15 +70,11 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 text-align:center;
-z-index:2;
 position:relative;
-animation:fadeIn 2s ease;
+z-index:2;
 }
 
-/* LOGO */
-
 .logo{
-
 font-size:95px;
 letter-spacing:6px;
 
@@ -86,31 +82,20 @@ background:linear-gradient(
 90deg,
 #38bdf8,
 #6366f1,
-#9333ea,
-#38bdf8
+#9333ea
 );
-
-background-size:300%;
 
 -webkit-background-clip:text;
 color:transparent;
 
-animation:logoGradient 8s linear infinite;
-
 text-shadow:
 0 0 25px rgba(56,189,248,0.5),
 0 0 50px rgba(147,51,234,0.4);
-
-}
-
-@keyframes logoGradient{
-0%{background-position:0%;}
-100%{background-position:300%;}
 }
 
 .subtitle{
 margin-top:10px;
-opacity:0.85;
+opacity:0.8;
 font-size:20px;
 letter-spacing:3px;
 }
@@ -128,8 +113,6 @@ color:white;
 text-decoration:none;
 transition:0.35s;
 box-shadow:0 0 15px rgba(56,189,248,0.35);
-position:relative;
-z-index:3;
 }
 
 .enterBtn:hover{
@@ -139,59 +122,42 @@ box-shadow:
 0 0 50px #6366f1;
 }
 
-/* CROSSHAIR */
+/* CUSTOM CURSOR */
 
-.crosshair{
+.cursor{
 
 position:fixed;
 
-width:42px;
-height:42px;
+width:28px;
+height:40px;
 
 pointer-events:none;
 
-transform:translate(-50%,-50%);
-
 z-index:9999;
 
+transform:translate(-50%,-50%);
+
 }
 
-/* CENTER GEM */
+/* BLADE SHAPE */
 
-.crosshair-core{
+.cursor-blade{
 
-position:absolute;
+width:100%;
+height:100%;
 
-left:50%;
-top:50%;
-
-width:12px;
-height:12px;
-
-transform:translate(-50%,-50%) rotate(45deg);
-
-background:linear-gradient(
-135deg,
-#38bdf8,
-#6366f1,
-#9333ea
+clip-path:polygon(
+50% 0%,
+90% 40%,
+60% 100%,
+40% 100%,
+10% 40%
 );
 
-box-shadow:
-0 0 10px #38bdf8,
-0 0 20px #9333ea;
-
-}
-
-/* BLADES */
-
-.blade{
-
-position:absolute;
-
 background:linear-gradient(
-90deg,
+180deg,
 #38bdf8,
+#6366f1,
 #9333ea
 );
 
@@ -201,62 +167,52 @@ box-shadow:
 
 }
 
-.top{width:3px;height:15px;left:50%;top:0;transform:translateX(-50%);}
-.bottom{width:3px;height:15px;left:50%;bottom:0;transform:translateX(-50%);}
-.left{height:3px;width:15px;left:0;top:50%;transform:translateY(-50%);}
-.right{height:3px;width:15px;right:0;top:50%;transform:translateY(-50%);}
+/* FLAME EFFECT */
 
-/* ENERGY BURST */
-
-.burst{
+.cursor-flame{
 
 position:absolute;
 
+top:-8px;
 left:50%;
-top:50%;
 
-width:60px;
-height:60px;
+width:8px;
+height:14px;
 
-transform:translate(-50%,-50%);
+transform:translateX(-50%);
 
-border-radius:50%;
-
-background:radial-gradient(circle,
-rgba(56,189,248,0.9),
-rgba(147,51,234,0.7),
+background:linear-gradient(
+180deg,
+#38bdf8,
+#9333ea,
 transparent
 );
 
 opacity:0;
 
-pointer-events:none;
+filter:blur(1px);
 
 }
 
-@keyframes burstAnim{
+/* FLAME ANIMATION */
+
+@keyframes flameBurst{
 
 0%{
 opacity:1;
-transform:translate(-50%,-50%) scale(0.4);
+transform:translateX(-50%) scaleY(0.5);
 }
 
-70%{
-opacity:0.7;
+50%{
+opacity:1;
+transform:translateX(-50%) scaleY(1.4);
 }
 
 100%{
 opacity:0;
-transform:translate(-50%,-50%) scale(2.2);
+transform:translateX(-50%) scaleY(0.3);
 }
 
-}
-
-/* FADE */
-
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(40px);}
-to{opacity:1;transform:translateY(0);}
 }
 
 </style>
@@ -277,58 +233,52 @@ to{opacity:1;transform:translateY(0);}
 
 </div>
 
-<div class="crosshair" id="crosshair">
+<!-- CURSOR -->
 
-<div class="crosshair-core"></div>
+<div class="cursor" id="cursor">
 
-<div class="blade top"></div>
-<div class="blade bottom"></div>
-<div class="blade left"></div>
-<div class="blade right"></div>
-
-<div class="burst" id="burst"></div>
+<div class="cursor-blade"></div>
+<div class="cursor-flame" id="flame"></div>
 
 </div>
 
 <script>
 
-/* CROSSHAIR FOLLOW */
+/* CURSOR FOLLOW */
 
-const crosshair = document.getElementById("crosshair");
+const cursor = document.getElementById("cursor");
 
 document.addEventListener("mousemove", e => {
 
-crosshair.style.left = e.clientX + "px";
-crosshair.style.top = e.clientY + "px";
+cursor.style.left = e.clientX + "px";
+cursor.style.top = e.clientY + "px";
 
 });
 
-/* ESCANOR STYLE ENERGY FLARE */
+/* RANDOM FLAME BURST */
 
-const burst = document.getElementById("burst");
+const flame = document.getElementById("flame");
 
-function flare(){
+function triggerFlame(){
 
-burst.style.animation = "none";
-burst.offsetHeight;
+flame.style.animation = "none";
+flame.offsetHeight;
 
-burst.style.animation = "burstAnim 0.6s ease-out";
+flame.style.animation = "flameBurst 0.4s ease";
 
 }
 
-/* RANDOM 5–10 SECOND FLARES */
+function randomFlame(){
 
-function randomFlare(){
-
-flare();
+triggerFlame();
 
 let next = 5000 + Math.random()*5000;
 
-setTimeout(randomFlare,next);
+setTimeout(randomFlame,next);
 
 }
 
-randomFlare();
+randomFlame();
 
 </script>
 
@@ -336,4 +286,3 @@ randomFlare();
 
 </html>
 ```
-

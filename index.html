@@ -3,11 +3,10 @@
 
 <head>
 <title>Aetherfall Market</title>
-<link rel="stylesheet" href="style.css">
 
 <style>
 
-/* BODY BACKGROUND */
+/* BODY */
 
 body{
 margin:0;
@@ -21,14 +20,14 @@ background:linear-gradient(
 #0f172a,
 #1e1b4b,
 #3b0764,
-#0f172a
+#1e1b4b
 );
 
 background-size:400% 400%;
 animation:skyShift 20s ease infinite;
 }
 
-/* ANIMATED SKY COLORS */
+/* SKY SHIFT */
 
 @keyframes skyShift{
 0%{background-position:0% 50%;}
@@ -36,7 +35,7 @@ animation:skyShift 20s ease infinite;
 100%{background-position:0% 50%;}
 }
 
-/* STAR LAYER */
+/* STARS */
 
 .stars{
 position:fixed;
@@ -50,20 +49,31 @@ radial-gradient(white 1px, transparent 1px),
 radial-gradient(#38bdf8 1px, transparent 1px),
 radial-gradient(#a855f7 1px, transparent 1px);
 
-background-size:120px 120px, 200px 200px, 300px 300px;
-background-position:0 0, 40px 60px, 130px 270px;
+background-size:120px 120px, 200px 200px, 260px 260px;
 
 opacity:0.35;
 
-animation:starMove 80s linear infinite;
+animation:starMove 100s linear infinite;
 }
 
 @keyframes starMove{
 from{transform:translateY(0);}
-to{transform:translateY(-800px);}
+to{transform:translateY(-1000px);}
 }
 
-/* CENTER SCREEN */
+/* PARTICLES */
+
+.particle{
+position:fixed;
+width:4px;
+height:4px;
+background:#38bdf8;
+border-radius:50%;
+opacity:0.7;
+pointer-events:none;
+}
+
+/* CENTER */
 
 .center{
 height:100vh;
@@ -73,15 +83,13 @@ justify-content:center;
 align-items:center;
 text-align:center;
 animation:fadeIn 2s ease;
-z-index:2;
-position:relative;
 }
 
-/* BIG TITLE */
+/* LOGO */
 
 .logo{
 
-font-size:90px;
+font-size:95px;
 letter-spacing:6px;
 
 background:linear-gradient(
@@ -97,15 +105,17 @@ background-size:300%;
 -webkit-background-clip:text;
 color:transparent;
 
-animation:gradientMove 8s linear infinite;
+animation:logoGradient 8s linear infinite;
 
 text-shadow:
-0 0 20px rgba(56,189,248,0.5),
-0 0 40px rgba(99,102,241,0.4);
+0 0 25px rgba(56,189,248,0.5),
+0 0 50px rgba(147,51,234,0.4);
 
 }
 
-@keyframes gradientMove{
+/* LOGO GRADIENT */
+
+@keyframes logoGradient{
 0%{background-position:0%;}
 100%{background-position:300%;}
 }
@@ -119,13 +129,13 @@ font-size:20px;
 letter-spacing:3px;
 }
 
-/* ENTER BUTTON */
+/* BUTTON */
 
 .enterBtn{
 
 margin-top:50px;
 
-padding:16px 50px;
+padding:16px 60px;
 
 font-size:18px;
 
@@ -141,7 +151,7 @@ text-decoration:none;
 
 transition:0.35s;
 
-box-shadow:0 0 10px rgba(56,189,248,0.3);
+box-shadow:0 0 15px rgba(56,189,248,0.35);
 
 }
 
@@ -150,25 +160,22 @@ box-shadow:0 0 10px rgba(56,189,248,0.3);
 transform:scale(1.15);
 
 box-shadow:
-0 0 20px #38bdf8,
-0 0 40px #6366f1;
+0 0 25px #38bdf8,
+0 0 50px #6366f1;
 
 }
 
-/* FADE IN */
+/* FADE */
 
 @keyframes fadeIn{
-
 from{
 opacity:0;
 transform:translateY(40px);
 }
-
 to{
 opacity:1;
 transform:translateY(0);
 }
-
 }
 
 </style>
@@ -195,5 +202,65 @@ ENTER
 
 </div>
 
+<script>
+
+/* MAGIC PARTICLES */
+
+function createParticle(){
+
+let p = document.createElement("div");
+p.className="particle";
+
+p.style.left=Math.random()*window.innerWidth+"px";
+p.style.top=window.innerHeight+"px";
+
+document.body.appendChild(p);
+
+let speed=1+Math.random()*2;
+
+function animate(){
+
+let y=parseFloat(p.style.top);
+
+p.style.top=(y-speed)+"px";
+
+if(y<-10){
+p.remove();
+return;
+}
+
+requestAnimationFrame(animate);
+}
+
+animate();
+}
+
+/* spawn particles */
+
+setInterval(createParticle,120);
+
+
+/* mouse glow */
+
+let glow=document.createElement("div");
+
+glow.style.position="fixed";
+glow.style.width="300px";
+glow.style.height="300px";
+glow.style.borderRadius="50%";
+glow.style.pointerEvents="none";
+glow.style.background="radial-gradient(circle, rgba(56,189,248,0.15), transparent 70%)";
+glow.style.transform="translate(-50%,-50%)";
+
+document.body.appendChild(glow);
+
+document.addEventListener("mousemove",e=>{
+glow.style.left=e.clientX+"px";
+glow.style.top=e.clientY+"px";
+});
+
+</script>
+
 </body>
+
 </html>

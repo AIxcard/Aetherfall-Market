@@ -1,7 +1,6 @@
 ```html
 <!DOCTYPE html>
 <html>
-
 <head>
 <title>Aetherfall Market</title>
 
@@ -16,10 +15,8 @@ display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
-font-family:Arial;
+font-family:Arial, sans-serif;
 color:white;
-
-/* purple + white animated gradient */
 
 background:linear-gradient(
 -45deg,
@@ -48,8 +45,6 @@ animation:bgMove 12s ease infinite;
 font-size:95px;
 letter-spacing:6px;
 
-/* purple + white gradient text */
-
 background:linear-gradient(
 90deg,
 #ffffff,
@@ -71,18 +66,27 @@ text-shadow:
 
 }
 
-/* text gradient animation */
-
 @keyframes textMove{
 0%{background-position:0%;}
 100%{background-position:300%;}
+}
+
+/* TAGLINE */
+
+.tagline{
+margin-top:15px;
+font-size:18px;
+letter-spacing:2px;
+opacity:0.9;
+text-align:center;
+max-width:600px;
 }
 
 /* ENTER BUTTON */
 
 .enterBtn{
 
-margin-top:60px;
+margin-top:50px;
 
 padding:16px 60px;
 
@@ -120,9 +124,12 @@ box-shadow:
 
 <h1 class="logo">AETHERFALL MARKET</h1>
 
+<div class="tagline">
+Discover powerful scripts, unique systems, and custom creations to elevate your game worlds.
+</div>
+
 <a href="market.html" class="enterBtn">ENTER</a>
 
 </body>
-
 </html>
 ```

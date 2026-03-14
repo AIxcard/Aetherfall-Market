@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Aetherfall Coin Game</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+margin:0;
+}
+
+header{
+text-align:center;
+padding:25px;
+font-size:40px;
+color:#a855f7;
+box-shadow:0 0 20px #9333ea;
+}
+
+#container{
+display:flex;
+justify-content:center;
+gap:40px;
+padding:40px;
+flex-wrap:wrap;
+}
+
+.panel{
+background:#0f172a;
+padding:25px;
+border-radius:12px;
+border:1px solid #2563eb;
+width:280px;
+box-shadow:0 0 12px rgba(59,130,246,.4);
+}
+
+.panel h2{
+margin-top:0;
+color:#38bdf8;
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:8px;
+margin-top:10px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.coinBtn{
+background:#2563eb;
+color:white;
+}
+
+.shopBtn{
+background:#9333ea;
+color:white;
+}
+
+.rewardBtn{
+background:#16a34a;
+color:white;
+}
+
+.stat{
+margin:6px 0;
+}
+
+#couponList{
+font-size:14px;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>AETHERFALL COIN GAME</header>
+
+<div id="container">
+
+<div class="panel">
+<h2>Coins</h2>
+<div id="coinText">Coins: 0</div>
+<button class="coinBtn" onclick="collectCoin()">Collect Coin</button>
+</div>
+
+<div class="panel">
+<h2>Daily Rewards</h2>
+<div>Claim once per day</div>
+<button class="rewardBtn" onclick="dailyReward()">Claim Reward</button>
+</div>
+
+<div class="panel">
+<h2>Missions</h2>
+
+<div class="stat">Advertise store → +30 coins</div>
+<button onclick="advertised()">Claim</button>
+
+<div class="stat">Play 10 clicks → +20 coins</div>
+<button onclick="missionClicks()">Claim</button>
+
+</div>
+
+<div class="panel">
+<h2>Coupon Shop</h2>
+
+<div>5 Baht Discount</div>
+<button class="shopBtn" onclick="buyCoupon(50,5)">Buy (50 coins)</button>
+
+<div>10 Baht Discount</div>
+<button class="shopBtn" onclick="buyCoupon(100,10)">Buy (100 coins)</button>
+
+<div>20 Baht Discount</div>
+<button class="shopBtn" onclick="buyCoupon(180,20)">Buy (180 coins)</button>
+
+</div>
+
+<div class="panel">
+<h2>Your Coupons</h2>
+<div id="couponList"></div>
+</div>
+
+<div class="panel">
+<h2>Stats</h2>
+
+<div id="clickStat">Clicks: 0</div>
+<div id="missionStat">Mission Completed: 0</div>
+
+<button onclick="resetGame()">Reset Progress</button>
+
+</div>
+
+</div>
+
+<script>
+
+let coins=0
+let clicks=0
+let missions=0
+let coupons=[]
+
+function updateUI(){
+
+document.getElementById("coinText").innerText="Coins: "+coins
+document.getElementById("clickStat").innerText="Clicks: "+clicks
+document.getElementById("missionStat").innerText="Mission Completed: "+missions
+
+let list=""
+
+coupons.forEach(c=>{
+list+=c+"<br>"
+})
+
+document.getElementById("couponList").innerHTML=list
+
+saveGame()
+
+}
+
+function collectCoin(){
+
+coins++
+clicks++
+
+updateUI()
+
+}
+
+function buyCoupon(cost,value){
+
+if(coins<cost){
+
+alert("Not enough coins")
+return
+
+}
+
+coins-=cost
+
+let code="ABYSS-"+Math.floor(Math.random()*9000+1000)
+
+coupons.push(code+" ("+value+" Baht Discount)")
+
+updateUI()
+
+}
+
+function dailyReward(){
+
+let last=localStorage.getItem("daily")
+
+let now=Date.now()
+
+if(last && now-last<86400000){
+
+alert("Already claimed today")
+return
+
+}
+
+coins+=20
+
+localStorage.setItem("daily",now)
+
+updateUI()
+
+}
+
+function advertised(){
+
+coins+=30
+missions++
+
+updateUI()
+
+}
+
+function missionClicks(){
+
+if(clicks<10){
+
+alert("Need 10 clicks")
+return
+
+}
+
+coins+=20
+missions++
+
+updateUI()
+
+}
+
+function saveGame(){
+
+localStorage.setItem("coins",coins)
+localStorage.setItem("clicks",clicks)
+localStorage.setItem("missions",missions)
+localStorage.setItem("coupons",JSON.stringify(coupons))
+
+}
+
+function loadGame(){
+
+let c=localStorage.getItem("coins")
+let cl=localStorage.getItem("clicks")
+let m=localStorage.getItem("missions")
+let cp=localStorage.getItem("coupons")
+
+if(c)coins=parseInt(c)
+if(cl)clicks=parseInt(cl)
+if(m)missions=parseInt(m)
+if(cp)coupons=JSON.parse(cp)
+
+updateUI()
+
+}
+
+function resetGame(){
+
+if(confirm("Reset all progress?")){
+
+localStorage.clear()
+
+coins=0
+clicks=0
+missions=0
+coupons=[]
+
+updateUI()
+
+}
+
+}
+
+loadGame()
+
+</script>
+
+</body>
+</html>

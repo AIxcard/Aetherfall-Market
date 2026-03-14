@@ -4,52 +4,81 @@
 
 <title>Aetherfall Click Game</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-
 <style>
 
 body{
 margin:0;
-background:#070b1f;
 font-family:Arial;
+background:#070b1f;
 color:white;
 overflow:hidden;
 }
 
 header{
 text-align:center;
-font-size:40px;
-padding:15px;
-font-family:'Orbitron';
-background:linear-gradient(90deg,#38bdf8,#9333ea);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
+font-size:32px;
+padding:16px;
+color:#a855f7;
+letter-spacing:3px;
 }
 
-#stats{
-display:flex;
-justify-content:center;
-gap:25px;
+#layout{
+display:grid;
+grid-template-columns:320px 1fr 320px;
+height:calc(100vh - 70px);
 }
 
-.stat{
+/* PANELS */
+
+.panel{
+padding:20px;
+overflow:auto;
+}
+
+/* MISSIONS */
+
+.mission{
 background:#0f172a;
-padding:10px 18px;
 border-radius:10px;
+padding:12px;
+margin-bottom:14px;
 border:1px solid #1e3a8a;
 }
 
-#center{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-text-align:center;
+.bar{
+height:14px;
+background:#1e293b;
+border-radius:6px;
+overflow:hidden;
+position:relative;
 }
 
+.fill{
+height:100%;
+background:#22c55e;
+width:0%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:11px;
+}
+
+/* CENTER */
+
+#center{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+position:relative;
+}
+
+/* SWORD */
+
 #sword{
-width:260px;
-transition:.15s;
+width:280px;
+cursor:pointer;
+transition:0.12s;
 }
 
 #sword:hover{
@@ -57,62 +86,11 @@ transform:scale(1.05);
 filter:drop-shadow(0 0 20px #9333ea);
 }
 
-.panel{
-position:absolute;
-left:20px;
-top:150px;
-width:260px;
+#sword:active{
+transform:scale(.9);
 }
 
-.card{
-background:#0f172a;
-border:1px solid #1e3a8a;
-border-radius:12px;
-padding:14px;
-margin-bottom:14px;
-}
-
-.bar{
-height:16px;
-background:#1e293b;
-border-radius:6px;
-position:relative;
-overflow:hidden;
-}
-
-.fill{
-background:#22c55e;
-height:100%;
-width:0%;
-}
-
-.percent{
-position:absolute;
-width:100%;
-text-align:center;
-top:0;
-font-size:12px;
-}
-
-.shop{
-position:absolute;
-right:20px;
-top:150px;
-width:260px;
-}
-
-button{
-background:#9333ea;
-border:none;
-padding:8px 12px;
-border-radius:6px;
-color:white;
-margin-top:6px;
-}
-
-button:hover{
-background:#a855f7;
-}
+/* FLOAT TEXT */
 
 .float{
 position:absolute;
@@ -123,225 +101,349 @@ animation:floatUp 1s forwards;
 
 @keyframes floatUp{
 0%{opacity:1;transform:translateY(0)}
-100%{opacity:0;transform:translateY(-60px)}
+100%{opacity:0;transform:translateY(-70px)}
+}
+
+/* STATS */
+
+#stats{
+margin-top:20px;
+text-align:center;
+font-size:18px;
+}
+
+/* SHOP */
+
+.shopItem{
+background:#0f172a;
+border-radius:10px;
+padding:10px;
+margin-bottom:10px;
+border:1px solid #1e3a8a;
+}
+
+.shopItem button{
+margin-top:6px;
+background:#9333ea;
+border:none;
+padding:5px 9px;
+border-radius:6px;
+color:white;
+cursor:pointer;
+}
+
+/* SETTINGS */
+
+#settingsBtn{
+position:absolute;
+top:15px;
+right:20px;
+cursor:pointer;
+font-size:18px;
+}
+
+.modal{
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:#020617;
+border:1px solid #2563eb;
+border-radius:12px;
+padding:25px;
+width:380px;
+}
+
+.close{
+position:absolute;
+top:10px;
+right:15px;
+cursor:pointer;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<header>AETHERFALL CLICK GAME</header>
+<header>
+AETHERFALL CLICK GAME
+<span id="settingsBtn" onclick="openSettings()">⚙</span>
+</header>
 
-<div id="stats">
-
-<div class="stat">Clicks: <span id="clicks">0</span></div>
-<div class="stat">Coins: <span id="coins">0</span></div>
-<div class="stat">Fragments: <span id="fragments">0</span></div>
-<div class="stat">Combo: <span id="combo">0</span></div>
-
-</div>
-
-<div id="center">
-<img src="Final_game_icon.png" id="sword">
-</div>
+<div id="layout">
 
 <div class="panel">
 
-<div class="card">
+<h3>Missions</h3>
 
-<b id="storyTitle">★ Storyline 1</b>
-
-<div id="storyInfo"></div>
-
-<div class="bar">
-<div class="fill" id="storyFill"></div>
-<div class="percent" id="storyPercent">0%</div>
+<div class="mission">
+5,000 Clicks — 50 Coins
+<div class="bar"><div id="m1" class="fill">0%</div></div>
 </div>
 
-<button id="claimBtn" onclick="claimStory()" disabled>
-Claim Reward
-</button>
-
+<div class="mission">
+25,000 Clicks — 200 Coins
+<div class="bar"><div id="m2" class="fill">0%</div></div>
 </div>
 
+<div class="mission">
+100,000 Clicks — 900 Coins
+<div class="bar"><div id="m3" class="fill">0%</div></div>
 </div>
 
-<div class="shop">
+<h3>Daily Challenge</h3>
 
-<div class="card">
-
-<b>5 Baht Coupon</b><br>
-Cost: 300 Coins
-
-<button onclick="buyCoupon(300,5)">Buy</button>
+<div class="mission">
+Reach 2000 clicks today — 60 Coins
+<div class="bar"><div id="daily" class="fill">0%</div></div>
+</div>
 
 </div>
 
-<div class="card">
 
-<b>10 Baht Coupon</b><br>
-Cost: 700 Coins
+<div id="center">
 
-<button onclick="buyCoupon(700,10)">Buy</button>
+<img id="sword" src="Final_game_icon.png">
 
-</div>
+<div id="stats">
 
-<div class="card">
-
-<b>20 Baht Coupon</b><br>
-Cost: 1800 Coins
-
-<button onclick="buyCoupon(1800,20)">Buy</button>
+Clicks: <span id="clicks">0</span><br>
+Coins: <span id="coins">0</span><br>
+Fragments: <span id="fragments">0</span><br>
+Combo: x<span id="combo">1</span>
 
 </div>
 
 </div>
 
-<audio id="music" loop>
-<source src="placeholder.mp3">
-</audio>
+
+<div class="panel">
+
+<h3>Upgrades</h3>
+
+<div class="shopItem">
+Sharper Blade (+1 click power)<br>
+Cost: 120 coins<br>
+<button onclick="upgrade(120,1)">Buy</button>
+</div>
+
+<div class="shopItem">
+Aether Core (+3 click power)<br>
+Cost: 400 coins<br>
+<button onclick="upgrade(400,3)">Buy</button>
+</div>
+
+<div class="shopItem">
+Spirit Flame (+10% crit)<br>
+Cost: 700 coins<br>
+<button onclick="critUpgrade()">Buy</button>
+</div>
+
+<h3>Coupon Shop</h3>
+
+<div class="shopItem">
+5 Baht Discount<br>
+Cost: 250 coins<br>
+<button onclick="coupon(250,5)">Buy</button>
+</div>
+
+<div class="shopItem">
+10 Baht Discount<br>
+Cost: 600 coins<br>
+<button onclick="coupon(600,10)">Buy</button>
+</div>
+
+<div class="shopItem">
+20 Baht Discount<br>
+Cost: 1500 coins<br>
+<button onclick="coupon(1500,20)">Buy</button>
+</div>
+
+</div>
+
+</div>
+
+
+<div id="settings" class="modal">
+
+<div class="close" onclick="closeSettings()">X</div>
+
+<h3>Settings</h3>
+
+<label>
+<input type="checkbox" id="animToggle" checked>
+Animations
+</label>
+
+<br><br>
+
+<label>UI Scale</label><br>
+<input type="range" min="80" max="120" value="100" id="scale">
+
+</div>
+
 
 <script>
 
 let clicks=0
 let coins=0
 let fragments=0
-let combo=0
+let clickPower=1
+let critChance=0.05
+let combo=1
 let lastClick=0
-
-let storyIndex=0
-
-const stories=[
-{goal:100,reward:10},
-{goal:500,reward:25},
-{goal:2000,reward:80},
-{goal:8000,reward:200}
-]
 
 const sword=document.getElementById("sword")
 
-sword.onclick=e=>{
+sword.onclick=(e)=>{
 
 let now=Date.now()
 
-if(now-lastClick>2000)combo=0
+if(now-lastClick<400){
 combo++
+}else{
+combo=1
+}
 
 lastClick=now
 
-clicks++
+let gain=clickPower*combo
 
-if(Math.random()<0.05)coins++
-if(Math.random()<0.02)fragments++
+if(Math.random()<critChance){
+gain*=5
+spawnText(e,"CRITICAL +" + gain,"#facc15")
+}else{
+spawnText(e,"+"+gain,"#38bdf8")
+}
 
-spawnText(e)
+clicks+=gain
+
+if(Math.random()<0.01){
+fragments++
+spawnText(e,"Fragment!","#a855f7")
+}
+
+if(clicks%1000<gain){
+coins+=10
+}
 
 update()
 
 }
 
-function spawnText(e){
+function spawnText(e,text,color){
+
+if(!document.getElementById("animToggle").checked)return
 
 let t=document.createElement("div")
 t.className="float"
-
-if(Math.random()<0.1){
-t.innerText="CRITICAL"
-t.style.color="#facc15"
-coins+=2
-}else{
-t.innerText="+1"
-t.style.color="#38bdf8"
-}
+t.innerText=text
+t.style.color=color
 
 t.style.left=e.pageX+"px"
 t.style.top=e.pageY+"px"
 
 document.body.appendChild(t)
 
-setTimeout(()=>t.remove(),900)
+setTimeout(()=>t.remove(),1000)
 
 }
 
-function update(){
+function upgrade(cost,power){
 
-document.getElementById("clicks").innerText=clicks
-document.getElementById("coins").innerText=coins
-document.getElementById("fragments").innerText=fragments
-document.getElementById("combo").innerText=combo
+if(coins<cost)return alert("Not enough coins")
 
-let s=stories[storyIndex]
-
-document.getElementById("storyTitle").innerText=
-"★ Storyline "+(storyIndex+1)
-
-document.getElementById("storyInfo").innerText=
-"Goal: "+s.goal+" clicks | Reward: "+s.reward+" coins"
-
-let percent=Math.min(100,(clicks/s.goal)*100)
-
-document.getElementById("storyFill").style.width=percent+"%"
-document.getElementById("storyPercent").innerText=Math.floor(percent)+"%"
-
-if(clicks>=s.goal){
-document.getElementById("claimBtn").disabled=false
-}
-
-save()
-
-}
-
-function claimStory(){
-
-let s=stories[storyIndex]
-
-if(clicks<s.goal)return
-
-coins+=s.reward
-
-storyIndex++
-
-document.getElementById("claimBtn").disabled=true
+coins-=cost
+clickPower+=power
 
 update()
 
 }
 
-function buyCoupon(cost,val){
+function critUpgrade(){
 
-if(coins<cost)return
+if(coins<700)return alert("Not enough coins")
+
+coins-=700
+critChance+=0.10
+
+update()
+
+}
+
+function coupon(cost,val){
+
+if(coins<cost)return alert("Not enough coins")
 
 coins-=cost
 
-let code="AETHER-"+Math.floor(Math.random()*9000)
+alert("Coupon generated: AETHER-"+Math.floor(Math.random()*9000)+" ("+val+" Baht)")
 
-let coupons=JSON.parse(localStorage.getItem("abyssCoupons")||"[]")
+update()
 
-coupons.push(code+" ("+val+" Baht)")
+}
 
-localStorage.setItem("abyssCoupons",JSON.stringify(coupons))
+function update(){
 
-alert("Coupon: "+code)
+document.getElementById("clicks").innerText=Math.floor(clicks)
+document.getElementById("coins").innerText=coins
+document.getElementById("fragments").innerText=fragments
+document.getElementById("combo").innerText=combo
 
+updateMission("m1",5000)
+updateMission("m2",25000)
+updateMission("m3",100000)
+updateMission("daily",2000)
+
+save()
+
+}
+
+function updateMission(id,goal){
+
+let percent=Math.min(100,(clicks/goal)*100)
+
+let bar=document.getElementById(id)
+
+bar.style.width=percent+"%"
+bar.innerText=Math.floor(percent)+"%"
+
+}
+
+function openSettings(){
+document.getElementById("settings").style.display="block"
+}
+
+function closeSettings(){
+document.getElementById("settings").style.display="none"
+}
+
+document.getElementById("scale").oninput=function(){
+document.body.style.transform="scale("+this.value/100+")"
 }
 
 function save(){
 
-localStorage.setItem("af_clicks",clicks)
-localStorage.setItem("af_coins",coins)
-localStorage.setItem("af_frag",fragments)
-localStorage.setItem("af_story",storyIndex)
+localStorage.setItem("a_clicks",clicks)
+localStorage.setItem("a_coins",coins)
+localStorage.setItem("a_frag",fragments)
+localStorage.setItem("a_power",clickPower)
 
 }
 
 function load(){
 
-clicks=parseInt(localStorage.getItem("af_clicks"))||0
-coins=parseInt(localStorage.getItem("af_coins"))||0
-fragments=parseInt(localStorage.getItem("af_frag"))||0
-storyIndex=parseInt(localStorage.getItem("af_story"))||0
+let c=localStorage.getItem("a_clicks")
+let co=localStorage.getItem("a_coins")
+let f=localStorage.getItem("a_frag")
+let p=localStorage.getItem("a_power")
+
+if(c)clicks=parseInt(c)
+if(co)coins=parseInt(co)
+if(f)fragments=parseInt(f)
+if(p)clickPower=parseInt(p)
 
 update()
 

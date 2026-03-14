@@ -1,230 +1,23 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-
-<title>Aetherfall Market</title>
-
-<style>
-
-body{
-margin:0;
-font-family:Arial;
-background:linear-gradient(135deg,#0b1026,#1c1040,#2a1a66);
-color:white;
-}
-
-.title{
-text-align:center;
-font-size:60px;
-margin-top:60px;
-letter-spacing:6px;
-}
-
-.subtitle{
-text-align:center;
-opacity:0.7;
-margin-bottom:50px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:25px;
-width:80%;
-margin:auto;
-}
-
-.box{
-background:#0e1535;
-border-radius:18px;
-padding:35px;
-text-align:center;
-cursor:pointer;
-border:1px solid rgba(255,255,255,0.1);
-transition:0.3s;
-}
-
-.box:hover{
-transform:translateY(-6px);
-box-shadow:0 0 25px rgba(120,120,255,0.4);
-}
-
-.section{
-display:none;
-width:70%;
-margin:60px auto;
-}
-
-.qa-item{
-background:#11183f;
-padding:20px;
-border-radius:12px;
-margin-bottom:20px;
-}
-
-.item{
-display:flex;
-gap:20px;
-background:#11183f;
-padding:20px;
-border-radius:12px;
-margin-bottom:20px;
-}
-
-.item img{
-width:90px;
-height:90px;
-border-radius:10px;
-object-fit:cover;
-}
-
-h2{
-margin-bottom:30px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="title">AETHERFALL MARKET</div>
-<div class="subtitle">Marketplace</div>
-
-
 <div class="grid">
 
-<div class="box" onclick="openSection('qa')">
+<a href="qa.html" class="box">
 <h3>Q&A</h3>
 <p>Common Questions</p>
-</div>
+</a>
 
-<div class="box" onclick="openSection('snacks')">
+<a href="snacks.html" class="box">
 <h3>Snacks</h3>
 <p>Available Items</p>
-</div>
+</a>
 
-<div class="box" onclick="openSection('games')">
+<a href="games.html" class="box">
 <h3>Game Services</h3>
 <p>Boosting / Help</p>
-</div>
+</a>
 
-<div class="box" onclick="openSection('info')">
+<a href="info.html" class="box">
 <h3>Store Info</h3>
 <p>Purchase Details</p>
-</div>
+</a>
 
 </div>
-
-
-
-<div id="qa" class="section">
-
-<h2>Questions & Answers</h2>
-
-<div class="qa-item">
-<h4>How can I purchase an item?</h4>
-<p>Please contact the seller directly after confirming that the item is currently in stock.</p>
-</div>
-
-<div class="qa-item">
-<h4>Are items restocked?</h4>
-<p>Yes. Certain items such as snacks may be restocked periodically depending on availability.</p>
-</div>
-
-<div class="qa-item">
-<h4>Can prices change?</h4>
-<p>Prices may change depending on stock availability and supply.</p>
-</div>
-
-</div>
-
-
-
-<div id="snacks" class="section">
-
-<h2>Snacks</h2>
-
-<div class="item">
-<img src="https://via.placeholder.com/90">
-<div>
-<h3>Chocolate Bar</h3>
-<p>Price: $1.50</p>
-<p>Stock: 12</p>
-</div>
-</div>
-
-<div class="item">
-<img src="https://via.placeholder.com/90">
-<div>
-<h3>Spicy Chips</h3>
-<p>Price: $2.00</p>
-<p>Stock: 8</p>
-</div>
-</div>
-
-</div>
-
-
-
-<div id="games" class="section">
-
-<h2>Game Services</h2>
-
-<div class="item">
-<img src="https://via.placeholder.com/90">
-<div>
-<h3>Roblox Grinding Service</h3>
-<p>Price: $5</p>
-<p>Stock: Available</p>
-</div>
-</div>
-
-<div class="item">
-<img src="https://via.placeholder.com/90">
-<div>
-<h3>Minecraft Build Assistance</h3>
-<p>Price: $8</p>
-<p>Stock: Available</p>
-</div>
-</div>
-
-</div>
-
-
-
-<div id="info" class="section">
-
-<h2>Store Information</h2>
-
-<div class="qa-item">
-<p>
-This marketplace displays currently available items and services.
-Before purchasing, please confirm stock availability with the seller.
-Payment methods and delivery details will be discussed directly during purchase.
-</p>
-</div>
-
-</div>
-
-
-
-<script>
-
-function openSection(id){
-
-let sections=document.querySelectorAll(".section");
-
-sections.forEach(section=>{
-section.style.display="none";
-});
-
-document.getElementById(id).style.display="block";
-
-}
-
-</script>
-
-</body>
-</html>

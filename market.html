@@ -1,233 +1,86 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
+
 <title>Aetherfall Market</title>
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
 body{
-background:#020617;
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#0b1026,#1c1040,#2a1a66);
 color:white;
-overflow-x:hidden;
 }
 
-/* GALAXY STARS */
-
-.stars{
-position:fixed;
-width:100%;
-height:200%;
-top:-100%;
-left:0;
-
-background:
-radial-gradient(white 1px, transparent 1px),
-radial-gradient(#60a5fa 1px, transparent 1px),
-radial-gradient(#3b82f6 2px, transparent 2px);
-
-background-size:120px 120px,200px 200px,300px 300px;
-
-animation:starsMove 120s linear infinite;
-
-z-index:-2;
+.title{
+text-align:center;
+font-size:60px;
+margin-top:60px;
+letter-spacing:6px;
 }
 
-@keyframes starsMove{
-from{transform:translateY(0)}
-to{transform:translateY(2000px)}
-}
-
-/* BACKGROUND THEMES */
-
-.nebula{
-background:
-radial-gradient(circle at 20% 30%,#9333ea 0%,transparent 50%),
-radial-gradient(circle at 80% 70%,#2563eb 0%,transparent 50%),
-radial-gradient(circle at 50% 50%,#ec4899 0%,transparent 60%),
-#020617;
-}
-
-.singularity{
-background:
-radial-gradient(circle at center,#7e22ce 0%,#000000 70%),
-radial-gradient(circle at center,rgba(168,85,247,.5) 0%,transparent 40%);
-}
-
-.abyss{
-background:#000000;
+.subtitle{
+text-align:center;
+opacity:0.7;
+margin-bottom:50px;
 }
 
 .grid{
-background:
-linear-gradient(#0f172a 1px,transparent 1px),
-linear-gradient(90deg,#0f172a 1px,transparent 1px);
-background-size:50px 50px;
-background-color:#020617;
-}
-
-/* HERO */
-
-.hero{
-width:100%;
-height:180px;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-background:linear-gradient(270deg,#000000,#4c1d95,#000000,#7e22ce,#000000);
-background-size:600% 600%;
-
-animation:gradientFlow 15s ease infinite;
-
-box-shadow:
-0 0 40px rgba(168,85,247,.5),
-inset 0 0 40px rgba(168,85,247,.3);
-}
-
-@keyframes gradientFlow{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
-
-.hero h1{
-font-size:64px;
-font-weight:bold;
-letter-spacing:6px;
-color:#c084fc;
-
-text-shadow:
-0 0 10px #9333ea,
-0 0 20px #9333ea,
-0 0 40px #7e22ce,
-0 0 80px #6b21a8;
-}
-
-/* NAVBAR */
-
-nav{
-text-align:center;
-padding:20px;
-background:rgba(2,6,23,.65);
-}
-
-nav a{
-margin:20px;
-color:#38bdf8;
-text-decoration:none;
-font-size:18px;
-}
-
-/* SECTIONS */
-
-section{
-max-width:950px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:25px;
+width:80%;
 margin:auto;
-padding:60px 20px;
+}
+
+.box{
+background:#0e1535;
+border-radius:18px;
+padding:35px;
+text-align:center;
+cursor:pointer;
+border:1px solid rgba(255,255,255,0.1);
+transition:0.3s;
+}
+
+.box:hover{
+transform:translateY(-6px);
+box-shadow:0 0 25px rgba(120,120,255,0.4);
+}
+
+.section{
+display:none;
+width:70%;
+margin:60px auto;
+}
+
+.qa-item{
+background:#11183f;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+}
+
+.item{
+display:flex;
+gap:20px;
+background:#11183f;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+}
+
+.item img{
+width:90px;
+height:90px;
+border-radius:10px;
+object-fit:cover;
 }
 
 h2{
-margin-bottom:25px;
-color:#60a5fa;
-border-bottom:2px solid #1e40af;
-padding-bottom:10px;
-}
-
-/* CARDS */
-
-.card{
-background:rgba(15,23,42,.85);
-border:1px solid #1e3a8a;
-border-radius:12px;
-padding:15px;
-margin:12px 0;
-transition:.25s;
-cursor:pointer;
-}
-
-.card:hover{
-transform:scale(1.03);
-border-color:#38bdf8;
-box-shadow:0 0 15px #2563eb;
-}
-
-/* DROPDOWN */
-
-details{
-background:rgba(15,23,42,.8);
-border:1px solid #1e3a8a;
-border-radius:12px;
-margin:15px 0;
-padding:18px;
-}
-
-summary{
-cursor:pointer;
-font-size:20px;
-color:#38bdf8;
-font-weight:bold;
-}
-
-/* SETTINGS */
-
-.settingsBtn{
-position:fixed;
-bottom:20px;
-right:20px;
-font-size:28px;
-background:#020617;
-border:1px solid #2563eb;
-border-radius:12px;
-padding:12px 18px;
-cursor:pointer;
-z-index:999;
-}
-
-.settingsPanel{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#020617;
-display:none;
-z-index:2000;
-padding:60px;
-}
-
-.settingBox{
-background:#0f172a;
-border:1px solid #2563eb;
-padding:25px;
-border-radius:12px;
-max-width:400px;
-}
-
-.closeSettings{
-margin-top:40px;
-padding:12px 20px;
-background:#2563eb;
-border:none;
-border-radius:8px;
-cursor:pointer;
-color:white;
-}
-
-footer{
-text-align:center;
-padding:40px;
-background:rgba(2,6,23,.8);
-margin-top:50px;
+margin-bottom:30px;
 }
 
 </style>
@@ -236,275 +89,142 @@ margin-top:50px;
 
 <body>
 
-<div class="stars"></div>
+<div class="title">AETHERFALL MARKET</div>
+<div class="subtitle">Marketplace</div>
 
-<div class="hero">
-<h1>AETHERFALL MARKET</h1>
+
+<div class="grid">
+
+<div class="box" onclick="openSection('qa')">
+<h3>Q&A</h3>
+<p>Common Questions</p>
 </div>
 
-<nav>
+<div class="box" onclick="openSection('snacks')">
+<h3>Snacks</h3>
+<p>Available Items</p>
+</div>
 
-<a href="#snacks">Snacks</a> <a href="#games">Roblox Services</a> <a href="#terms">Terms</a> <a href="#qa">Q&A</a> <a href="reviews.html">Reviews</a>
+<div class="box" onclick="openSection('games')">
+<h3>Game Services</h3>
+<p>Boosting / Help</p>
+</div>
 
-</nav>
+<div class="box" onclick="openSection('info')">
+<h3>Store Info</h3>
+<p>Purchase Details</p>
+</div>
 
-<audio id="music" loop>
-<source src="The Blood-Red Commanders March (Anime Vanguards OST).mp3" type="audio/mpeg">
-</audio>
+</div>
 
-<section id="snacks">
+
+
+<div id="qa" class="section">
+
+<h2>Questions & Answers</h2>
+
+<div class="qa-item">
+<h4>How can I purchase an item?</h4>
+<p>Please contact the seller directly after confirming that the item is currently in stock.</p>
+</div>
+
+<div class="qa-item">
+<h4>Are items restocked?</h4>
+<p>Yes. Certain items such as snacks may be restocked periodically depending on availability.</p>
+</div>
+
+<div class="qa-item">
+<h4>Can prices change?</h4>
+<p>Prices may change depending on stock availability and supply.</p>
+</div>
+
+</div>
+
+
+
+<div id="snacks" class="section">
 
 <h2>Snacks</h2>
 
-<div class="card">Skittles — 23 Baht | Stock 3</div>
-<div class="card">Chips — 16 Baht | Stock 10</div>
-<div class="card">Chuppa Lollipop — 8 Baht | Stock 10</div>
-<div class="card">Beng Beng — 9 Baht | Stock 10</div>
-
-</section>
-
-<section id="games">
-
-<h2>Roblox Services</h2>
-
-<details>
-<summary>Anime Spirits</summary>
-<div class="card">All Limited In Game — Price Varies</div>
-<div class="card">Best Soul Sword FS Spec Carry — 100 Baht</div>
-</details>
-
-<details>
-<summary>Verse Piece</summary>
-<div class="card">2X Drop GP — 230 Baht | Stock 5</div>
-<div class="card">Unlimited Bag GP — 100 Baht | Stock 4</div>
-<div class="card">2X Drop Luck GP — 50 Baht | Stock 2</div>
-<div class="card">Ainz Sets — 10 Baht | Stock 80</div>
-<div class="card">Homura Sets — 8 Baht | Stock 5</div>
-<div class="card">Madoka Sets — 8 Baht | Stock 2</div>
-</details>
-
-<details>
-<summary>Case Paradise</summary>
-<div class="card">Dragon Lore — 100 Baht | Stock 1</div>
-<div class="card">Emerald Web Gloves — 90 Baht | Stock 1</div>
-<div class="card">AWP Gungnir — 75 Baht | Stock 1</div>
-<div class="card">Extra Skins — 15 Baht each</div>
-</details>
-
-<details>
-<summary>Anime Vanguards</summary>
-<div class="card">Story Stage — 5 Baht</div>
-<div class="card">Challenge Stage — 10 Baht</div>
-<div class="card">Raid Stage — 15 Baht</div>
-<div class="card">30 Minutes Carry — 30 Baht</div>
-<div class="card">1 Hour Carry — 50 Baht</div>
-<div class="card">5 Hour Carry — 200 Baht</div>
-<div class="card">10 Hour Carry — 350 Baht</div>
-<div class="card">24 Hour Carry — 600 Baht</div>
-<div class="card">WoU — 25 Baht | Stock 10</div>
-<div class="card">Dio — 50 Baht | Stock 6</div>
-<div class="card">Shiny Dio — 100 Baht | Stock 5</div>
-</details>
-
-<details>
-<summary>Anime Paradox</summary>
-<div class="card">Story Stage — 5 Baht</div>
-<div class="card">Challenge Stage — 10 Baht</div>
-<div class="card">Raid Stage — 15 Baht</div>
-<div class="card">30 Minutes Carry — 30 Baht</div>
-<div class="card">1 Hour Carry — 50 Baht</div>
-<div class="card">5 Hour Carry — 200 Baht</div>
-<div class="card">10 Hour Carry — 350 Baht</div>
-<div class="card">24 Hour Carry — 600 Baht</div>
-<div class="card">Sukuna Portal Carry — 120 Baht | Stock 5</div>
-<div class="card">Gojo Portal Carry — 100 Baht | Stock 3</div>
-</details>
-
-<details>
-<summary>99 Nights In The Forest</summary>
-<div class="card">100 Days Carry — 32 Baht</div>
-<div class="card">250 Days Carry — 60 Baht</div>
-<div class="card">500 Days Carry — 100 Baht</div>
-<div class="card">1K Days Carry — 249 Baht</div>
-</details>
-
-<details>
-<summary>Flee The Facility</summary>
-<div class="card">Nuclear Waste — 60 Baht | Stock 1</div>
-<div class="card">S’mores — 60 Baht | Stock 1</div>
-<div class="card">Golden — 60 Baht | Stock 1</div>
-<div class="card">Ancient Trident — 145 Baht | Stock 1</div>
-<div class="card">Ancient Portal — 135 Baht | Stock 1</div>
-<div class="card">Lunar Witch Broom — 130 Baht | Stock 1</div>
-<div class="card">Cursed Circus Tent — 130 Baht | Stock 1</div>
-<div class="card">Enchanted Circus Tent — 130 Baht | Stock 1</div>
-<div class="card">Chromatic Phoenix — 130 Baht | Stock 1</div>
-<div class="card">Radiant Shell — 110 Baht | Stock 1</div>
-<div class="card">Ancient Key — 110 Baht | Stock 1</div>
-<div class="card">Lunar Witch Hat — 125 Baht | Stock 1</div>
-<div class="card">Cursed Jester Hat — 120 Baht | Stock 1</div>
-<div class="card">Enchanted Jester Hat — 120 Baht | Stock 1</div>
-<div class="card">Chromatic Spark — 120 Baht | Stock 1</div>
-<div class="card">Sunrise — 40 Baht | Stock 1</div>
-</details>
-
-</section>
-
-<section id="terms">
-<h2>Terms Of Use</h2>
-<div class="card">
-You can choose to add me or get an account with the item you'd like to purchase.
+<div class="item">
+<img src="https://via.placeholder.com/90">
+<div>
+<h3>Chocolate Bar</h3>
+<p>Price: $1.50</p>
+<p>Stock: 12</p>
 </div>
-</section>
-
-<section id="qa">
-
-<h2>Q&A</h2>
-
-<div class="card">
-How do we get refunds?<br>
-Refunds given if service fails. Snacks not refundable.
 </div>
 
-<div class="card">
-Will there be more stuff?<br>
-Yes, more products later.
+<div class="item">
+<img src="https://via.placeholder.com/90">
+<div>
+<h3>Spicy Chips</h3>
+<p>Price: $2.00</p>
+<p>Stock: 8</p>
 </div>
-
-<div class="card">
-What account do we add?<br>
-Tpbuno
-</div>
-
-<div class="card">
-How do we receive the account?<br>
-Sent through Google Chat.
-</div>
-
-</section>
-
-<footer>
-Abyssal Market © 2026
-</footer>
-
-<div class="settingsBtn" onclick="openSettings()">⚙</div>
-
-<div class="settingsPanel" id="settings">
-
-<h2>Settings</h2>
-
-<div class="settingBox">
-
-Music Volume <input type="range" min="0" max="100" value="50" id="vol">
-
-<br><br>
-
-Background
-
-<div style="display:flex;align-items:center;gap:10px;margin-top:10px">
-
-<button onclick="prevBG()">◀</button>
-
-<div id="bgName" style="min-width:140px;text-align:center;color:#60a5fa;font-weight:bold">
-Stellar
-</div>
-
-<button onclick="nextBG()">▶</button>
-
 </div>
 
 </div>
 
-<button class="closeSettings" onclick="closeSettings()">Close</button>
+
+
+<div id="games" class="section">
+
+<h2>Game Services</h2>
+
+<div class="item">
+<img src="https://via.placeholder.com/90">
+<div>
+<h3>Roblox Grinding Service</h3>
+<p>Price: $5</p>
+<p>Stock: Available</p>
+</div>
+</div>
+
+<div class="item">
+<img src="https://via.placeholder.com/90">
+<div>
+<h3>Minecraft Build Assistance</h3>
+<p>Price: $8</p>
+<p>Stock: Available</p>
+</div>
+</div>
 
 </div>
+
+
+
+<div id="info" class="section">
+
+<h2>Store Information</h2>
+
+<div class="qa-item">
+<p>
+This marketplace displays currently available items and services.
+Before purchasing, please confirm stock availability with the seller.
+Payment methods and delivery details will be discussed directly during purchase.
+</p>
+</div>
+
+</div>
+
+
 
 <script>
 
-const music=document.getElementById("music")
+function openSection(id){
 
-document.addEventListener("click",function(){
-music.volume=0.5
-music.play()
-},{once:true})
+let sections=document.querySelectorAll(".section");
 
-document.getElementById("vol").addEventListener("input",function(){
-music.volume=this.value/100
-})
+sections.forEach(section=>{
+section.style.display="none";
+});
 
-function openSettings(){
-document.getElementById("settings").style.display="block"
-}
-
-function closeSettings(){
-document.getElementById("settings").style.display="none"
-}
-
-/* BACKGROUND SYSTEM */
-
-const backgrounds=["stellar","nebula","singularity","abyss","grid"]
-
-let currentBG=0
-
-function applyBG(){
-
-document.body.classList.remove("nebula","singularity","abyss","grid")
-
-const stars=document.querySelector(".stars")
-
-let bg=backgrounds[currentBG]
-
-if(bg==="stellar"){
-stars.style.display="block"
-}else{
-stars.style.display="none"
-document.body.classList.add(bg)
-}
-
-const names={
-stellar:"Stellar",
-nebula:"Nebula Storm",
-singularity:"Singularity",
-abyss:"Abyss",
-grid:"Cyber Grid"
-}
-
-document.getElementById("bgName").innerText=names[bg]
-
-localStorage.setItem("abyssBG",currentBG)
+document.getElementById(id).style.display="block";
 
 }
-
-function nextBG(){
-currentBG++
-if(currentBG>=backgrounds.length){currentBG=0}
-applyBG()
-}
-
-function prevBG(){
-currentBG--
-if(currentBG<0){currentBG=backgrounds.length-1}
-applyBG()
-}
-
-function loadBG(){
-
-let saved=localStorage.getItem("abyssBG")
-
-if(saved!==null){
-currentBG=parseInt(saved)
-}
-
-applyBG()
-
-}
-
-loadBG()
 
 </script>
-  
-<script src="cursor.js"></script>
-  
+
 </body>
 </html>
-message.txt

@@ -12,10 +12,7 @@ font-family:Segoe UI;
 background:#060b20;
 color:white;
 overflow:hidden;
-transition:.4s;
 }
-
-/* TITLE */
 
 header{
 text-align:center;
@@ -26,12 +23,12 @@ letter-spacing:3px;
 font-weight:700;
 }
 
-/* STATS */
+/* stats */
 
 #statsBar{
 display:flex;
 justify-content:center;
-gap:30px;
+gap:25px;
 margin-bottom:10px;
 }
 
@@ -44,7 +41,7 @@ text-align:center;
 min-width:110px;
 }
 
-/* GRID */
+/* layout */
 
 #layout{
 display:grid;
@@ -54,10 +51,9 @@ height:calc(100vh - 120px);
 
 .panel{
 padding:20px;
-overflow:auto;
 }
 
-/* CENTER */
+/* sword */
 
 #center{
 display:flex;
@@ -68,7 +64,7 @@ align-items:center;
 #sword{
 width:420px;
 cursor:pointer;
-transition:.1s;
+transition:.15s;
 }
 
 #sword:hover{
@@ -76,7 +72,7 @@ transform:scale(1.05);
 filter:drop-shadow(0 0 20px #8b5cf6);
 }
 
-/* MENU */
+/* menu */
 
 #menuIcons{
 display:grid;
@@ -102,23 +98,49 @@ width:42px;
 margin-bottom:8px;
 }
 
-.menuBtn span{
-font-size:14px;
-}
-
 .menuBtn:hover{
 background:#1e293b;
 }
 
-/* MISSIONS */
+/* modal */
 
-.mission{
-background:#0f172a;
-border-radius:10px;
-padding:12px;
-margin-bottom:16px;
-border:1px solid #1e3a8a;
+.modal{
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:#020617;
+border:1px solid #2563eb;
+border-radius:12px;
+padding:25px;
+width:600px;
+max-height:80vh;
+overflow:auto;
 }
+
+.close{
+position:absolute;
+top:10px;
+right:15px;
+cursor:pointer;
+}
+
+/* floating text */
+
+.float{
+position:absolute;
+pointer-events:none;
+font-weight:bold;
+animation:floatUp 1s forwards;
+}
+
+@keyframes floatUp{
+0%{opacity:1;transform:translateY(0)}
+100%{opacity:0;transform:translateY(-60px)}
+}
+
+/* progress */
 
 .bar{
 height:18px;
@@ -142,62 +164,8 @@ top:0;
 font-size:12px;
 }
 
-.claimBtn{
-margin-top:8px;
-background:#22c55e;
-border:none;
-padding:6px 12px;
-border-radius:6px;
-color:white;
-cursor:pointer;
-}
-
-/* MODALS */
-
-.modal{
-display:none;
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-background:#020617;
-border:1px solid #2563eb;
-border-radius:12px;
-padding:25px;
-width:520px;
-max-height:80vh;
-overflow:auto;
-}
-
-.close{
-position:absolute;
-top:10px;
-right:15px;
-cursor:pointer;
-}
-
-/* SETTINGS TOGGLES */
-
-.toggle{
-padding:6px 14px;
-border-radius:6px;
-cursor:pointer;
-color:white;
-display:inline-block;
-}
-
-.on{background:#16a34a;}
-.off{background:#dc2626;}
-
-/* LORE NAV */
-
-.loreNav{
-display:flex;
-justify-content:space-between;
-margin-top:20px;
-}
-
 </style>
+
 </head>
 
 <body>
@@ -229,9 +197,9 @@ margin-top:20px;
 <span>Guide</span>
 </div>
 
-<div class="menuBtn" onclick="openSettings()">
-<img src="settings.png">
-<span>Settings</span>
+<div class="menuBtn" onclick="openUpgrades()">
+<img src="upgrade.png">
+<span>Upgrades</span>
 </div>
 
 <div class="menuBtn" onclick="openShop()">
@@ -255,36 +223,29 @@ margin-top:20px;
 
 <h3>Storyline</h3>
 
-<div class="mission">
-
-<div id="storyTitle"></div>
-Goal: <span id="storyGoal"></span> Clicks  
-Reward: <span id="storyReward"></span> Coins
+Goal: <span id="storyGoal"></span> clicks  
+Reward: <span id="storyReward"></span> coins
 
 <div class="bar">
 <div id="storyFill" class="fill"></div>
 <span id="storyPercent" class="percent">0%</span>
 </div>
 
-<button class="claimBtn" onclick="claimStory()">Claim</button>
+<button onclick="claimStory()">Claim</button>
 
-</div>
+<br><br>
 
 <h3>Daily Mission</h3>
 
-<div class="mission">
-
-Goal: 2000 Clicks  
-Reward: 80 Coins
+Goal: 2000 clicks  
+Reward: 80 coins
 
 <div class="bar">
 <div id="dailyFill" class="fill"></div>
 <span id="dailyPercent" class="percent">0%</span>
 </div>
 
-<button class="claimBtn" onclick="claimDaily()">Claim</button>
-
-</div>
+<button onclick="claimDaily()">Claim</button>
 
 </div>
 
@@ -293,22 +254,15 @@ Reward: 80 Coins
 <!-- LORE -->
 
 <div id="lore" class="modal">
-
 <div class="close" onclick="closeLore()">X</div>
 
-<h2>The Aetherfall Chronicle</h2>
+<h2>Aetherfall Chronicle</h2>
 
 <p id="loreText"></p>
 
-<div class="loreNav">
-
 <button onclick="prevLore()">←</button>
-
-<span id="lorePage">1 / 10</span>
-
+<span id="lorePage"></span>
 <button onclick="nextLore()">→</button>
-
-</div>
 
 </div>
 
@@ -320,41 +274,37 @@ Reward: 80 Coins
 <h2>Guide</h2>
 
 <p>Click the sword to gain clicks.</p>
-<p>Build combos quickly to increase click power.</p>
+<p>Keep clicking fast to build combos.</p>
 <p>Fragments unlock powerful upgrades.</p>
-<p>Coins can be spent on coupons and upgrades.</p>
+<p>Coins buy coupons and upgrades.</p>
 
 </div>
 
-<!-- SETTINGS -->
+<!-- UPGRADES -->
 
-<div id="settings" class="modal">
+<div id="upgrades" class="modal">
 
-<div class="close" onclick="closeSettings()">X</div>
+<div class="close" onclick="closeUpgrades()">X</div>
 
-<h2>Settings</h2>
+<h2>Upgrades</h2>
 
-Music  
-<div id="musicToggle" class="toggle on" onclick="toggleMusic()">ON</div>
+<h3>Auto Clicker</h3>
+Cost: 3000 coins  
+<button onclick="buyAutoClick()">Buy</button>
 
-<br><br>
+<h3>Combo Booster</h3>
+Cost: 1200 coins  
+<button onclick="buyComboBoost()">Buy</button>
 
-Effects  
-<div id="effectsToggle" class="toggle on" onclick="toggleEffects()">ON</div>
+<hr>
 
-<br><br>
+<h3>Settings</h3>
 
 Background
 
-<div>
-
 <button onclick="prevBG()">←</button>
-
-<span id="bgName">Aether Night</span>
-
+<span id="bgName"></span>
 <button onclick="nextBG()">→</button>
-
-</div>
 
 </div>
 
@@ -366,45 +316,65 @@ Background
 
 <h2>Shop</h2>
 
-<p>Fragment upgrades and coupons will appear here.</p>
+<h3>Fragment Shop</h3>
+
+Power Core (+2 power)  
+Cost: 10 fragments  
+<button onclick="buyFragPower()">Buy</button>
+
+<br><br>
+
+Energy Core (+4 power)  
+Cost: 25 fragments  
+<button onclick="buyFragEnergy()">Buy</button>
+
+<hr>
+
+<h3>Coupon Shop</h3>
+
+5 Baht Coupon  
+Cost: 300 coins  
+<button onclick="buyCoupon()">Buy</button>
 
 </div>
 
 <script>
 
-/* CORE */
+/* core */
 
 let clicks=0
 let coins=0
 let fragments=0
 let combo=0
+let clickPower=1
 
 let storyIndex=0
 let dailyClaimed=false
 
-/* SAVE SYSTEM */
+/* save */
 
 function saveGame(){
 
-const data={clicks,coins,fragments,combo,storyIndex}
+const data={clicks,coins,fragments,combo,clickPower,storyIndex}
 
-localStorage.setItem("aetherfallSave",JSON.stringify(data))
+localStorage.setItem("aetherSave",JSON.stringify(data))
 
 }
 
 function loadGame(){
 
-let data=localStorage.getItem("aetherfallSave")
+let data=localStorage.getItem("aetherSave")
 
 if(!data) return
 
 data=JSON.parse(data)
 
-clicks=data.clicks||0
-coins=data.coins||0
-fragments=data.fragments||0
-combo=data.combo||0
-storyIndex=data.storyIndex||0
+clicks=data.clicks
+coins=data.coins
+fragments=data.fragments
+combo=data.combo
+clickPower=data.clickPower
+storyIndex=data.storyIndex
 
 }
 
@@ -412,17 +382,18 @@ loadGame()
 
 setInterval(saveGame,2000)
 
-/* CLICKING */
+/* click */
 
 let comboTimer=null
 
 const sword=document.getElementById("sword")
 
-sword.onclick=()=>{
+sword.onclick=(e)=>{
 
 combo++
+clicks+=clickPower
 
-clicks++
+spawnText(e.pageX,e.pageY,"+"+clickPower)
 
 clearTimeout(comboTimer)
 
@@ -437,40 +408,74 @@ update()
 
 }
 
-/* MISSIONS */
+/* effects */
 
-const storyGoals=[100,500,1000,3000,5000,10000,20000]
-const storyRewards=[15,25,40,60,80,120,180]
+function spawnText(x,y,text){
 
-function update(){
+const el=document.createElement("div")
 
-document.getElementById("clicks").innerText=clicks
-document.getElementById("coins").innerText=coins
-document.getElementById("fragments").innerText=fragments
-document.getElementById("combo").innerText=combo
+el.className="float"
+el.innerText=text
 
-updateStory()
-updateDaily()
+el.style.left=x+"px"
+el.style.top=y+"px"
+
+document.body.appendChild(el)
+
+setTimeout(()=>el.remove(),1000)
+
+}
+
+/* upgrades */
+
+function buyAutoClick(){
+
+if(coins<3000) return
+
+coins-=3000
+
+setInterval(()=>{
+clicks+=clickPower
+update()
+},2000)
 
 }
 
-/* STORY */
+function buyComboBoost(){
 
-function updateStory(){
+if(coins<1200) return
 
-let goal=storyGoals[storyIndex]
-
-let percent=Math.min(100,(clicks/goal)*100)
-
-document.getElementById("storyTitle").innerText="Storyline "+(storyIndex+1)
-
-document.getElementById("storyGoal").innerText=goal
-document.getElementById("storyReward").innerText=storyRewards[storyIndex]
-
-document.getElementById("storyFill").style.width=percent+"%"
-document.getElementById("storyPercent").innerText=Math.floor(percent)+"%"
+coins-=1200
+clickPower+=1
 
 }
+
+/* fragment shop */
+
+function buyFragPower(){
+
+if(fragments<10) return
+
+fragments-=10
+clickPower+=2
+
+}
+
+/* coupons */
+
+function buyCoupon(){
+
+if(coins<300) return
+
+coins-=300
+alert("5 baht coupon claimed")
+
+}
+
+/* missions */
+
+const storyGoals=[100,500,1000,3000,5000,10000]
+const storyRewards=[15,25,40,60,80,120]
 
 function claimStory(){
 
@@ -481,17 +486,6 @@ coins+=storyRewards[storyIndex]
 storyIndex++
 
 update()
-
-}
-
-/* DAILY */
-
-function updateDaily(){
-
-let percent=Math.min(100,(clicks/2000)*100)
-
-document.getElementById("dailyFill").style.width=percent+"%"
-document.getElementById("dailyPercent").innerText=Math.floor(percent)+"%"
 
 }
 
@@ -507,132 +501,68 @@ update()
 
 }
 
-/* SETTINGS */
+/* backgrounds */
 
-let music=true
-let effects=true
-
-function toggleMusic(){
-
-music=!music
-
-const btn=document.getElementById("musicToggle")
-
-btn.className="toggle "+(music?"on":"off")
-btn.innerText=music?"ON":"OFF"
-
-}
-
-function toggleEffects(){
-
-effects=!effects
-
-const btn=document.getElementById("effectsToggle")
-
-btn.className="toggle "+(effects?"on":"off")
-btn.innerText=effects?"ON":"OFF"
-
-}
-
-/* BACKGROUNDS */
-
-const backgrounds=[
+const bgColors=[
 "#060b20",
 "#020617",
-"#0f172a",
-"#111827"
+"#111827",
+"#0f172a"
 ]
 
 const bgNames=[
 "Aether Night",
 "Void Sky",
-"Crystal Dark",
-"Deep Abyss"
+"Deep Abyss",
+"Crystal Dark"
 ]
 
 let bgIndex=0
 
 function applyBG(){
 
-document.body.style.background=backgrounds[bgIndex]
-
+document.body.style.background=bgColors[bgIndex]
 document.getElementById("bgName").innerText=bgNames[bgIndex]
 
 }
 
 function nextBG(){
 
-bgIndex=(bgIndex+1)%backgrounds.length
-
+bgIndex=(bgIndex+1)%bgColors.length
 applyBG()
 
 }
 
 function prevBG(){
 
-bgIndex=(bgIndex-1+backgrounds.length)%backgrounds.length
-
+bgIndex=(bgIndex-1+bgColors.length)%bgColors.length
 applyBG()
 
 }
 
-/* LORE STORY */
+/* lore */
 
 const lorePages=[
 
-`Long before the kingdoms of Aetherfall existed, the sky itself was unstable.
+"The sky was not always dark.",
 
-There were no stars yet, only slow rivers of pale light moving across the dark.
+"Before the kingdoms rose, fragments of power drifted across the world.",
 
-Scholars would later believe this was the first form of aether — the raw force that binds reality together.`,
+"The first blade fell from the heavens.",
 
-`In that age, there were no cities.
+"Scholars named it Aetherfall.",
 
-Only scattered settlements built by early travelers who followed strange glowing storms that drifted through the air.
+"It shattered the balance of the world.",
 
-These storms were not natural.
+"Fragments became currency.",
 
-They were pieces of something greater.`,
+"Kingdoms rose around its power.",
 
-`One night, the largest storm ever recorded tore across the sky.
+"But the sword is not complete.",
 
-The clouds cracked open, and a single blade fell from the heavens.
+"It is only a fragment of something larger.",
 
-When it struck the earth, the ground split and the sky itself flickered.
-
-The blade would later be named: Aetherfall.`,
-
-`No one knew who forged it.
-
-The metal was colder than ice, yet faint blue light ran through its surface like veins.`,
-
-`The first person who touched the sword vanished.
-
-Not killed.
-
-Not destroyed.
-
-Simply gone.`,
-
-`Years later, the sword began reacting to motion.
-
-Each strike against its surface caused small fragments of glowing crystal to break away.
-
-These fragments held strange energy.`,
-
-`Some used the fragments to power machines.
-
-Others claimed they could hear whispers inside them.`,
-
-`As the fragments spread across the land, entire kingdoms formed around them.
-
-Aetherfall became the center of a new age.`,
-
-`But the sword was never meant to stay here.
-
-Old texts warn that the blade is only a fragment of something far larger.`,
-
-`And every strike against it may be slowly waking whatever lies beyond the sky.`
+"And every strike wakes the thing beyond the sky."
 
 ]
 
@@ -668,7 +598,7 @@ updateLore()
 
 }
 
-/* MODALS */
+/* UI */
 
 function openLore(){document.getElementById("lore").style.display="block";updateLore()}
 function closeLore(){document.getElementById("lore").style.display="none"}
@@ -676,12 +606,37 @@ function closeLore(){document.getElementById("lore").style.display="none"}
 function openGuide(){document.getElementById("guide").style.display="block"}
 function closeGuide(){document.getElementById("guide").style.display="none"}
 
-function openSettings(){document.getElementById("settings").style.display="block"}
-function closeSettings(){document.getElementById("settings").style.display="none"}
+function openUpgrades(){document.getElementById("upgrades").style.display="block"}
+function closeUpgrades(){document.getElementById("upgrades").style.display="none"}
 
 function openShop(){document.getElementById("shop").style.display="block"}
 function closeShop(){document.getElementById("shop").style.display="none"}
 
+function update(){
+
+document.getElementById("clicks").innerText=clicks
+document.getElementById("coins").innerText=coins
+document.getElementById("fragments").innerText=fragments
+document.getElementById("combo").innerText=combo
+
+let sGoal=storyGoals[storyIndex]||storyGoals[storyGoals.length-1]
+
+let percent=Math.min(100,(clicks/sGoal)*100)
+
+document.getElementById("storyGoal").innerText=sGoal
+document.getElementById("storyReward").innerText=storyRewards[storyIndex]||0
+
+document.getElementById("storyFill").style.width=percent+"%"
+document.getElementById("storyPercent").innerText=Math.floor(percent)+"%"
+
+let dPercent=Math.min(100,(clicks/2000)*100)
+
+document.getElementById("dailyFill").style.width=dPercent+"%"
+document.getElementById("dailyPercent").innerText=Math.floor(dPercent)+"%"
+
+}
+
+applyBG()
 update()
 
 </script>

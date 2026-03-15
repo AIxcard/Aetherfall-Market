@@ -22,7 +22,7 @@
             user-select: none;
         }
 
-        #layout { display: grid; grid-template-columns: 240px 1fr 280px; height: 100%; }
+        #layout { display: grid; grid-template-columns: 220px 1fr 260px; height: 100%; }
 
         .side-panel {
             background: var(--panel); border-right: 1px solid var(--border);
@@ -37,94 +37,91 @@
         }
 
         header {
-            font-size: 38px; font-weight: 900; letter-spacing: 6px;
+            font-size: 32px; font-weight: 900; letter-spacing: 5px;
             background: linear-gradient(to bottom, #fff, var(--accent));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
-        /* COMPACT STATS */
-        #stats { display: flex; gap: 8px; margin-bottom: 15px; }
-        .stat-box {
-            background: rgba(13, 17, 23, 0.8); border: 1px solid rgba(30, 58, 138, 0.3);
-            padding: 8px 12px; border-radius: 8px; text-align: center; min-width: 65px;
+        /* COMPACT HUD */
+        #hud { display: flex; gap: 8px; margin-bottom: 12px; }
+        .stat-mini {
+            background: rgba(0,0,0,0.5); border: 1px solid var(--border);
+            padding: 5px 10px; border-radius: 4px; text-align: center; min-width: 60px;
         }
-        .stat-box small { font-size: 8px; text-transform: uppercase; opacity: 0.7; display: block; margin-bottom: 2px; }
-        .stat-box span { font-size: 0.95em; font-weight: bold; }
+        .stat-mini small { font-size: 7px; text-transform: uppercase; display: block; opacity: 0.6; }
+        .stat-mini span { font-size: 13px; font-weight: 800; }
 
-        /* PROGRESS BARS */
-        #levelWrap { width: 400px; margin-bottom: 15px; }
+        #levelWrap { width: 380px; margin-bottom: 15px; }
         .bar-outer {
-            background: #000; height: 24px; border-radius: 6px;
+            background: #000; height: 20px; border-radius: 4px;
             border: 1px solid var(--border); position: relative; overflow: hidden;
         }
         .fill { height: 100%; background: linear-gradient(90deg, #4c1d95, #8b5cf6); width: 0%; transition: width 0.3s; }
         .bar-content {
             position: absolute; width: 100%; height: 100%; top:0; z-index: 6;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0 10px; box-sizing: border-box; font-size: 10px; font-weight: bold;
+            padding: 0 8px; box-sizing: border-box; font-size: 9px; font-weight: bold;
         }
 
-        /* SWORD */
-        #sword { width: 250px; cursor: pointer; transition: transform 0.05s; z-index: 5; filter: drop-shadow(0 0 15px rgba(167, 139, 250, 0.2)); }
-        #sword:active { transform: scale(0.94); }
+        #sword { width: 230px; cursor: pointer; transition: transform 0.05s; z-index: 5; }
+        #sword:active { transform: scale(0.93); }
 
-        /* ANGLED CRIT EFFECTS */
+        /* OLD SCHOOL ANGLED CRITS */
         .click-text {
-            position: absolute; pointer-events: none; font-weight: 900; font-size: 18px;
-            color: white; animation: floatDiagonal 0.7s ease-out forwards; z-index: 100;
+            position: absolute; pointer-events: none; font-weight: 900; font-size: 16px;
+            color: white; animation: floatDiag 0.7s ease-out forwards; z-index: 100;
         }
         .crit-text { 
-            color: var(--gold); font-size: 30px; 
-            text-shadow: 2px 2px 0px #854d0e, 0 0 15px orange;
-            animation: critDiagonal 0.6s ease-out forwards !important;
+            color: var(--gold); font-size: 28px; 
+            text-shadow: 2px 2px 0px #854d0e, 0 0 10px orange;
+            animation: critDiag 0.6s ease-out forwards !important;
         }
-        @keyframes floatDiagonal {
+        @keyframes floatDiag {
             0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(20px, -100px) rotate(10deg); opacity: 0; }
+            100% { transform: translate(30px, -80px); opacity: 0; }
         }
-        @keyframes critDiagonal {
-            0% { transform: translate(0, 0) scale(0.5) rotate(-15deg); opacity: 1; }
-            20% { transform: translate(-10px, -20px) scale(1.3) rotate(5deg); }
-            100% { transform: translate(-40px, -150px) rotate(-20deg); opacity: 0; }
+        @keyframes critDiag {
+            0% { transform: translate(0, 0) scale(0.5) rotate(-10deg); opacity: 1; }
+            20% { transform: translate(-15px, -15px) scale(1.2) rotate(5deg); }
+            100% { transform: translate(-50px, -140px) rotate(-15deg); opacity: 0; }
         }
 
-        /* SIDE UI */
-        .menuBtn {
-            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.06);
-            padding: 12px; margin-bottom: 8px; border-radius: 6px;
-            cursor: pointer; font-size: 13px; transition: 0.2s;
+        /* UI BUTTONS */
+        .nav-btn {
+            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05);
+            padding: 10px; margin-bottom: 6px; border-radius: 4px;
+            cursor: pointer; font-size: 12px; transition: 0.2s;
         }
-        .menuBtn:hover { border-color: var(--accent); background: rgba(167, 139, 250, 0.1); }
-        .shop-card { background: var(--card-bg); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        .nav-btn:hover { border-color: var(--accent); background: rgba(167, 139, 250, 0.1); }
+        
+        .quest-card { background: var(--card-bg); padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); }
         .btn-claim {
             background: linear-gradient(180deg, #8b5cf6, #6d28d9);
-            border: none; color: white; padding: 8px; border-radius: 4px;
-            width: 100%; font-weight: 800; cursor: pointer; font-size: 11px; text-transform: uppercase;
+            border: none; color: white; padding: 6px; border-radius: 3px;
+            width: 100%; font-weight: 800; cursor: pointer; font-size: 10px; margin-top: 5px;
         }
         .btn-claim:disabled { background: #1a1a1a; color: #444; cursor: not-allowed; }
 
-        /* MODALS */
         .modal {
             display: none; position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%); background: #080a0f;
-            border: 1px solid var(--accent); border-radius: 12px;
-            width: 600px; max-height: 70vh; padding: 25px; z-index: 1000; overflow-y: auto;
+            border: 1px solid var(--accent); border-radius: 8px;
+            width: 500px; max-height: 60vh; padding: 20px; z-index: 1000; overflow-y: auto;
         }
-        .close { float: right; cursor: pointer; color: #ff4d4d; font-size: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div id="layout">
     <div class="side-panel">
-        <div style="font-weight:900; color:var(--accent); margin-bottom:20px; font-size:14px; letter-spacing:2px;">NEXUS CORE</div>
-        <div class="menuBtn" onclick="openModal('lore-m')">📘 Archive</div>
-        <div class="menuBtn" onclick="openModal('mile-m')">🏆 Milestones</div>
-        <div class="menuBtn" onclick="openModal('shop-m')">💎 Frag Shop</div>
-        <div class="menuBtn" onclick="openModal('arts-m')">✨ Artifacts</div>
-        <div class="menuBtn" onclick="openModal('coupon-m')">🎟️ Coupons</div>
-        <div style="margin-top: auto;" class="menuBtn" onclick="openModal('set-m')">⚙️ System</div>
+        <div style="font-size:10px; color:var(--accent); font-weight:900; margin-bottom:15px; letter-spacing:1px;">CORE TERMINAL</div>
+        <div class="nav-btn" onclick="openM('lore')">📘 Lore Archive</div>
+        <div class="nav-btn" onclick="openM('shop')">💎 Frag Shop</div>
+        <div class="nav-btn" onclick="openM('arts')">✨ Artifacts</div>
+        <div class="nav-btn" onclick="openM('miles')">🏆 Milestones</div>
+        <div style="margin-top:auto" class="nav-btn" onclick="openM('sets')">⚙️ Settings</div>
     </div>
 
     <div id="center-area">
@@ -132,133 +129,129 @@
         <div id="levelWrap">
             <div class="bar-outer">
                 <div id="levelFill" class="fill"></div>
-                <div class="bar-content">
-                    <span id="lvDisplay">LV 1</span>
-                    <span id="expDisplay">0 / 200 EXP</span>
-                </div>
+                <div class="bar-content"><span id="lvTxt">LV 1</span><span id="expTxt">0/200</span></div>
             </div>
         </div>
-        <div id="stats">
-            <div class="stat-box"><small>Clicks</small><span id="stat-clicks">0</span></div>
-            <div class="stat-box"><small>Gold</small><span id="stat-gold" style="color:var(--gold)">0</span></div>
-            <div class="stat-box"><small>Frags</small><span id="stat-frag" style="color:var(--frag)">0</span></div>
-            <div class="stat-box"><small>Combo</small><span id="stat-combo" style="color:var(--combo)">0</span></div>
+        <div id="hud">
+            <div class="stat-mini"><small>Clicks</small><span id="hud-clicks">0</span></div>
+            <div class="stat-mini"><small>Gold</small><span id="hud-gold" style="color:var(--gold)">0</span></div>
+            <div class="stat-mini"><small>Frags</small><span id="hud-frag" style="color:var(--frag)">0</span></div>
+            <div class="stat-mini"><small>Combo</small><span id="hud-combo" style="color:var(--combo)">0</span></div>
         </div>
         <img id="sword" src="Final_game_icon.png" alt="Sword">
     </div>
 
     <div class="side-panel right-panel">
-        <div style="font-weight:900; color:var(--accent); margin-bottom:15px; font-size:14px;">OBJECTIVES</div>
-        <div id="quest-box" class="shop-card">
-            </div>
-        <div class="shop-card" style="margin-top:10px;">
-            <p style="font-size:10px; font-weight:bold; margin:0 0 5px 0;">DAILY REFLEX</p>
-            <div style="background:#000; height:4px; border-radius:2px; overflow:hidden;">
-                <div id="dailyFill" class="fill"></div>
-            </div>
-            <button class="btn-claim" id="daily-btn" style="margin-top:8px;" onclick="claimDaily()">Collect</button>
+        <div style="font-size:10px; color:var(--accent); font-weight:900; margin-bottom:10px;">QUESTS</div>
+        <div id="quest-area" class="quest-card"></div>
+        <div class="quest-card" style="margin-top:10px;">
+            <small style="font-weight:bold;">DAILY REFLEX</small>
+            <div style="background:#000; height:3px; margin:5px 0;"><div id="dailyFill" class="fill"></div></div>
+            <button class="btn-claim" id="daily-btn" onclick="claimDaily()">COLLECT</button>
         </div>
     </div>
 </div>
 
-<div id="lore-m" class="modal">
-    <span class="close" onclick="closeModal('lore-m')">&times;</span>
-    <h2 style="color:var(--accent)">THE ARCHIVE</h2>
-    <p style="line-height:1.6; font-size:14px; opacity:0.8;">
-        In the age of the Silent Sky, the Aether shattered. What was once a river of infinite energy became frozen fragments scattered across the void. <br><br>
-        <b>Gold:</b> The residue of ancient solar energy. Extremely rare (0.5% yield). <br>
-        <b>Fragments:</b> Pure shards of reality. Only found by those with extreme focus (0.1% yield). <br><br>
-        Your task is simple: Strike the Nexus. Rebuild the world.
+<div id="modal-lore" class="modal">
+    <h3 style="color:var(--accent); margin-top:0;">THE SHATTERED ARCHIVE</h3>
+    <p style="font-size:13px; line-height:1.5; opacity:0.8;">
+        The Aether once flowed as a singular consciousness until the Great Divergence. Now, fragments of reality are all that remain. 
+        <br><br><b>Gold (0.5%):</b> Residual soul-dust found in the cracks of the Nexus. 
+        <br><b>Fragments (0.1%):</b> Raw shards of existence. Near impossible to synthesize.
     </p>
+    <button class="btn-claim" onclick="closeM()">CLOSE</button>
 </div>
 
-<div id="mile-m" class="modal"><span class="close" onclick="closeModal('mile-m')">&times;</span><h2>Milestones</h2><div id="mileCard"></div></div>
-<div id="shop-m" class="modal"><span class="close" onclick="closeModal('shop-m')">&times;</span><h2>Frag Shop</h2><div id="fragShopList" class="grid-shop"></div></div>
-<div id="arts-m" class="modal"><span class="close" onclick="closeModal('arts-m')">&times;</span><h2>Artifacts</h2><div id="artList"></div></div>
-<div id="coupon-m" class="modal"><span class="close" onclick="closeModal('coupon-m')">&times;</span><h2>Coupons</h2><div id="couponList"></div></div>
-<div id="set-m" class="modal"><span class="close" onclick="closeModal('set-m')">&times;</span><h2>System</h2><button class="btn-claim" style="background:#ef4444" onclick="hardReset()">Factory Reset</button></div>
+<div id="modal-shop" class="modal">
+    <h3>FRAGMENT SHOP</h3>
+    <div class="grid">
+        <div class="quest-card"><b>Core</b> (+1 Pow)<button class="btn-claim" onclick="buy('Core', 5, 1)">5 Frags</button></div>
+        <div class="quest-card"><b>Void</b> (+3 Pow)<button class="btn-claim" onclick="buy('Void', 15, 3)">15 Frags</button></div>
+    </div>
+    <button class="btn-claim" onclick="closeM()" style="margin-top:10px;">CLOSE</button>
+</div>
+
+<div id="modal-arts" class="modal">
+    <h3>ARTIFACTS</h3>
+    <div id="art-list" class="grid"></div>
+    <button class="btn-claim" onclick="closeM()" style="margin-top:10px;">CLOSE</button>
+</div>
 
 <script>
 let clicks=0, gold=0, frags=0, combo=0, power=1;
-let level=1, exp=0, storyStage=0, dailyPower=0;
-let lastDaily = 0, claimedMiles = [], artifacts = [];
+let level=1, exp=0, storyIdx=0, dailyP=0, lastD=0;
+let artifacts = [];
 
-const STORIES = [
-    {id: 0, title: "The Awakening", desc: "The first sparks of light return to the void.", goal: 100, rG: 50, rE: 40},
-    {id: 1, title: "The Void Path", desc: "Traverse the dark expanse to find the core.", goal: 1000, rG: 200, rE: 150},
-    {id: 2, title: "Celestial Peak", desc: "Reach the summit where reality was forged.", goal: 5000, rG: 1000, rE: 500}
+const CHAPTERS = [
+    {t: "The Awakening", d: "First sparks in the dark.", g: 100, rG: 50, rE: 40},
+    {t: "The Void Path", d: "Searching the empty expanse.", g: 1000, rG: 200, rE: 150},
+    {t: "Final Ascent", d: "Rebuilding the Core.", g: 5000, rG: 1000, rE: 500}
 ];
 
 document.getElementById('sword').addEventListener('click', (e) => {
     clicks++; combo++;
-    let isCrit = Math.random() < 0.10;
-    let val = isCrit ? power * 2 : power;
+    let crit = Math.random() < 0.10;
+    let v = crit ? power * 2 : power;
     
-    let gotGold = (Math.random() < 0.005 && combo > 10);
-    let gotFrag = (Math.random() < 0.001);
-
-    if(gotGold) gold += 10;
-    if(gotFrag) frags += 1;
-    if(level < 100) { exp += (0.05 * (isCrit ? 2 : 1)); dailyPower += val; }
+    if(Math.random() < 0.005 && combo > 10) gold += 10;
+    if(Math.random() < 0.001) frags += 1;
     
-    spawnText(e.clientX, e.clientY, val, isCrit, gotGold, gotFrag);
-    checkLevel(); updateUI();
+    if(level < 100) { exp += (0.05 * (crit?2:1)); dailyP += v; }
+    
+    pop(e.clientX, e.clientY, v, crit);
+    checkLv(); update();
 });
 
-function spawnText(x, y, val, crit, g, f) {
+function pop(x, y, v, c) {
     const t = document.createElement('div');
-    t.className = 'click-text' + (crit ? ' crit-text' : '');
-    t.innerText = (crit ? 'CRIT! ' : '+') + val;
+    t.className = 'click-text' + (c ? ' crit-text' : '');
+    t.innerText = (c ? 'CRIT! ' : '+') + v;
     t.style.left = x + 'px'; t.style.top = y + 'px';
     document.body.appendChild(t); setTimeout(()=>t.remove(), 600);
-
-    if(g) {
-        const gt = document.createElement('div');
-        gt.className = 'click-text'; gt.style.color = 'var(--gold)';
-        gt.innerText = '+10 GOLD'; gt.style.left = (x + 30) + 'px'; gt.style.top = (y-20) + 'px';
-        document.body.appendChild(gt); setTimeout(()=>gt.remove(), 800);
-    }
 }
 
-function checkLevel() {
-    let req = 200 + (level * 50);
-    if(exp >= req && level < 100) { exp -= req; level++; }
+function checkLv() {
+    let r = 200 + (level * 50);
+    if(exp >= r && level < 100) { exp -= r; level++; }
 }
 
-function updateUI() {
-    document.getElementById('stat-clicks').innerText = clicks.toLocaleString();
-    document.getElementById('stat-gold').innerText = Math.floor(gold);
-    document.getElementById('stat-frag').innerText = frags;
-    document.getElementById('stat-combo').innerText = combo;
-    document.getElementById('lvDisplay').innerText = "LV " + level;
-    
-    let req = 200 + (level * 50);
-    document.getElementById('levelFill').style.width = (level >= 100 ? 100 : (exp/req*100)) + "%";
-    document.getElementById('expDisplay').innerText = level >= 100 ? "MAX" : Math.floor(exp) + "/" + req;
+function update() {
+    document.getElementById('hud-clicks').innerText = clicks;
+    document.getElementById('hud-gold').innerText = gold;
+    document.getElementById('hud-frag').innerText = frags;
+    document.getElementById('hud-combo').innerText = combo;
+    document.getElementById('lvTxt').innerText = "LV " + level;
+    let r = 200 + (level * 50);
+    document.getElementById('levelFill').style.width = (level>=100?100:(exp/r*100)) + "%";
 
-    const qBox = document.getElementById('quest-box');
-    if(storyStage < STORIES.length) {
-        let s = STORIES[storyStage];
-        qBox.innerHTML = `<p style="font-size:12px; font-weight:bold; margin:0; color:var(--accent)">${s.title}</p>
-        <p style="font-size:10px; opacity:0.6; margin:4px 0 8px 0;">${s.desc}</p>
-        <div style="background:#000; height:4px; border-radius:2px; margin:5px 0; overflow:hidden;"><div class="fill" style="width:${Math.min(100,(clicks/s.goal)*100)}%"></div></div>
-        <button class="btn-claim" ${clicks >= s.goal ? "" : "disabled"} onclick="claimStory()">Claim</button>`;
-    } else { qBox.innerHTML = "<p style='text-align:center; font-size:11px;'>NEXUS REBUILT</p>"; }
+    const qA = document.getElementById('quest-area');
+    if(storyIdx < CHAPTERS.length) {
+        let s = CHAPTERS[storyIdx];
+        qA.innerHTML = `<b style="font-size:11px;color:var(--accent)">${s.t}</b>
+        <p style="font-size:9px;margin:3px 0;opacity:0.7">${s.d}</p>
+        <div style="background:#000;height:3px;"><div class="fill" style="width:${Math.min(100,(clicks/s.g)*100)}%"></div></div>
+        <button class="btn-claim" ${clicks >= s.g ? "" : "disabled"} onclick="claimS()">CLAIM</button>`;
+    } else { qA.innerHTML = "CORE RESTORED"; }
 
-    let isClaimed = new Date(lastDaily).toDateString() === new Date().toDateString();
-    document.getElementById('dailyFill').style.width = Math.min(100, (dailyPower/1500)*100) + "%";
-    document.getElementById('daily-btn').disabled = (dailyPower < 1500 || isClaimed);
+    let isD = new Date(lastD).toDateString() === new Date().toDateString();
+    document.getElementById('dailyFill').style.width = Math.min(100, (dailyP/1500)*100) + "%";
+    document.getElementById('daily-btn').disabled = (dailyP < 1500 || isD);
 }
 
-function claimStory() { let s = STORIES[storyStage]; gold += s.rG; exp += s.rE; storyStage++; updateUI(); }
-function claimDaily() { gold += 150; frags += 1; lastDaily = Date.now(); dailyPower = 0; updateUI(); }
+function claimS() { let s = CHAPTERS[storyIdx]; gold += s.rG; exp += s.rE; storyIdx++; update(); }
+function claimDaily() { gold += 150; frags += 1; lastD = Date.now(); dailyP = 0; update(); }
 
-function openModal(id) { document.getElementById(id).style.display = 'block'; }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function hardReset() { if(confirm("Erase all data?")) { localStorage.clear(); location.reload(); } }
+function buy(n, c, p) { if(frags >= c) { frags -= c; power += p; artifacts.push(n); update(); renderA(); } }
+function renderA() {
+    let h = ""; artifacts.forEach(a => h += `<div class="stat-mini">${a}</div>`);
+    document.getElementById('art-list').innerHTML = h;
+}
 
-setInterval(() => { if(combo > 0) { combo--; updateUI(); } }, 3000);
-// Auto-save logic here as before...
+function openM(id) { document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); document.getElementById('modal-'+id).style.display='block'; }
+function closeM() { document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); }
+
+setInterval(() => { if(combo > 0) { combo--; update(); } }, 2500);
+update();
 </script>
 </body>
 </html>

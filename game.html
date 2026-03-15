@@ -16,11 +16,8 @@
             --crit: #ff4d4d;
             --text: #f8fafc;
             --card-bg: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-            
-            /* High Fidelity Gradients */
             --grad-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #fef3c7 100%);
             --grad-frag: linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #ddd6fe 100%);
-            --grad-crit: linear-gradient(180deg, #ff0000 0%, #991b1b 100%);
             --grad-action: linear-gradient(180deg, #4f46e5 0%, #3730a3 100%);
         }
 
@@ -34,9 +31,9 @@
 
         .side-panel {
             background: var(--panel); border-right: 1px solid var(--border);
-            padding: 25px; display: flex; flex-direction: column; z-index: 10;
+            padding: 20px; display: flex; flex-direction: column; z-index: 10;
         }
-        .right-panel { border-right: none; border-left: 1px solid var(--border); }
+        .right-panel { border-right: none; border-left: 1px solid var(--border); overflow-y: auto; }
 
         #center-area {
             display: flex; flex-direction: column; align-items: center; padding-top: 20px;
@@ -45,101 +42,70 @@
         }
 
         header {
-            font-family: 'Orbitron', sans-serif; font-size: 42px; font-weight: 900; letter-spacing: 12px;
+            font-family: 'Orbitron', sans-serif; font-size: 38px; font-weight: 900; letter-spacing: 10px;
             background: linear-gradient(to bottom, #fff 20%, var(--accent) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        /* PROGRESS BARS */
-        #levelWrap { width: 85%; max-width: 650px; margin-bottom: 20px; }
+        /* PROGRESS */
+        #levelWrap { width: 85%; max-width: 600px; margin-bottom: 15px; }
         .bar-outer {
-            background: #000; height: 35px; border-radius: 4px;
+            background: #000; height: 32px; border-radius: 4px;
             border: 1px solid var(--border); position: relative; overflow: hidden;
         }
         .fill { height: 100%; background: linear-gradient(90deg, #1e3a8a, #7c3aed, #c084fc); width: 0%; transition: width 0.3s; }
         .bar-content {
             position: absolute; width: 100%; height: 100%; top:0; z-index: 6;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0 15px; box-sizing: border-box; font-family: 'Orbitron'; font-size: 11px;
+            padding: 0 12px; box-sizing: border-box; font-family: 'Orbitron'; font-size: 10px;
         }
 
-        /* HUD STATS */
-        #stats-hud { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; width: 80%; }
-        .stat-box {
-            background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255,255,255,0.1);
-            padding: 10px; border-radius: 4px; text-align: center;
-        }
-        .stat-box small { font-size: 9px; text-transform: uppercase; opacity: 0.5; display: block; }
-        .stat-box span { font-family: 'Orbitron'; font-size: 16px; }
+        #stats-hud { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; width: 80%; }
+        .stat-box { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255,255,255,0.1); padding: 8px; border-radius: 4px; text-align: center; }
+        .stat-box small { font-size: 8px; text-transform: uppercase; opacity: 0.5; display: block; }
+        .stat-box span { font-family: 'Orbitron'; font-size: 14px; }
 
-        #sword { 
-            width: 300px; cursor: pointer; transition: transform 0.05s; z-index: 5;
-            filter: drop-shadow(0 0 30px rgba(124, 58, 237, 0.2));
-        }
-        #sword:active { transform: scale(0.92) rotate(-3deg); }
+        #sword { width: 280px; cursor: pointer; transition: transform 0.05s; z-index: 5; filter: drop-shadow(0 0 25px rgba(124, 58, 237, 0.2)); }
+        #sword:active { transform: scale(0.92); }
 
-        /* BUTTONS */
         .menuBtn {
             background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05);
-            padding: 15px; margin-bottom: 10px; border-radius: 4px;
-            cursor: pointer; transition: 0.3s; font-family: 'Orbitron'; font-size: 10px; letter-spacing: 2px;
+            padding: 12px; margin-bottom: 8px; border-radius: 4px;
+            cursor: pointer; transition: 0.2s; font-family: 'Orbitron'; font-size: 9px; letter-spacing: 1.5px;
         }
-        .menuBtn:hover { border-color: var(--accent); background: rgba(192, 132, 252, 0.1); color: #fff; }
+        .menuBtn:hover { border-color: var(--accent); background: rgba(192, 132, 252, 0.1); }
 
-        /* MODALS */
         .modal {
             display: none; position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%); background: #02040a;
             border: 1px solid var(--accent); border-radius: 4px;
-            width: 85%; max-width: 900px; height: 80vh; padding: 40px; z-index: 1000; overflow-y: auto;
+            width: 85%; max-width: 800px; height: 75vh; padding: 30px; z-index: 1000; overflow-y: auto;
         }
         .close { float: right; cursor: pointer; color: #ef4444; font-family: 'Orbitron'; }
 
-        .grid-shop { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .shop-card { 
-            background: var(--card-bg); padding: 18px; border-radius: 4px; 
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .shop-card b { font-family: 'Orbitron'; color: var(--accent); font-size: 13px; }
+        .grid-shop { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .shop-card { background: var(--card-bg); padding: 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); }
+        .btn-claim { background: var(--grad-action); border: none; color: white; padding: 10px; width: 100%; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; margin-top: 8px; border-radius: 2px;}
+        .btn-claim:disabled { background: #333; cursor: not-allowed; opacity: 0.5; }
 
-        .btn-claim {
-            background: var(--grad-action); border: none; color: white; padding: 12px;
-            width: 100%; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; margin-top: 10px;
-        }
-        .btn-claim:disabled { opacity: 0.2; cursor: not-allowed; }
+        .timer-text { font-family: 'Orbitron'; font-size: 9px; color: var(--accent); display: block; margin-top: 5px; }
 
-        /* ANIMATIONS */
-        .click-text {
-            position: absolute; pointer-events: none; font-family: 'Orbitron'; font-weight: 900;
-            animation: floatUp 0.7s ease-out forwards; z-index: 100;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-130px) scale(1.4); opacity: 0; }
-        }
-
-        .crit { color: var(--crit) !important; font-size: 32px !important; text-shadow: 0 0 15px #ff0000; }
-
-        .top-alert {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            padding: 10px 30px; font-family: 'Orbitron'; font-size: 11px; z-index: 2000; display: none;
-        }
+        .click-text { position: absolute; pointer-events: none; font-family: 'Orbitron'; font-weight: 900; animation: floatUp 0.6s ease-out forwards; z-index: 100; }
+        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
+        .crit { color: var(--crit) !important; font-size: 28px !important; text-shadow: 0 0 10px #f00; }
     </style>
 </head>
 <body>
 
-<div id="gold-alert" class="top-alert" style="background: var(--grad-gold); color: #000;">+10 GOLD FOUND</div>
-<div id="frag-alert" class="top-alert" style="background: var(--grad-frag); color: #000;">FRAGMENT DETECTED</div>
-
 <div id="layout">
     <div class="side-panel">
-        <h3 style="font-family:'Orbitron'; font-size: 12px; color:var(--accent); margin-bottom: 20px;">COMMAND</h3>
+        <h3 style="font-family:'Orbitron'; font-size: 11px; color:var(--accent);">NEXUS OS</h3>
         <div class="menuBtn" onclick="openModal('guide-m')">GUIDE</div>
-        <div class="menuBtn" onclick="openModal('forge-m')">NEXUS FORGE</div>
+        <div class="menuBtn" onclick="openModal('forge-m')">FORGE</div>
         <div class="menuBtn" onclick="openModal('shop-m')">FRAGMENT SHOP</div>
-        <div class="menuBtn" onclick="openModal('coupon-m')">COUPON MARKET</div>
-        <div class="menuBtn" onclick="openModal('arts-m')">COLLECTION</div>
+        <div class="menuBtn" onclick="openModal('coupon-m')">COUPON MARKET <span id="market-timer" class="timer-text"></span></div>
+        <div class="menuBtn" onclick="openModal('inv-m')">INVENTORY</div>
         <div class="menuBtn" onclick="openModal('settings-m')" style="margin-top:auto">⚙️ SETTINGS</div>
     </div>
 
@@ -164,221 +130,204 @@
     </div>
 
     <div class="side-panel right-panel">
-        <h3 style="font-family:'Orbitron'; font-size: 12px; color:var(--accent); margin-bottom: 20px;">MISSIONS</h3>
-        <div class="shop-card" style="border-left: 3px solid var(--accent);">
-            <b id="st-ch">CHAPTER 1: PART 1</b>
-            <p id="st-title" style="font-size:14px; margin:5px 0;">The First Spark</p>
-            <p style="font-size:10px; opacity:0.6;">Objective: Reach <span id="st-obj">100</span> Clicks</p>
-            <div class="bar-outer" style="height:10px; margin:10px 0;"><div id="st-fill" class="fill"></div></div>
-            <small style="color:var(--gold)">Reward: <span id="st-rew">50</span> Gold + EXP</small>
-            <button class="btn-claim" id="st-btn" onclick="claimStory()">CLAIM</button>
+        <h3 style="font-family:'Orbitron'; font-size: 11px; color:var(--accent);">MISSIONS</h3>
+        <div class="shop-card" style="border-left: 3px solid var(--accent); margin-bottom: 10px;">
+            <b id="st-ch">CH 1: PART 1</b>
+            <p id="st-title" style="font-size:12px; margin:4px 0;">Awakening</p>
+            <div class="bar-outer" style="height:8px; margin:8px 0;"><div id="st-fill" class="fill"></div></div>
+            <small id="st-rew" style="font-size:9px; color:var(--gold)"></small>
+            <button class="btn-claim" id="st-btn" onclick="claimStory()">CLAIM STORY</button>
         </div>
-
-        <div class="shop-card" style="margin-top:20px; border-left: 3px solid var(--frag);">
-            <b>DAILY FOCUS</b>
-            <p style="font-size:12px; margin:5px 0;">Objective: Generate 2,000 Power</p>
-            <div class="bar-outer" style="height:10px; margin:10px 0;"><div id="dailyFill" class="fill" style="background:var(--grad-frag)"></div></div>
-            <small style="color:var(--frag)">Reward: 1 Frag + 100 Gold</small>
-            <button class="btn-claim" id="daily-btn" onclick="claimDaily()">COLLECT</button>
+        <div class="shop-card" style="border-left: 3px solid var(--frag); margin-bottom: 10px;">
+            <b>DAILY MISSION</b><span id="daily-timer" class="timer-text"></span>
+            <p style="font-size:11px; margin:4px 0;">Objective: 1,500 Clicks</p>
+            <button class="btn-claim" id="daily-btn" onclick="claimDaily()">CLAIM DAILY</button>
+        </div>
+        <div class="shop-card" style="border-left: 3px solid var(--combo);">
+            <b>WEEKLY MISSION</b><span id="weekly-timer" class="timer-text"></span>
+            <p style="font-size:11px; margin:4px 0;">Objective: 15,000 Clicks</p>
+            <button class="btn-claim" id="weekly-btn" onclick="claimWeekly()">CLAIM WEEKLY</button>
         </div>
     </div>
 </div>
 
-<div id="guide-m" class="modal">
-    <span class="close" onclick="closeModal('guide-m')">[X]</span>
-    <h1 style="font-family:'Orbitron'">Nexus Guide</h1>
-    <p>• <b>Gold (0.5%):</b> Earned via clicking.</p>
-    <p>• <b>Fragments (0.1%):</b> Rare drops for Artifacts.</p>
-    <p>• <b>Critical Hits:</b> 5% chance to deal 3x Power.</p>
-    <p>• <b>Coupons:</b> Flat Baht discount on all Gold purchases.</p>
-</div>
-
-<div id="forge-m" class="modal">
-    <span class="close" onclick="closeModal('forge-m')">[X]</span>
-    <h2 style="font-family:'Orbitron'">Nexus Forge</h2>
-    <div class="grid-shop">
-        <div class="shop-card"><b>Iron Edge</b><br>+2 Power<br><small>Cost: 500 Gold & 2 Frags</small><button class="btn-claim" onclick="buyForge(500, 2, 2, 'Iron Edge')">FORGE</button></div>
-        <div class="shop-card"><b>Steel Core</b><br>+5 Power<br><small>Cost: 2000 Gold & 10 Frags</small><button class="btn-claim" onclick="buyForge(2000, 10, 5, 'Steel Core')">FORGE</button></div>
-        <div class="shop-card"><b>Aether Transmute</b><br>Buy 1 Fragment<br><small>Cost: 5000 Gold</small><button class="btn-claim" onclick="transmute()">TRANSMUTE</button></div>
-    </div>
-</div>
-
-<div id="shop-m" class="modal">
-    <span class="close" onclick="closeModal('shop-m')">[X]</span>
-    <h2 style="font-family:'Orbitron'">Fragment Shop</h2>
-    <div class="grid-shop">
-        <div class="shop-card"><b>Void Catalyst</b><br>+1 Power<button class="btn-claim" onclick="buyArt('Void Catalyst', 5, 1)">5 FRAGS</button></div>
-        <div class="shop-card"><b>Star Heart</b><br>+4 Power<button class="btn-claim" onclick="buyArt('Star Heart', 25, 4)">25 FRAGS</button></div>
-        <div class="shop-card"><b>Nova Engine</b><br>+12 Power<button class="btn-claim" onclick="buyArt('Nova Engine', 100, 12)">100 FRAGS</button></div>
-        <div class="shop-card"><b>Crit Rune</b><br>+5% Crit Chance<button class="btn-claim" onclick="buyCrit()">150 FRAGS</button></div>
-    </div>
-</div>
+<div id="inv-m" class="modal"><span class="close" onclick="closeModal('inv-m')">[X]</span><h2 style="font-family:'Orbitron'">Inventory</h2><div id="invList" class="grid-shop"></div></div>
 
 <div id="coupon-m" class="modal">
     <span class="close" onclick="closeModal('coupon-m')">[X]</span>
     <h2 style="font-family:'Orbitron'">Coupon Market</h2>
     <div class="grid-shop">
-        <div class="shop-card"><b>Bronze Coupon</b><br>100 Baht Discount<button class="btn-claim" onclick="buyCoupon('Bronze', 1200, 100)">1,200 GOLD</button></div>
-        <div class="shop-card"><b>Silver Coupon</b><br>500 Baht Discount<button class="btn-claim" onclick="buyCoupon('Silver', 5000, 500)">5,000 GOLD</button></div>
-        <div class="shop-card"><b>Gold Coupon</b><br>2,000 Baht Discount<button class="btn-claim" onclick="buyCoupon('Gold', 18000, 2000)">18,000 GOLD</button></div>
+        <div class="shop-card"><b>Small Discount</b><br>8 Baht OFF<button class="btn-claim cp-item" onclick="buyCoupon('S-Coupon', 500, 8)">500 Gold</button></div>
+        <div class="shop-card"><b>Medium Discount</b><br>40 Baht OFF<button class="btn-claim cp-item" onclick="buyCoupon('M-Coupon', 2500, 40)">2,500 Gold</button></div>
+        <div class="shop-card"><b>24H Carry (Rare)</b><br>600 Baht OFF<button class="btn-claim cp-item" onclick="buyCoupon('Carry', 50000, 600)">50,000 Gold</button></div>
     </div>
 </div>
 
-<div id="arts-m" class="modal"><span class="close" onclick="closeModal('arts-m')">[X]</span><h2 style="font-family:'Orbitron'">Collection Vault</h2><div id="artList" class="grid-shop"></div></div>
-
 <div id="settings-m" class="modal">
     <span class="close" onclick="closeModal('settings-m')">[X]</span>
-    <h2 style="font-family:'Orbitron'">Settings</h2>
-    <p>Total Clicks: <span id="set-clicks">0</span></p>
-    <p>Active Discount: <span id="set-disc">0</span> Baht</p>
-    <button class="btn-claim" style="background:var(--grad-crit)" onclick="hardReset()">WIPE ALL DATA</button>
+    <h2 style="font-family:'Orbitron'">Settings & Hidden Stats</h2>
+    <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:4px;">
+        <p>Hidden Power Seed: <span id="set-seed">---</span></p>
+        <p>Encryption Hash: <span id="set-hash">---</span></p>
+        <p>Crit Chance: <span id="set-crit">5%</span></p>
+        <p>Market Discount: <span id="set-disc">0</span> Baht</p>
+        <p>Total Clicks: <span id="set-clicks">0</span></p>
+    </div>
+    <button class="btn-claim" style="background:#b91c1c; margin-top:20px" onclick="hardReset()">FACTORY RESET</button>
 </div>
 
+<div id="forge-m" class="modal"><span class="close" onclick="closeModal('forge-m')">[X]</span><h2 style="font-family:'Orbitron'">Forge</h2><div class="grid-shop" id="forgeList"></div></div>
+<div id="shop-m" class="modal"><span class="close" onclick="closeModal('shop-m')">[X]</span><h2 style="font-family:'Orbitron'">Fragment Shop</h2><div class="grid-shop" id="fragList"></div></div>
+<div id="guide-m" class="modal"><span class="close" onclick="closeModal('guide-m')">[X]</span><h2 style="font-family:'Orbitron'">Guide</h2><p>Every 100 Combo gives +1 extra click power.</p></div>
+
 <script>
-let clicks=0, gold=0, frags=0, power=1, level=1, exp=0, combo=0, storyIdx=0, dailyP=0, discount=0, critChance=0.05;
-let artifacts = [];
-let comboTimer;
-
-const STORIES = [
-    {p: "1:1", t: "The First Spark", g: 100, rG: 50, rE: 100},
-    {p: "1:2", t: "Gathering Dust", g: 400, rG: 120, rE: 250},
-    {p: "1:3", t: "Small Echoes", g: 1000, rG: 300, rE: 600}
-];
-
-document.getElementById('sword').addEventListener('click', (e) => {
-    clicks++; combo++;
-    let isCrit = Math.random() < critChance;
-    let dmg = isCrit ? power * 3 : power;
-    dailyP += dmg;
-
-    clearTimeout(comboTimer);
-    comboTimer = setTimeout(() => { combo = 0; updateUI(); }, 2500);
-
-    if(Math.random() < 0.005) { gold += 10; showAlert('gold-alert'); }
-    if(Math.random() < 0.001) { frags += 1; showAlert('frag-alert'); }
-
-    exp += 0.2;
-    let req = 200 + level*60;
-    if(exp >= req) { exp=0; level++; }
-
-    createPop(e.clientX, e.clientY, dmg, isCrit);
-    updateUI();
-});
+let clicks=0, gold=0, frags=0, power=1, level=1, exp=0, combo=0, storyCh=1, storyPart=1, discount=0, inv=[];
+let dailyClaimed=false, weeklyClaimed=false, marketRestocked=false;
+let dailyClicks=0, weeklyClicks=0;
 
 function updateUI() {
     document.getElementById('hud-clicks').innerText = clicks.toLocaleString();
     document.getElementById('hud-gold').innerText = Math.floor(gold).toLocaleString();
     document.getElementById('hud-frags').innerText = frags.toLocaleString();
     document.getElementById('hud-combo').innerText = combo.toLocaleString();
-    document.getElementById('lvDisplay').innerText = "LEVEL " + level;
+    document.getElementById('lvDisplay').innerText = `LEVEL ${level}`;
     
-    let req = 200 + level*60;
+    let req = 200 + (level * 60);
     document.getElementById('levelFill').style.width = (exp/req*100) + "%";
-    document.getElementById('expDisplay').innerText = Math.floor(exp) + " / " + req + " EXP";
+    document.getElementById('expDisplay').innerText = `${Math.floor(exp)} / ${req} EXP`;
 
-    if(storyIdx < STORIES.length) {
-        let s = STORIES[storyIdx];
-        document.getElementById('st-ch').innerText = "CHAPTER 1: PART " + s.p;
-        document.getElementById('st-title').innerText = s.t;
-        document.getElementById('st-obj').innerText = s.g;
-        document.getElementById('st-fill').style.width = Math.min(100, (clicks/s.g)*100) + "%";
-        document.getElementById('st-btn').disabled = clicks < s.g;
-    }
+    // Story Logic
+    document.getElementById('st-ch').innerText = `CH ${storyCh}: PART ${storyPart}`;
+    let target = (storyCh * 500) + (storyPart * 100);
+    document.getElementById('st-fill').style.width = Math.min(100, (clicks/target)*100) + "%";
+    document.getElementById('st-btn').disabled = (clicks < target);
+    let rewG = (storyCh * 100) + (storyPart * 20);
+    let rewE = (storyCh * 50) + (storyPart * 10);
+    let rewF = storyCh >= 4 ? Math.floor(storyPart/2) : 0;
+    document.getElementById('st-rew').innerText = `Reward: ${rewG}G, ${rewE}XP ${rewF > 0 ? '+ '+rewF+'F' : ''}`;
 
-    document.getElementById('dailyFill').style.width = Math.min(100, (dailyP/2000)*100) + "%";
-    document.getElementById('daily-btn').disabled = dailyP < 2000;
-    
+    // Mission Buttons
+    document.getElementById('daily-btn').disabled = (dailyClicks < 1500 || dailyClaimed);
+    document.getElementById('daily-btn').innerText = dailyClaimed ? "CLAIMED" : "CLAIM DAILY";
+    document.getElementById('weekly-btn').disabled = (weeklyClicks < 15000 || weeklyClaimed);
+    document.getElementById('weekly-btn').innerText = weeklyClaimed ? "CLAIMED" : "CLAIM WEEKLY";
+
+    // Settings
     document.getElementById('set-clicks').innerText = clicks;
     document.getElementById('set-disc').innerText = discount;
+    document.getElementById('set-seed').innerText = (clicks * 1.618).toFixed(0);
+    document.getElementById('set-hash').innerText = btoa(clicks).substring(0,8);
 
     save();
 }
 
-function buyForge(gC, fC, pP, name) {
-    let finalGold = Math.max(0, gC - discount);
-    if(gold >= finalGold && frags >= fC) {
-        gold -= finalGold; frags -= fC; power += pP;
-        artifacts.push(name + " (+"+pP+" Power)");
-        renderArts(); updateUI();
-    }
-}
-
-function buyArt(name, fC, pP) {
-    if(frags >= fC) {
-        frags -= fC; power += pP;
-        artifacts.push(name + " (+"+pP+" Power)");
-        renderArts(); updateUI();
-    }
-}
-
-function buyCrit() {
-    if(frags >= 150) {
-        frags -= 150; critChance += 0.05;
-        artifacts.push("Critical Rune (+5%)");
-        renderArts(); updateUI();
-    }
-}
-
-function buyCoupon(name, gC, dV) {
-    if(gold >= gC) {
-        gold -= gC; if(dV > discount) discount = dV;
-        artifacts.push(name + " Coupon (" + dV + " Baht)");
-        renderArts(); updateUI();
-    }
-}
-
-function transmute() {
-    let finalGold = Math.max(0, 5000 - discount);
-    if(gold >= finalGold) { gold -= finalGold; frags += 1; updateUI(); }
-}
-
-function renderArts() {
-    document.getElementById('artList').innerHTML = artifacts.map(a => `<div class="shop-card"><b>${a}</b></div>`).join('');
-}
-
-function claimStory() { 
-    gold += STORIES[storyIdx].rG; 
-    exp += STORIES[storyIdx].rE;
-    storyIdx++; updateUI(); 
-}
-
-function claimDaily() { gold += 100; frags += 1; dailyP = 0; updateUI(); }
-
-function showAlert(id) {
-    let a = document.getElementById(id);
-    a.style.display = 'block';
-    setTimeout(() => a.style.display = 'none', 1500);
-}
+document.getElementById('sword').addEventListener('click', (e) => {
+    let comboBonus = Math.floor(combo / 100);
+    let hit = 1 + comboBonus;
+    clicks += hit; dailyClicks += hit; weeklyClicks += hit; combo++;
+    
+    let isCrit = Math.random() < 0.05;
+    let goldGain = (Math.random() < 0.005) ? 10 : 0;
+    gold += goldGain;
+    exp += (0.2 * hit);
+    
+    if(exp >= (200 + level*60)) { exp=0; level++; }
+    
+    createPop(e.clientX, e.clientY, hit, isCrit);
+    clearTimeout(window.ctimer);
+    window.ctimer = setTimeout(() => { combo = 0; updateUI(); }, 2500);
+    updateUI();
+});
 
 function createPop(x, y, d, crit) {
     const el = document.createElement('div');
     el.className = 'click-text' + (crit ? ' crit' : '');
     el.style.left = x + 'px'; el.style.top = y + 'px';
-    el.innerText = crit ? "CRIT +" + d : "+" + d;
+    el.innerText = crit ? "CRIT!" : "+" + d;
     document.body.appendChild(el);
-    setTimeout(() => el.remove(), 700);
+    setTimeout(() => el.remove(), 600);
 }
 
-function save() {
-    const data = {clicks, gold, frags, power, level, exp, storyIdx, dailyP, discount, artifacts, critChance};
-    localStorage.setItem('aether_v7', JSON.stringify(data));
-}
+// Timers & Resets
+function updateTimers() {
+    const now = new Date();
+    // Daily
+    const nextDaily = new Date(now); nextDaily.setHours(24,0,0,0);
+    const dDiff = nextDaily - now;
+    document.getElementById('daily-timer').innerText = formatTime(dDiff);
+    if(dDiff <= 1000) { dailyClaimed = false; dailyClicks = 0; }
 
-function load() {
-    let s = localStorage.getItem('aether_v7');
-    if(s) {
-        let d = JSON.parse(s);
-        clicks=d.clicks; gold=d.gold; frags=d.frags; power=d.power; level=d.level;
-        exp=d.exp; storyIdx=d.storyIdx; dailyP=d.dailyP; discount=d.discount; artifacts=d.artifacts||[];
-        critChance=d.critChance||0.05;
-        renderArts(); updateUI();
+    // Weekly (Market & Weekly Mission)
+    const nextWeekly = new Date(now); 
+    nextWeekly.setDate(now.getDate() + (7 - now.getDay()) % 7 || 7);
+    nextWeekly.setHours(24,0,0,0);
+    const wDiff = nextWeekly - now;
+    let ts = formatTime(wDiff);
+    document.getElementById('weekly-timer').innerText = ts;
+    document.getElementById('market-timer').innerText = "RESTOCK IN: " + ts;
+    
+    if(wDiff <= 1000) { 
+        weeklyClaimed = false; weeklyClicks = 0; 
+        document.querySelectorAll('.cp-item').forEach(b => b.disabled = false);
     }
 }
 
-function openModal(id) { document.getElementById(id).style.display = 'block'; }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function hardReset() { if(confirm("WIPE DATA?")) { localStorage.clear(); location.reload(); } }
+function formatTime(ms) {
+    let s = Math.floor(ms/1000);
+    let m = Math.floor(s/60);
+    let h = Math.floor(m/60);
+    let d = Math.floor(h/24);
+    return `${d}d ${h%24}h ${m%60}m ${s%60}s`;
+}
 
+function claimStory() {
+    gold += (storyCh * 100) + (storyPart * 20);
+    exp += (storyCh * 50) + (storyPart * 10);
+    if(storyCh >= 4) frags += Math.floor(storyPart/2);
+    
+    storyPart++;
+    if(storyPart > 10) { storyPart = 1; storyCh++; }
+    if(storyCh > 5) storyCh = 5; // End of current content
+    updateUI();
+}
+
+function claimDaily() { gold += 100; exp += 200; dailyClaimed = true; updateUI(); }
+function claimWeekly() { gold += 1000; exp += 1500; frags += 5; weeklyClaimed = true; updateUI(); }
+
+function buyCoupon(name, cost, dV) {
+    let finalCost = Math.max(0, cost - discount);
+    if(gold >= finalCost) {
+        gold -= finalCost; discount = dV;
+        inv.push(name); renderInv(); updateUI();
+    }
+}
+
+function renderInv() {
+    document.getElementById('invList').innerHTML = inv.map(i => `<div class="shop-card"><b>${i}</b></div>`).join('');
+}
+
+function save() {
+    const d = {clicks, gold, frags, level, exp, storyCh, storyPart, discount, inv, dailyClaimed, weeklyClaimed, dailyClicks, weeklyClicks};
+    localStorage.setItem('aether_v8', JSON.stringify(d));
+}
+function load() {
+    let s = localStorage.getItem('aether_v8');
+    if(s) {
+        let d = JSON.parse(s);
+        clicks=d.clicks; gold=d.gold; frags=d.frags; level=d.level; exp=d.exp;
+        storyCh=d.storyCh; storyPart=d.storyPart; discount=d.discount; inv=d.inv||[];
+        dailyClaimed=d.dailyClaimed; weeklyClaimed=d.weeklyClaimed;
+        dailyClicks=d.dailyClicks||0; weeklyClicks=d.weeklyClicks||0;
+        renderInv();
+    }
+    updateUI();
+}
+
+function openModal(id) { document.getElementById(id).style.display='block'; }
+function closeModal(id) { document.getElementById(id).style.display='none'; }
+function hardReset() { if(confirm("WIPE ALL?")) { localStorage.clear(); location.reload(); } }
+
+setInterval(updateTimers, 1000);
 load();
 </script>
 </body>

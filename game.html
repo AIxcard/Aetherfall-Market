@@ -13,120 +13,113 @@
             --frag: #d8b4fe;
             --combo: #22d3ee;
             --text: #e2e8f0;
-            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-bg: rgba(255, 255, 255, 0.05);
         }
 
         body, html {
-            margin: 0; height: 100%; overflow: hidden;
+            margin: 0; height: 100vh; overflow: hidden;
             background: var(--bg); font-family: 'Segoe UI', sans-serif; color: var(--text);
             user-select: none;
         }
 
-        #layout { display: grid; grid-template-columns: 260px 1fr 300px; height: 100vh; }
+        #layout { display: grid; grid-template-columns: 240px 1fr 280px; height: 100%; }
 
         .side-panel {
             background: var(--panel); border-right: 1px solid var(--border);
-            padding: 25px 20px; display: flex; flex-direction: column; z-index: 10;
+            padding: 20px; display: flex; flex-direction: column; z-index: 10;
         }
         .right-panel { border-right: none; border-left: 1px solid var(--border); }
 
         #center-area {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             background: radial-gradient(circle at center, #0a1128 0%, #020408 100%);
-            position: relative; overflow: hidden; padding-bottom: 50px;
+            position: relative; overflow: hidden;
         }
 
         header {
-            font-size: 48px; font-weight: 900; letter-spacing: 8px;
+            font-size: 36px; font-weight: 900; letter-spacing: 6px;
             background: linear-gradient(to bottom, #fff, var(--accent));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 15px; z-index: 5;
+            margin-bottom: 15px;
         }
 
-        /* PROGRESS BARS */
-        #levelWrap { width: 80%; max-width: 500px; margin-bottom: 25px; z-index: 5; }
+        /* COMPACT HUD */
+        #hud { display: flex; gap: 10px; margin-bottom: 15px; }
+        .stat-box {
+            background: rgba(0,0,0,0.6); border: 1px solid var(--border);
+            padding: 8px 12px; border-radius: 6px; text-align: center; min-width: 65px;
+        }
+        .stat-box small { font-size: 8px; text-transform: uppercase; display: block; opacity: 0.6; }
+        .stat-box span { font-size: 14px; font-weight: 800; }
+
+        #levelWrap { width: 400px; margin-bottom: 20px; }
         .bar-outer {
-            background: #000; height: 32px; border-radius: 8px;
+            background: #000; height: 22px; border-radius: 4px;
             border: 1px solid var(--border); position: relative; overflow: hidden;
         }
         .fill { height: 100%; background: linear-gradient(90deg, #4c1d95, #8b5cf6); width: 0%; transition: width 0.3s; }
         .bar-content {
             position: absolute; width: 100%; height: 100%; top:0; z-index: 6;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0 15px; box-sizing: border-box; font-size: 12px; font-weight: bold;
+            padding: 0 10px; box-sizing: border-box; font-size: 10px; font-weight: bold;
         }
 
-        /* STATS GRID */
-        #stats { display: flex; gap: 12px; margin-bottom: 25px; z-index: 5; }
-        .stat-box {
-            background: rgba(13, 17, 23, 0.8); border: 1px solid rgba(30, 58, 138, 0.4);
-            padding: 12px 18px; border-radius: 12px; text-align: center; min-width: 80px;
-        }
-        .stat-box small { font-size: 9px; text-transform: uppercase; opacity: 0.6; display: block; margin-bottom: 2px; }
-        .stat-box span { font-size: 1.2em; font-weight: bold; }
+        #sword { width: 240px; cursor: pointer; transition: transform 0.05s; z-index: 5; }
+        #sword:active { transform: scale(0.93); }
 
-        /* SWORD INTERACTION */
-        #sword { width: 280px; cursor: pointer; transition: transform 0.05s; z-index: 5; }
-        #sword:active { transform: scale(0.92); }
-
-        /* CLICK TEXTS */
+        /* THE GOOD CRITS */
         .click-text {
-            position: absolute; pointer-events: none; font-weight: 900; font-size: 20px;
-            color: white; animation: floatUp 0.7s ease-out forwards; z-index: 100;
+            position: absolute; pointer-events: none; font-weight: 900; font-size: 18px;
+            color: white; animation: floatDiag 0.7s ease-out forwards; z-index: 100;
         }
-        .crit-text { color: var(--gold); font-size: 36px; text-shadow: 0 0 15px orange; }
-        .gold-pop { color: var(--gold); font-size: 24px; text-shadow: 0 0 10px #fff; }
-        .frag-pop { color: var(--frag); font-size: 28px; text-shadow: 0 0 20px var(--frag); }
+        .crit-text { 
+            color: var(--gold); font-size: 32px; 
+            text-shadow: 2px 2px 0px #854d0e, 0 0 12px orange;
+            animation: critDiag 0.6s ease-out forwards !important;
+        }
+        @keyframes floatDiag {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(30px, -90px); opacity: 0; }
+        }
+        @keyframes critDiag {
+            0% { transform: translate(0, 0) scale(0.5) rotate(-15deg); opacity: 1; }
+            20% { transform: translate(-10px, -20px) scale(1.3) rotate(5deg); }
+            100% { transform: translate(-40px, -150px) rotate(-20deg); opacity: 0; }
+        }
 
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-120px) rotate(10deg); opacity: 0; }
+        .nav-btn {
+            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05);
+            padding: 12px; margin-bottom: 8px; border-radius: 6px;
+            cursor: pointer; font-size: 13px; transition: 0.2s;
         }
-
-        .shake { animation: shake 0.15s ease-in-out; }
-        @keyframes shake {
-            0%, 100% { transform: translate(0,0); }
-            25% { transform: translate(3px, 3px); }
-            50% { transform: translate(-3px, -3px); }
-        }
-
-        /* BUTTONS & CARDS */
-        .menuBtn {
-            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.06);
-            padding: 14px; margin-bottom: 10px; border-radius: 10px;
-            cursor: pointer; font-size: 14px; transition: 0.2s;
-        }
-        .menuBtn:hover { border-color: var(--accent); background: rgba(167, 139, 250, 0.1); }
+        .nav-btn:hover { border-color: var(--accent); background: rgba(167, 139, 250, 0.1); }
         
-        .shop-card { background: var(--card-bg); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.04); }
-        
+        .card { background: var(--card-bg); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
         .btn-claim {
             background: linear-gradient(180deg, #8b5cf6, #6d28d9);
-            border: none; color: white; padding: 12px; border-radius: 8px;
-            width: 100%; font-weight: 800; cursor: pointer; font-size: 12px;
+            border: none; color: white; padding: 8px; border-radius: 4px;
+            width: 100%; font-weight: 800; cursor: pointer; font-size: 11px; margin-top: 8px;
         }
         .btn-claim:disabled { background: #1a1a1a; color: #444; cursor: not-allowed; }
 
-        /* MODALS */
         .modal {
             display: none; position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%); background: #080a0f;
-            border: 1px solid var(--accent); border-radius: 20px;
-            width: 700px; max-height: 80vh; padding: 30px; z-index: 1000; overflow-y: auto;
+            border: 1px solid var(--accent); border-radius: 12px;
+            width: 550px; max-height: 70vh; padding: 25px; z-index: 1000; overflow-y: auto;
         }
-        .close { float: right; cursor: pointer; color: #ff4d4d; font-size: 24px; }
     </style>
 </head>
 <body>
 
 <div id="layout">
     <div class="side-panel">
-        <div style="font-weight: 800; color: var(--accent); margin-bottom: 20px; font-size: 12px; letter-spacing: 2px;">NEXUS CORE</div>
-        <div class="menuBtn" onclick="openModal('lore-m')">📘 Lore Archive</div>
-        <div class="menuBtn" onclick="openModal('mile-m')">🏆 Milestones</div>
-        <div class="menuBtn" onclick="openModal('shop-m')">💎 Fragment Shop</div>
-        <div class="menuBtn" onclick="openModal('arts-m')">✨ My Artifacts</div>
-        <div style="margin-top: auto;" class="menuBtn" onclick="openModal('set-m')">⚙️ Settings</div>
+        <div style="font-weight:900; color:var(--accent); font-size:12px; margin-bottom:20px;">SYSTEM CORE</div>
+        <div class="nav-btn" onclick="openM('lore')">📘 Lore Archive</div>
+        <div class="nav-btn" onclick="openM('shop')">💎 Frag Shop</div>
+        <div class="nav-btn" onclick="openM('arts')">✨ My Artifacts</div>
+        <div class="nav-btn" onclick="openM('miles')">🏆 Milestones</div>
+        <div style="margin-top:auto" class="nav-btn" onclick="openM('sets')">⚙️ Settings</div>
     </div>
 
     <div id="center-area">
@@ -134,133 +127,130 @@
         <div id="levelWrap">
             <div class="bar-outer">
                 <div id="levelFill" class="fill"></div>
-                <div class="bar-content">
-                    <span id="lvDisplay">Level 1</span>
-                    <span id="expDisplay">0 / 200 EXP</span>
-                </div>
+                <div class="bar-content"><span id="lvTxt">LV 1</span><span id="expTxt">0/200</span></div>
             </div>
         </div>
-        <div id="stats">
-            <div class="stat-box"><small>Clicks</small><span id="stat-clicks">0</span></div>
-            <div class="stat-box"><small>Gold</small><span id="stat-gold" style="color:var(--gold)">0</span></div>
-            <div class="stat-box"><small>Fragments</small><span id="stat-frag" style="color:var(--frag)">0</span></div>
-            <div class="stat-box"><small>Combo</small><span id="stat-combo" style="color:var(--combo)">0</span></div>
+        <div id="hud">
+            <div class="stat-box"><small>Clicks</small><span id="hud-clicks">0</span></div>
+            <div class="stat-box"><small>Gold</small><span id="hud-gold" style="color:var(--gold)">0</span></div>
+            <div class="stat-box"><small>Frags</small><span id="hud-frag" style="color:var(--frag)">0</span></div>
+            <div class="stat-box"><small>Combo</small><span id="hud-combo" style="color:var(--combo)">0</span></div>
         </div>
         <img id="sword" src="Final_game_icon.png" alt="Sword">
     </div>
 
     <div class="side-panel right-panel">
-        <h3 style="color: var(--accent); margin-bottom: 15px; font-size: 16px;">ACTIVE QUEST</h3>
-        <div class="shop-card" id="storyContainer">
-            <p id="st-chapter" style="font-size:10px; color:var(--accent); font-weight:bold; text-transform:uppercase; margin:0;">Chapter 1</p>
-            <p id="st-title" style="font-size:18px; font-weight:bold; margin: 5px 0 10px 0;">The Awakening</p>
-            <div style="background:#000; height:6px; border-radius:3px; overflow:hidden; margin-bottom:15px;">
-                <div id="st-fill" class="fill"></div>
+        <div style="font-weight:900; color:var(--accent); font-size:12px; margin-bottom:15px;">OBJECTIVES</div>
+        <div id="quest-area" class="card"></div>
+        
+        <div class="card" style="margin-top:15px;">
+            <b style="font-size:11px;">DAILY REFLEX</b>
+            <div style="background:#000; height:4px; margin:8px 0; border-radius:2px; overflow:hidden;">
+                <div id="dailyFill" class="fill"></div>
             </div>
-            <button class="btn-claim" id="st-btn" onclick="claimStory()">Claim Reward</button>
+            <button class="btn-claim" id="daily-btn" onclick="claimDaily()">Collect Fragments</button>
         </div>
     </div>
 </div>
 
-<div id="lore-m" class="modal"><span class="close" onclick="closeModal('lore-m')">&times;</span><h2>Archive</h2><p>Resources are scarce. Gold (0.5%) and Fragments (0.1%) are the only way to rebuild the Nexus.</p></div>
-<div id="mile-m" class="modal"><span class="close" onclick="closeModal('mile-m')">&times;</span><h2>Milestones</h2><div id="mileCard" style="text-align:center;"></div></div>
-<div id="shop-m" class="modal"><span class="close" onclick="closeModal('shop-m')">&times;</span><h2>Shop</h2><div class="grid-shop" id="shopItems"></div></div>
-<div id="arts-m" class="modal"><span class="close" onclick="closeModal('arts-m')">&times;</span><h2>Artifacts</h2><div id="artList"></div></div>
+<div id="modal-lore" class="modal">
+    <h3 style="color:var(--accent)">THE SHATTERED ARCHIVE</h3>
+    <p style="font-size:14px; line-height:1.6; opacity:0.8;">
+        The Aether shattered during the Great Divergence. Now, only the strongest strikes can manifest reality shards. 
+        <br><br><b>Gold:</b> Ancient solar dust (0.5% chance).
+        <br><b>Fragments:</b> Pure crystalline logic (0.1% chance).
+    </p>
+    <button class="btn-claim" onclick="closeM()">Close</button>
+</div>
+
+<div id="modal-shop" class="modal">
+    <h3>FRAGMENT SHOP</h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="card"><b>Star Core</b> (+1 Pow)<button class="btn-claim" onclick="buy('Star Core', 5, 1)">5 Frags</button></div>
+        <div class="card"><b>Void Cell</b> (+3 Pow)<button class="btn-claim" onclick="buy('Void Cell', 15, 3)">15 Frags</button></div>
+    </div>
+    <button class="btn-claim" onclick="closeM()" style="margin-top:15px;">Close</button>
+</div>
+
+<div id="modal-arts" class="modal">
+    <h3>MY ARTIFACTS</h3>
+    <div id="art-list" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+    <button class="btn-claim" onclick="closeM()" style="margin-top:15px;">Close</button>
+</div>
 
 <script>
 let clicks=0, gold=0, frags=0, combo=0, power=1;
-let level=1, exp=0, storyStage=0;
+let level=1, exp=0, storyIdx=0, dailyP=0, lastD=0;
+let artifacts = [];
+
+const CHAPTERS = [
+    {t: "The Awakening", d: "The first sparks return to the dark.", g: 100, rG: 50, rE: 40},
+    {t: "The Void Path", d: "Searching the empty expanse.", g: 1000, rG: 200, rE: 150},
+    {t: "Celestial Peak", d: "Reaching the summit of the Core.", g: 5000, rG: 1000, rE: 500}
+];
 
 document.getElementById('sword').addEventListener('click', (e) => {
-    clicks++; 
-    combo++;
+    clicks++; combo++;
+    let crit = Math.random() < 0.10;
+    let v = crit ? power * 2 : power;
     
-    let isCrit = Math.random() < 0.10;
-    let actualPower = isCrit ? power * 2 : power;
+    if(Math.random() < 0.005 && combo > 10) gold += 10;
+    if(Math.random() < 0.001) frags += 1;
     
-    // UPDATED ECONOMY
-    let gotGold = (Math.random() < 0.005 && combo > 10); // 0.5%
-    let gotFrag = (Math.random() < 0.001); // 0.1%
+    if(level < 100) { exp += (0.05 * (crit?2:1)); dailyP += v; }
+    
+    const t = document.createElement('div');
+    t.className = 'click-text' + (crit ? ' crit-text' : '');
+    t.innerText = (crit ? 'CRIT! ' : '+') + v;
+    t.style.left = e.clientX + 'px'; t.style.top = e.clientY + 'px';
+    document.body.appendChild(t); setTimeout(()=>t.remove(), 600);
 
-    if(gotGold) {
-        gold += 10;
-        document.getElementById('center-area').classList.add('shake');
-        setTimeout(() => document.getElementById('center-area').classList.remove('shake'), 150);
-    }
-    
-    if(gotFrag) {
-        frags += 1;
-    }
-
-    exp += 0.05 * (isCrit ? 1.5 : 1); 
-    createClickEffect(e.clientX, e.clientY, actualPower, isCrit, gotGold, gotFrag);
-    checkLevel(); 
-    updateUI();
+    checkLv(); update();
 });
 
-function createClickEffect(x, y, val, crit, goldDrop, fragDrop) {
-    const txt = document.createElement('div');
-    txt.className = 'click-text' + (crit ? ' crit-text' : '');
-    txt.innerText = (crit ? 'CRIT! ' : '+') + val;
-    txt.style.left = (x - 20) + 'px';
-    txt.style.top = (y - 40) + 'px';
-    document.body.appendChild(txt);
-    setTimeout(() => txt.remove(), 700);
-
-    if(goldDrop) {
-        const gt = document.createElement('div');
-        gt.className = 'click-text gold-pop';
-        gt.innerText = '+10 GOLD';
-        gt.style.left = (x + 30) + 'px';
-        gt.style.top = (y - 10) + 'px';
-        document.body.appendChild(gt);
-        setTimeout(() => gt.remove(), 900);
-    }
-
-    if(fragDrop) {
-        const ft = document.createElement('div');
-        ft.className = 'click-text frag-pop';
-        ft.innerText = '+1 FRAGMENT';
-        ft.style.left = x + 'px';
-        ft.style.top = (y - 60) + 'px';
-        document.body.appendChild(ft);
-        setTimeout(() => ft.remove(), 1000);
-    }
+function checkLv() {
+    let r = 200 + (level * 50);
+    if(exp >= r && level < 100) { exp -= r; level++; }
 }
 
-function checkLevel() {
-    let req = 200 + (level * 50);
-    if(exp >= req && level < 100) { exp -= req; level++; }
+function update() {
+    document.getElementById('hud-clicks').innerText = clicks;
+    document.getElementById('hud-gold').innerText = gold;
+    document.getElementById('hud-frag').innerText = frags;
+    document.getElementById('hud-combo').innerText = combo;
+    document.getElementById('lvTxt').innerText = "LV " + level;
+    let r = 200 + (level * 50);
+    document.getElementById('levelFill').style.width = (level>=100?100:(exp/r*100)) + "%";
+
+    const qA = document.getElementById('quest-area');
+    if(storyIdx < CHAPTERS.length) {
+        let s = CHAPTERS[storyIdx];
+        qA.innerHTML = `<b style="font-size:12px;color:var(--accent)">${s.t}</b>
+        <p style="font-size:10px;opacity:0.6;margin:5px 0;">${s.d}</p>
+        <div style="background:#000;height:4px;border-radius:2px;"><div class="fill" style="width:${Math.min(100,(clicks/s.g)*100)}%"></div></div>
+        <button class="btn-claim" ${clicks >= s.g ? "" : "disabled"} onclick="claimS()">Claim Reward</button>`;
+    } else { qA.innerHTML = "<b>STORY COMPLETE</b>"; }
+
+    let isD = new Date(lastD).toDateString() === new Date().toDateString();
+    document.getElementById('dailyFill').style.width = Math.min(100, (dailyP/1500)*100) + "%";
+    document.getElementById('daily-btn').disabled = (dailyP < 1500 || isD);
 }
 
-function updateUI() {
-    document.getElementById('stat-clicks').innerText = clicks.toLocaleString();
-    document.getElementById('stat-gold').innerText = Math.floor(gold).toLocaleString();
-    document.getElementById('stat-frag').innerText = frags;
-    document.getElementById('stat-combo').innerText = combo;
-    document.getElementById('lvDisplay').innerText = "Level " + level;
-    
-    let req = 200 + (level * 50);
-    document.getElementById('levelFill').style.width = (level >= 100 ? 100 : (exp/req*100)) + "%";
-    document.getElementById('expDisplay').innerText = level >= 100 ? "MAX" : Math.floor(exp) + " / " + req + " EXP";
+function claimS() { let s = CHAPTERS[storyIdx]; gold += s.rG; exp += s.rE; storyIdx++; update(); }
+function claimDaily() { gold += 150; frags += 1; lastD = Date.now(); dailyP = 0; update(); }
 
-    // Quest logic
-    let questGoal = (storyStage + 1) * 250;
-    document.getElementById('st-fill').style.width = Math.min(100, (clicks/questGoal)*100) + "%";
-    document.getElementById('st-btn').disabled = clicks < questGoal;
+function buy(n, c, p) { if(frags >= c) { frags -= c; power += p; artifacts.push(n); update(); renderA(); } }
+function renderA() {
+    let h = artifacts.length ? "" : "<p style='font-size:11px;'>No artifacts yet.</p>";
+    artifacts.forEach(a => h += `<div class="card" style="font-size:11px; text-align:center;">${a}</div>`);
+    document.getElementById('art-list').innerHTML = h;
 }
 
-function claimStory() {
-    storyStage++;
-    gold += 100;
-    updateUI();
-}
+function openM(id) { document.getElementById('modal-'+id).style.display='block'; }
+function closeM() { document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); }
 
-function openModal(id) { document.getElementById(id).style.display = 'block'; }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-setInterval(() => { if(combo > 0) combo--; updateUI(); }, 2500);
-updateUI();
+setInterval(() => { if(combo > 0) { combo--; update(); } }, 2500);
+update();
 </script>
 </body>
 </html>

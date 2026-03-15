@@ -16,8 +16,6 @@
             --crit: #ff4d4d;
             --text: #f8fafc;
             --card-bg: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-            --grad-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #fef3c7 100%);
-            --grad-frag: linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #ddd6fe 100%);
             --grad-action: linear-gradient(180deg, #4f46e5 0%, #3730a3 100%);
         }
 
@@ -48,7 +46,6 @@
             margin-bottom: 15px;
         }
 
-        /* PROGRESS */
         #levelWrap { width: 85%; max-width: 600px; margin-bottom: 15px; }
         .bar-outer {
             background: #000; height: 32px; border-radius: 4px;
@@ -87,13 +84,11 @@
         .grid-shop { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .shop-card { background: var(--card-bg); padding: 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); }
         .btn-claim { background: var(--grad-action); border: none; color: white; padding: 10px; width: 100%; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; margin-top: 8px; border-radius: 2px;}
-        .btn-claim:disabled { background: #333; cursor: not-allowed; opacity: 0.5; }
+        .btn-claim:disabled { background: #333 !important; cursor: not-allowed; opacity: 0.5; }
 
         .timer-text { font-family: 'Orbitron'; font-size: 9px; color: var(--accent); display: block; margin-top: 5px; }
-
         .click-text { position: absolute; pointer-events: none; font-family: 'Orbitron'; font-weight: 900; animation: floatUp 0.6s ease-out forwards; z-index: 100; }
         @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
-        .crit { color: var(--crit) !important; font-size: 28px !important; text-shadow: 0 0 10px #f00; }
     </style>
 </head>
 <body>
@@ -133,19 +128,21 @@
         <h3 style="font-family:'Orbitron'; font-size: 11px; color:var(--accent);">MISSIONS</h3>
         <div class="shop-card" style="border-left: 3px solid var(--accent); margin-bottom: 10px;">
             <b id="st-ch">CH 1: PART 1</b>
-            <p id="st-title" style="font-size:12px; margin:4px 0;">Awakening</p>
+            <p id="st-obj" style="font-size:11px; margin:4px 0; color:var(--accent);"></p>
             <div class="bar-outer" style="height:8px; margin:8px 0;"><div id="st-fill" class="fill"></div></div>
             <small id="st-rew" style="font-size:9px; color:var(--gold)"></small>
             <button class="btn-claim" id="st-btn" onclick="claimStory()">CLAIM STORY</button>
         </div>
         <div class="shop-card" style="border-left: 3px solid var(--frag); margin-bottom: 10px;">
             <b>DAILY MISSION</b><span id="daily-timer" class="timer-text"></span>
-            <p style="font-size:11px; margin:4px 0;">Objective: 1,500 Clicks</p>
+            <p style="font-size:11px; margin:4px 0;">Objective: 5,000 Clicks</p>
+            <small style="color:var(--frag)">Reward: 250 Gold, 500 EXP</small>
             <button class="btn-claim" id="daily-btn" onclick="claimDaily()">CLAIM DAILY</button>
         </div>
         <div class="shop-card" style="border-left: 3px solid var(--combo);">
             <b>WEEKLY MISSION</b><span id="weekly-timer" class="timer-text"></span>
-            <p style="font-size:11px; margin:4px 0;">Objective: 15,000 Clicks</p>
+            <p style="font-size:11px; margin:4px 0;">Objective: 50,000 Clicks</p>
+            <small style="color:var(--combo)">Reward: 2000 Gold, 5000 EXP, 10 Frags</small>
             <button class="btn-claim" id="weekly-btn" onclick="claimWeekly()">CLAIM WEEKLY</button>
         </div>
     </div>
@@ -157,33 +154,26 @@
     <span class="close" onclick="closeModal('coupon-m')">[X]</span>
     <h2 style="font-family:'Orbitron'">Coupon Market</h2>
     <div class="grid-shop">
-        <div class="shop-card"><b>Small Discount</b><br>8 Baht OFF<button class="btn-claim cp-item" onclick="buyCoupon('S-Coupon', 500, 8)">500 Gold</button></div>
-        <div class="shop-card"><b>Medium Discount</b><br>40 Baht OFF<button class="btn-claim cp-item" onclick="buyCoupon('M-Coupon', 2500, 40)">2,500 Gold</button></div>
-        <div class="shop-card"><b>24H Carry (Rare)</b><br>600 Baht OFF<button class="btn-claim cp-item" onclick="buyCoupon('Carry', 50000, 600)">50,000 Gold</button></div>
+        <div class="shop-card"><b>Bronze Coupon</b><br>5 Baht Discount<button class="btn-claim cp-item" onclick="buyCoupon('Bronze', 500, 5)">500 Gold</button></div>
+        <div class="shop-card"><b>Silver Coupon</b><br>10 Baht Discount<button class="btn-claim cp-item" onclick="buyCoupon('Silver', 1500, 10)">1,500 Gold</button></div>
+        <div class="shop-card"><b>Gold Coupon</b><br>25 Baht Discount<button class="btn-claim cp-item" onclick="buyCoupon('Gold', 5000, 25)">5,000 Gold</button></div>
     </div>
 </div>
 
 <div id="settings-m" class="modal">
     <span class="close" onclick="closeModal('settings-m')">[X]</span>
-    <h2 style="font-family:'Orbitron'">Settings & Hidden Stats</h2>
-    <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:4px;">
-        <p>Hidden Power Seed: <span id="set-seed">---</span></p>
-        <p>Encryption Hash: <span id="set-hash">---</span></p>
-        <p>Crit Chance: <span id="set-crit">5%</span></p>
-        <p>Market Discount: <span id="set-disc">0</span> Baht</p>
-        <p>Total Clicks: <span id="set-clicks">0</span></p>
-    </div>
+    <h2 style="font-family:'Orbitron'">Settings</h2>
+    <p style="font-size:12px; opacity:0.7;">Factory Reset will wipe all local data permanently.</p>
     <button class="btn-claim" style="background:#b91c1c; margin-top:20px" onclick="hardReset()">FACTORY RESET</button>
 </div>
 
-<div id="forge-m" class="modal"><span class="close" onclick="closeModal('forge-m')">[X]</span><h2 style="font-family:'Orbitron'">Forge</h2><div class="grid-shop" id="forgeList"></div></div>
-<div id="shop-m" class="modal"><span class="close" onclick="closeModal('shop-m')">[X]</span><h2 style="font-family:'Orbitron'">Fragment Shop</h2><div class="grid-shop" id="fragList"></div></div>
-<div id="guide-m" class="modal"><span class="close" onclick="closeModal('guide-m')">[X]</span><h2 style="font-family:'Orbitron'">Guide</h2><p>Every 100 Combo gives +1 extra click power.</p></div>
+<div id="forge-m" class="modal"><span class="close" onclick="closeModal('forge-m')">[X]</span><h2 style="font-family:'Orbitron'">Forge</h2><p>Forge currently offline.</p></div>
+<div id="shop-m" class="modal"><span class="close" onclick="closeModal('shop-m')">[X]</span><h2 style="font-family:'Orbitron'">Fragment Shop</h2><p>Shop currently offline.</p></div>
+<div id="guide-m" class="modal"><span class="close" onclick="closeModal('guide-m')">[X]</span><h2 style="font-family:'Orbitron'">Guide</h2><p>Welcome to Aetherfall. Click the sword to gain EXP and find Gold.</p></div>
 
 <script>
 let clicks=0, gold=0, frags=0, power=1, level=1, exp=0, combo=0, storyCh=1, storyPart=1, discount=0, inv=[];
-let dailyClaimed=false, weeklyClaimed=false, marketRestocked=false;
-let dailyClicks=0, weeklyClicks=0;
+let dailyClaimed=false, weeklyClaimed=false, dailyClicks=0, weeklyClicks=0;
 
 function updateUI() {
     document.getElementById('hud-clicks').innerText = clicks.toLocaleString();
@@ -198,78 +188,58 @@ function updateUI() {
 
     // Story Logic
     document.getElementById('st-ch').innerText = `CH ${storyCh}: PART ${storyPart}`;
-    let target = (storyCh * 500) + (storyPart * 100);
+    let target = (storyCh * 1000) + (storyPart * 200);
+    document.getElementById('st-obj').innerText = `Objective: ${target.toLocaleString()} Clicks`;
     document.getElementById('st-fill').style.width = Math.min(100, (clicks/target)*100) + "%";
     document.getElementById('st-btn').disabled = (clicks < target);
-    let rewG = (storyCh * 100) + (storyPart * 20);
-    let rewE = (storyCh * 50) + (storyPart * 10);
+    
+    let rewG = (storyCh * 150) + (storyPart * 50);
+    let rewE = (storyCh * 100) + (storyPart * 20);
     let rewF = storyCh >= 4 ? Math.floor(storyPart/2) : 0;
-    document.getElementById('st-rew').innerText = `Reward: ${rewG}G, ${rewE}XP ${rewF > 0 ? '+ '+rewF+'F' : ''}`;
+    document.getElementById('st-rew').innerText = `Reward: ${rewG} Gold, ${rewE} EXP ${rewF > 0 ? '+ '+rewF+' Frags' : ''}`;
 
-    // Mission Buttons
-    document.getElementById('daily-btn').disabled = (dailyClicks < 1500 || dailyClaimed);
+    document.getElementById('daily-btn').disabled = (dailyClicks < 5000 || dailyClaimed);
     document.getElementById('daily-btn').innerText = dailyClaimed ? "CLAIMED" : "CLAIM DAILY";
-    document.getElementById('weekly-btn').disabled = (weeklyClicks < 15000 || weeklyClaimed);
+    document.getElementById('weekly-btn').disabled = (weeklyClicks < 50000 || weeklyClaimed);
     document.getElementById('weekly-btn').innerText = weeklyClaimed ? "CLAIMED" : "CLAIM WEEKLY";
-
-    // Settings
-    document.getElementById('set-clicks').innerText = clicks;
-    document.getElementById('set-disc').innerText = discount;
-    document.getElementById('set-seed').innerText = (clicks * 1.618).toFixed(0);
-    document.getElementById('set-hash').innerText = btoa(clicks).substring(0,8);
 
     save();
 }
 
 document.getElementById('sword').addEventListener('click', (e) => {
-    let comboBonus = Math.floor(combo / 100);
-    let hit = 1 + comboBonus;
+    let hit = 1 + Math.floor(combo / 100);
     clicks += hit; dailyClicks += hit; weeklyClicks += hit; combo++;
     
-    let isCrit = Math.random() < 0.05;
-    let goldGain = (Math.random() < 0.005) ? 10 : 0;
-    gold += goldGain;
+    if(Math.random() < 0.005) gold += 10;
     exp += (0.2 * hit);
     
     if(exp >= (200 + level*60)) { exp=0; level++; }
     
-    createPop(e.clientX, e.clientY, hit, isCrit);
+    const el = document.createElement('div');
+    el.className = 'click-text';
+    el.style.left = e.clientX + 'px'; el.style.top = e.clientY + 'px';
+    el.innerText = "+" + hit;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 600);
+
     clearTimeout(window.ctimer);
     window.ctimer = setTimeout(() => { combo = 0; updateUI(); }, 2500);
     updateUI();
 });
 
-function createPop(x, y, d, crit) {
-    const el = document.createElement('div');
-    el.className = 'click-text' + (crit ? ' crit' : '');
-    el.style.left = x + 'px'; el.style.top = y + 'px';
-    el.innerText = crit ? "CRIT!" : "+" + d;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 600);
-}
-
-// Timers & Resets
 function updateTimers() {
     const now = new Date();
-    // Daily
     const nextDaily = new Date(now); nextDaily.setHours(24,0,0,0);
     const dDiff = nextDaily - now;
     document.getElementById('daily-timer').innerText = formatTime(dDiff);
     if(dDiff <= 1000) { dailyClaimed = false; dailyClicks = 0; }
 
-    // Weekly (Market & Weekly Mission)
     const nextWeekly = new Date(now); 
     nextWeekly.setDate(now.getDate() + (7 - now.getDay()) % 7 || 7);
     nextWeekly.setHours(24,0,0,0);
     const wDiff = nextWeekly - now;
-    let ts = formatTime(wDiff);
-    document.getElementById('weekly-timer').innerText = ts;
-    document.getElementById('market-timer').innerText = "RESTOCK IN: " + ts;
-    
-    if(wDiff <= 1000) { 
-        weeklyClaimed = false; weeklyClicks = 0; 
-        document.querySelectorAll('.cp-item').forEach(b => b.disabled = false);
-    }
+    document.getElementById('weekly-timer').innerText = formatTime(wDiff);
+    document.getElementById('market-timer').innerText = "RESTOCK: " + formatTime(wDiff);
 }
 
 function formatTime(ms) {
@@ -281,51 +251,49 @@ function formatTime(ms) {
 }
 
 function claimStory() {
-    gold += (storyCh * 100) + (storyPart * 20);
-    exp += (storyCh * 50) + (storyPart * 10);
+    gold += (storyCh * 150) + (storyPart * 50);
+    exp += (storyCh * 100) + (storyPart * 20);
     if(storyCh >= 4) frags += Math.floor(storyPart/2);
     
     storyPart++;
-    if(storyPart > 10) { storyPart = 1; storyCh++; }
-    if(storyCh > 5) storyCh = 5; // End of current content
+    if(storyPart > 10) { 
+        if(storyCh === 5) { // Reset loop after Ch 5 P 10
+            storyCh = 5; storyPart = 1; 
+        } else {
+            storyPart = 1; storyCh++; 
+        }
+    }
     updateUI();
 }
 
-function claimDaily() { gold += 100; exp += 200; dailyClaimed = true; updateUI(); }
-function claimWeekly() { gold += 1000; exp += 1500; frags += 5; weeklyClaimed = true; updateUI(); }
+function claimDaily() { gold += 250; exp += 500; dailyClaimed = true; updateUI(); }
+function claimWeekly() { gold += 2000; exp += 5000; frags += 10; weeklyClaimed = true; updateUI(); }
 
 function buyCoupon(name, cost, dV) {
-    let finalCost = Math.max(0, cost - discount);
-    if(gold >= finalCost) {
-        gold -= finalCost; discount = dV;
-        inv.push(name); renderInv(); updateUI();
-    }
+    if(gold >= cost) { gold -= cost; discount = dV; inv.push(name + " Coupon"); renderInv(); updateUI(); }
 }
 
-function renderInv() {
-    document.getElementById('invList').innerHTML = inv.map(i => `<div class="shop-card"><b>${i}</b></div>`).join('');
-}
+function renderInv() { document.getElementById('invList').innerHTML = inv.map(i => `<div class="shop-card"><b>${i}</b></div>`).join(''); }
+function openModal(id) { document.getElementById(id).style.display='block'; }
+function closeModal(id) { document.getElementById(id).style.display='none'; }
+function hardReset() { if(confirm("WIPE DATA?")) { localStorage.clear(); location.reload(); } }
 
 function save() {
     const d = {clicks, gold, frags, level, exp, storyCh, storyPart, discount, inv, dailyClaimed, weeklyClaimed, dailyClicks, weeklyClicks};
-    localStorage.setItem('aether_v8', JSON.stringify(d));
+    localStorage.setItem('aether_v9', JSON.stringify(d));
 }
 function load() {
-    let s = localStorage.getItem('aether_v8');
+    let s = localStorage.getItem('aether_v9');
     if(s) {
         let d = JSON.parse(s);
-        clicks=d.clicks; gold=d.gold; frags=d.frags; level=d.level; exp=d.exp;
-        storyCh=d.storyCh; storyPart=d.storyPart; discount=d.discount; inv=d.inv||[];
-        dailyClaimed=d.dailyClaimed; weeklyClaimed=d.weeklyClaimed;
+        clicks=d.clicks||0; gold=d.gold||0; frags=d.frags||0; level=d.level||1; exp=d.exp||0;
+        storyCh=d.storyCh||1; storyPart=d.storyPart||1; discount=d.discount||0; inv=d.inv||[];
+        dailyClaimed=d.dailyClaimed||false; weeklyClaimed=d.weeklyClaimed||false;
         dailyClicks=d.dailyClicks||0; weeklyClicks=d.weeklyClicks||0;
         renderInv();
     }
     updateUI();
 }
-
-function openModal(id) { document.getElementById(id).style.display='block'; }
-function closeModal(id) { document.getElementById(id).style.display='none'; }
-function hardReset() { if(confirm("WIPE ALL?")) { localStorage.clear(); location.reload(); } }
 
 setInterval(updateTimers, 1000);
 load();

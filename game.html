@@ -11,7 +11,7 @@ font-family:Segoe UI;
 background:#060b20;
 color:white;
 overflow:hidden;
-transition:background .5s;
+transition:.4s;
 }
 
 /* TITLE */
@@ -90,7 +90,7 @@ animation:floatUp 1s forwards;
 100%{opacity:0;transform:translateY(-70px)}
 }
 
-/* BUTTON GRID */
+/* MENU */
 
 #menuIcons{
 display:grid;
@@ -113,15 +113,6 @@ cursor:pointer;
 
 .menuBtn:hover{
 background:#1e293b;
-}
-
-.menuIcon{
-font-size:28px;
-}
-
-.menuText{
-margin-top:6px;
-font-size:13px;
 }
 
 /* MISSIONS */
@@ -207,8 +198,8 @@ cursor:pointer;
 
 .shopColumns{
 display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:30px;
+grid-template-columns:1fr 1fr;
+gap:40px;
 }
 
 .shopItem{
@@ -249,25 +240,10 @@ cursor:pointer;
 
 <div id="menuIcons">
 
-<div class="menuBtn" onclick="openLore()">
-<div class="menuIcon">📘</div>
-<div class="menuText">Lore</div>
-</div>
-
-<div class="menuBtn" onclick="openGuide()">
-<div class="menuIcon">❓</div>
-<div class="menuText">Guide</div>
-</div>
-
-<div class="menuBtn" onclick="openSettings()">
-<div class="menuIcon">⚙</div>
-<div class="menuText">Settings</div>
-</div>
-
-<div class="menuBtn" onclick="openShop()">
-<div class="menuIcon">🛒</div>
-<div class="menuText">Shop</div>
-</div>
+<div class="menuBtn" onclick="openLore()">📘<br>Lore</div>
+<div class="menuBtn" onclick="openGuide()">❓<br>Guide</div>
+<div class="menuBtn" onclick="openUpgrades()">⚡<br>Upgrades</div>
+<div class="menuBtn" onclick="openShop()">🛒<br>Shop</div>
 
 </div>
 
@@ -301,7 +277,7 @@ Reward: <span id="storyReward"></span> Coins
 <div class="mission">
 
 Goal: 2000 Clicks  
-Reward: 60 Coins
+Reward: 80 Coins
 
 <div class="bar">
 <div id="dailyFill" class="fill"></div>
@@ -316,30 +292,50 @@ Reward: 60 Coins
 
 </div>
 
-<!-- SETTINGS -->
+<!-- LORE -->
 
-<div id="settings" class="modal">
-<div class="close" onclick="closeSettings()">X</div>
+<div id="lore" class="modal">
+<div class="close" onclick="closeLore()">X</div>
+<h2>Lore</h2>
+<p>The Aetherfall blade stores fragments of ancient energy.</p>
+<p>Striking the blade releases fragments and coins used to improve its power.</p>
+</div>
 
-<h2>Settings</h2>
+<!-- GUIDE -->
 
-Music<br>
-<button onclick="toggleMusic()">Toggle Music</button>
+<div id="guide" class="modal">
+<div class="close" onclick="closeGuide()">X</div>
+<h2>Guide</h2>
+<p>Click the sword to gain clicks.</p>
+<p>Build combos for extra rewards.</p>
+<p>Spend fragments and coins in the shop.</p>
+</div>
+
+<!-- UPGRADES -->
+
+<div id="upgrades" class="modal">
+<div class="close" onclick="closeUpgrades()">X</div>
+
+<h2>Upgrades</h2>
+
+<div class="shopItem">
+Auto Clicker<br>
+Cost: 3000 coins<br>
+Speed: 1 click / 2s
+<button onclick="buyAutoClick()">Buy</button>
+</div>
+
+<hr>
+
+<h3>Settings</h3>
+
+Music
+<button onclick="toggleMusic()">On / Off</button>
 
 <br><br>
 
-Effects<br>
-<button onclick="toggleEffects()">Toggle Effects</button>
-
-<br><br>
-
-Gameplay<br>
-<button onclick="resetCombo()">Reset Combo</button>
-
-<br><br>
-
-Visual<br>
-<button onclick="changeBackground()">Change Background</button>
+Effects
+<button onclick="toggleEffects()">On / Off</button>
 
 </div>
 
@@ -349,66 +345,63 @@ Visual<br>
 
 <div class="close" onclick="closeShop()">X</div>
 
-<h2>Market</h2>
+<h2>Shop</h2>
 
 <div class="shopColumns">
-
-<div>
-
-<h3>Upgrades</h3>
-
-<div class="shopItem">
-Sharper Blade (+1)<br>
-Cost:120
-<button onclick="buyUpgrade(120,1)">Buy</button>
-</div>
-
-<div class="shopItem">
-Aether Core (+3)<br>
-Cost:400
-<button onclick="buyUpgrade(400,3)">Buy</button>
-</div>
-
-<div class="shopItem">
-Combo Boost<br>
-Cost:600
-<button onclick="buyComboBoost()">Buy</button>
-</div>
-
-</div>
 
 <div>
 
 <h3>Fragment Shop</h3>
 
 <div class="shopItem">
-Critical Boost<br>
-Cost:20 Fragments
-<button onclick="buyFragment()">Buy</button>
+Power Core (+2 power)<br>
+Cost: 10 fragments
+<button onclick="buyFragPower()">Buy</button>
+</div>
+
+<div class="shopItem">
+Energy Core (+4 power)<br>
+Cost: 25 fragments
+<button onclick="buyFragEnergy()">Buy</button>
+</div>
+
+<div class="shopItem">
+Combo Amplifier<br>
+Cost: 40 fragments
+<button onclick="buyComboBoost()">Buy</button>
 </div>
 
 <div class="shopItem">
 Fragment Generator<br>
-Cost:2000 Coins
-<button onclick="buyFragmentGenerator()">Buy</button>
+Cost: 60 fragments
+<button onclick="buyFragGen()">Buy</button>
 </div>
 
 </div>
 
 <div>
 
-<h3>Automation</h3>
+<h3>Coupon Shop</h3>
 
 <div class="shopItem">
-Auto Clicker<br>
-Cost:1500 Coins
-<button onclick="buyAutoClick()">Buy</button>
+5 Baht Coupon<br>
+Cost: 300 coins<br>
+Stock: <span id="c5">10</span>
+<button onclick="buyC5()">Buy</button>
 </div>
 
 <div class="shopItem">
-5 Baht Discount<br>
-Cost:250 Coins
-<button onclick="buyCoupon()">Buy</button>
+10 Baht Coupon<br>
+Cost: 700 coins<br>
+Stock: <span id="c10">5</span>
+<button onclick="buyC10()">Buy</button>
+</div>
+
+<div class="shopItem">
+20 Baht Coupon<br>
+Cost: 1500 coins<br>
+Stock: <span id="c20">2</span>
+<button onclick="buyC20()">Buy</button>
 </div>
 
 </div>
@@ -416,10 +409,6 @@ Cost:250 Coins
 </div>
 
 </div>
-
-<audio id="music" loop>
-<source src="placeholder.mp3">
-</audio>
 
 <script>
 
@@ -428,54 +417,15 @@ let coins=0
 let fragments=0
 let combo=0
 let clickPower=1
+
 let storyIndex=0
-let lastClick=0
-
-let musicOn=true
-let effectsOn=true
-let backgroundIndex=0
-
-const backgrounds=[
-"#060b20",
-"#020617",
-"#0b1028",
-"#050014"
-]
-
-const storyGoals=[100,500,1000,3000,5000,10000,20000,50000,80000,120000,200000,350000,500000,750000,1000000]
-
-const storyRewards=[10,20,40,60,80,120,160,200,260,320,400,500,650,800,1000]
-
 let dailyClaimed=false
 
-function save(){
-localStorage.setItem("aetherfall_save",
-JSON.stringify({clicks,coins,fragments,storyIndex,dailyClaimed,clickPower,musicOn,effectsOn,backgroundIndex}))
-}
+let coupon5=10
+let coupon10=5
+let coupon20=2
 
-function load(){
-
-let data=localStorage.getItem("aetherfall_save")
-
-if(data){
-let s=JSON.parse(data)
-
-clicks=s.clicks||0
-coins=s.coins||0
-fragments=s.fragments||0
-storyIndex=s.storyIndex||0
-dailyClaimed=s.dailyClaimed||false
-clickPower=s.clickPower||1
-musicOn=s.musicOn??true
-effectsOn=s.effectsOn??true
-backgroundIndex=s.backgroundIndex||0
-}
-
-document.body.style.background=backgrounds[backgroundIndex]
-
-}
-
-load()
+let lastClick=0
 
 const sword=document.getElementById("sword")
 
@@ -483,30 +433,23 @@ sword.onclick=(e)=>{
 
 let now=Date.now()
 
-if(now-lastClick>2000){
-combo=0
-}
-
+if(now-lastClick>2000) combo=0
 lastClick=now
+
 combo++
 
 let gain=clickPower+Math.floor(combo/25)
 
 clicks+=gain
 
+if(combo%50==0) coins+=5
+if(combo%150==0) fragments++
+
 spawnText(e,"+"+gain)
 
 update()
-save()
 
 }
-
-setInterval(()=>{
-if(Date.now()-lastClick>2000){
-combo=0
-update()
-}
-},500)
 
 function spawnText(e,text){
 
@@ -517,7 +460,6 @@ t.style.left=e.pageX+"px"
 t.style.top=e.pageY+"px"
 
 document.body.appendChild(t)
-
 setTimeout(()=>t.remove(),1000)
 
 }
@@ -529,21 +471,27 @@ document.getElementById("coins").innerText=coins
 document.getElementById("fragments").innerText=fragments
 document.getElementById("combo").innerText=combo
 
+document.getElementById("c5").innerText=coupon5
+document.getElementById("c10").innerText=coupon10
+document.getElementById("c20").innerText=coupon20
+
 updateStory()
 updateDaily()
 
 }
 
+const storyGoals=[100,500,1000,3000,5000,10000,20000]
+const storyRewards=[15,25,40,60,80,120,180]
+
 function updateStory(){
 
 let goal=storyGoals[storyIndex]
-let reward=storyRewards[storyIndex]
-
-document.getElementById("storyTitle").innerText="★ Storyline "+(storyIndex+1)
-document.getElementById("storyGoal").innerText=goal
-document.getElementById("storyReward").innerText=reward
 
 let percent=Math.min(100,(clicks/goal)*100)
+
+document.getElementById("storyTitle").innerText="Storyline "+(storyIndex+1)
+document.getElementById("storyGoal").innerText=goal
+document.getElementById("storyReward").innerText=storyRewards[storyIndex]
 
 document.getElementById("storyFill").style.width=percent+"%"
 document.getElementById("storyPercent").innerText=Math.floor(percent)+"%"
@@ -554,20 +502,15 @@ function claimStory(){
 
 let goal=storyGoals[storyIndex]
 
-if(clicks<goal){
-alert("Goal not completed yet")
-return
-}
+if(clicks<goal) return
 
 coins+=storyRewards[storyIndex]
+
 storyIndex++
 
-if(storyIndex>=storyGoals.length){
-storyIndex=storyGoals.length-1
-}
+if(storyIndex>=storyGoals.length) storyIndex=storyGoals.length-1
 
 update()
-save()
 
 }
 
@@ -582,95 +525,46 @@ document.getElementById("dailyPercent").innerText=Math.floor(percent)+"%"
 
 function claimDaily(){
 
-if(dailyClaimed)return
-if(clicks<2000)return
+if(dailyClaimed) return
+if(clicks<2000) return
 
-coins+=60
+coins+=80
 dailyClaimed=true
 
 update()
-save()
 
 }
 
-function buyUpgrade(cost,power){
-if(coins<cost)return
-coins-=cost
-clickPower+=power
-update()
-save()
-}
+/* SHOP */
 
-function buyComboBoost(){
-if(coins<600)return
-coins-=600
-clickPower+=2
-update()
-save()
-}
-
-function buyFragment(){
-if(fragments<20)return
-fragments-=20
-clickPower+=5
-update()
-save()
-}
-
-function buyFragmentGenerator(){
-if(coins<2000)return
-coins-=2000
-setInterval(()=>{fragments++;update()},5000)
-update()
-save()
-}
+function buyFragPower(){if(fragments>=10){fragments-=10;clickPower+=2;update()}}
+function buyFragEnergy(){if(fragments>=25){fragments-=25;clickPower+=4;update()}}
+function buyComboBoost(){if(fragments>=40){fragments-=40;clickPower+=3;update()}}
+function buyFragGen(){if(fragments>=60){fragments-=60;setInterval(()=>{fragments++},300000)}}
 
 function buyAutoClick(){
-if(coins<1500)return
-coins-=1500
-setInterval(()=>{clicks+=clickPower;update()},1000)
-update()
-save()
+if(coins<3000)return
+coins-=3000
+setInterval(()=>{clicks+=clickPower;if(Math.random()<0.2)coins++;update()},2000)
 }
 
-function buyCoupon(){
-if(coins<250)return
-coins-=250
-alert("Coupon generated")
-update()
-save()
-}
+function buyC5(){if(coins>=300&&coupon5>0){coins-=300;coupon5--;update()}}
+function buyC10(){if(coins>=700&&coupon10>0){coins-=700;coupon10--;update()}}
+function buyC20(){if(coins>=1500&&coupon20>0){coins-=1500;coupon20--;update()}}
 
-function toggleMusic(){
-let m=document.getElementById("music")
-musicOn=!musicOn
-if(musicOn)m.play()
-else m.pause()
-save()
-}
+/* UI */
 
-function toggleEffects(){
-effectsOn=!effectsOn
-save()
-}
+function openLore(){document.getElementById("lore").style.display="block"}
+function closeLore(){document.getElementById("lore").style.display="none"}
 
-function resetCombo(){
-combo=0
-update()
-}
-
-function changeBackground(){
-backgroundIndex++
-if(backgroundIndex>=backgrounds.length)backgroundIndex=0
-document.body.style.background=backgrounds[backgroundIndex]
-save()
-}
-
-function openSettings(){document.getElementById("settings").style.display="block"}
-function closeSettings(){document.getElementById("settings").style.display="none"}
+function openGuide(){document.getElementById("guide").style.display="block"}
+function closeGuide(){document.getElementById("guide").style.display="none"}
 
 function openShop(){document.getElementById("shopPopup").style.display="block"}
 function closeShop(){document.getElementById("shopPopup").style.display="none"}
+
+function openUpgrades(){document.getElementById("upgrades").style.display="block"}
+function closeUpgrades(){document.getElementById("upgrades").style.display="none"}
 
 update()
 

@@ -12,22 +12,18 @@ margin:0;
 height:100%;
 overflow:hidden;
 background:#050816;
-color:white;
 font-family:Segoe UI,Arial;
+color:white;
 }
-
-/* HEADER */
 
 header{
 text-align:center;
 font-size:42px;
-padding:18px;
-letter-spacing:4px;
+padding:20px;
 color:#a78bfa;
+letter-spacing:4px;
 font-weight:bold;
 }
-
-/* BACK */
 
 #back{
 position:absolute;
@@ -46,7 +42,6 @@ cursor:pointer;
 #levelWrap{
 width:520px;
 margin:auto;
-text-align:center;
 }
 
 .bar{
@@ -58,8 +53,8 @@ overflow:hidden;
 }
 
 .fill{
-background:#8b5cf6;
 height:100%;
+background:#8b5cf6;
 width:0%;
 }
 
@@ -245,7 +240,7 @@ animation:floatUp 1s forwards;
 
 <h3>Daily Mission</h3>
 
-Reach 2000 clicks
+Goal: 2000 clicks
 Reward: <span class="coin">200 coins</span> + 50 EXP
 
 <div class="bar">
@@ -266,73 +261,99 @@ Reward: <span class="coin">200 coins</span> + 50 EXP
 <!-- LORE -->
 
 <div class="modal" id="lore">
-
 <span class="close" onclick="closeModal('lore')">X</span>
-
 <h2>Lore</h2>
 
-<p>
-Fragments were discovered decades ago during a deep seismic scan beneath an abandoned research facility.  
-At first they appeared to be simple crystalline structures, but scientists quickly noticed that the material emitted enormous energy pulses when struck with repeated force.
-</p>
+<p>Fragments were discovered beneath the ruins of an abandoned research complex.  
+Scientists quickly realized these crystalline shards reacted violently when struck repeatedly.</p>
 
-<p>
-The phenomenon became known as resonance amplification. Each strike caused the fragments to vibrate faster and release more energy. Entire laboratories were built around this discovery, and eventually the technology powered floating infrastructure and advanced weaponry.
-</p>
+<p>Every strike amplified their resonance output. Eventually engineers built entire power systems around fragment resonance technology.</p>
 
-<p>
-However, the fragments were not native to Earth. Geological scans revealed that they originated from microscopic dimensional fractures deep beneath the crust. When the first large-scale extraction occurred, those fractures widened and triggered the Resonance Collapse.
-</p>
+<p>But fragments were not native to Earth. They came from microscopic dimensional fractures beneath the crust.</p>
 
-<p>
-Cities powered by fragment reactors began to fail as energy feedback loops destabilized their systems. Entire regions were lost overnight. The world shifted from scientific exploration to survival and containment.
-</p>
+<p>When those fractures widened, the Resonance Collapse began. Cities powered by fragments destabilized overnight.</p>
 
-<p>
-Now fragments are rare and heavily traded. Markets like the Abyssal Exchange deal in fragment shards, relic upgrades, and forbidden technology. Those capable of harvesting fragments have become powerful figures in the new world.
-</p>
+<p>Now fragments are rare and traded through underground markets like the Abyssal Exchange.</p>
 
 </div>
 
 <!-- GUIDE -->
 
 <div class="modal" id="guide">
-
 <span class="close" onclick="closeModal('guide')">X</span>
 
 <h2>Guide</h2>
 
-<p>
-Aetherfall is a clicker game built around fragment energy and resonance combos. Each click represents a strike that resonates with the fragment core, generating energy in the form of clicks and coins.
-</p>
+<p>Click the sword to generate resonance energy. Each click increases your total clicks and contributes to your combo.</p>
 
-<p>
-Combos increase when you click repeatedly without pausing for more than three seconds. Higher combos increase the number of clicks gained per strike, allowing you to progress much faster.
-</p>
+<p>Combos increase your click power. If you stop clicking for more than 3 seconds, the combo resets.</p>
 
-<p>
-Coins are used in the shop to purchase upgrades, fragments, and other enhancements. Fragments themselves are a rarer resource used for stronger upgrades that permanently increase your power.
-</p>
+<p>Coins are earned through missions, random drops, and milestones. Use them to purchase upgrades in the shop.</p>
 
-<p>
-Story missions guide progression and reward coins and experience points. Daily missions refresh every 24 hours and provide reliable rewards if completed.
-</p>
+<p>Fragments are rare resources used for powerful permanent upgrades.</p>
 
-<p>
-Milestones unlock every five levels and reward large coin or fragment bonuses. These milestones go all the way to level 100.
-</p>
+<p>Milestones unlock every 5 levels up to level 100 and provide large rewards.</p>
+
+</div>
+
+<!-- SHOP -->
+
+<div class="modal" id="shop">
+<span class="close" onclick="closeModal('shop')">X</span>
+
+<h2>Shop</h2>
+
+<h3>Coupon Shop</h3>
+
+<div>Small Coin Pack – 100 coins (Stock: <span id="coupon1Stock">5</span>)
+<button onclick="buyCoupon(1)">Buy</button></div>
+
+<div>Medium Coin Pack – 500 coins (Stock: <span id="coupon2Stock">3</span>)
+<button onclick="buyCoupon(2)">Buy</button></div>
+
+<h3>Fragment Shop</h3>
+
+<div>Buy Fragment – 200 coins
+<button onclick="buyFragment()">Buy</button></div>
+
+</div>
+
+<!-- UPGRADES -->
+
+<div class="modal" id="upgrades">
+<span class="close" onclick="closeModal('upgrades')">X</span>
+
+<h2>Upgrades</h2>
+
+<div>Sharpened Blade (+1 power) – 150 coins <button onclick="buyUpgrade(1)">Buy</button></div>
+<div>Resonance Core (+2 power) – 500 coins <button onclick="buyUpgrade(2)">Buy</button></div>
+<div>Fragment Infusion (+5 power) – 10 fragments <button onclick="buyUpgrade(3)">Buy</button></div>
+<div>Combo Stabilizer (PERMANENT +combo bonus) – 15 fragments <button onclick="buyUpgrade(4)">Buy</button></div>
+<div>Ancient Amplifier (PERMANENT x2 clicks) – 50 fragments <button onclick="buyUpgrade(5)">Buy</button></div>
+
+</div>
+
+<!-- MILESTONES -->
+
+<div class="modal" id="milestones">
+<span class="close" onclick="closeModal('milestones')">X</span>
+
+<h2>Milestones</h2>
+
+<div id="milestoneText"></div>
+
+<button onclick="claimMilestone()">Claim Reward</button>
 
 </div>
 
 <script>
 
-/* CORE DATA */
+/* CORE */
 
 let clicks=0
 let coins=0
 let fragments=0
 let combo=0
-
 let power=1
 
 let level=1
@@ -346,56 +367,47 @@ let lastDailyClaim=0
 
 let storyStage=0
 
+/* STOCK */
+
+let coupon1Stock=5
+let coupon2Stock=3
+
 /* STORY */
 
 const storyGoals=[100,500,2000,5000,20000]
 const storyCoins=[20,50,120,300,1000]
 const storyExp=[10,30,60,120,400]
 
-/* EXP */
-
-function expNeeded(lvl){
-return 200 + lvl*lvl*20
-}
-
 /* FLOAT */
 
-function float(e,text){
-
+function float(text){
 let d=document.createElement("div")
 d.className="float"
 d.innerText=text
-
-d.style.left=(e.pageX||window.innerWidth/2)+"px"
-d.style.top=(e.pageY||window.innerHeight/2)+"px"
-
+d.style.left="50%"
+d.style.top="50%"
 document.body.appendChild(d)
-
 setTimeout(()=>d.remove(),1000)
-
 }
 
 /* CLICK */
 
-const sword=document.getElementById("sword")
-
-sword.onclick=e=>{
-
+document.getElementById("sword").onclick=()=>{
 clickQueue++
 
 if(Math.random()<0.005){
 coins+=10
-float(e,"+10 coins")
+float("+10 coins")
 }
 
 if(Math.random()<0.001){
 fragments++
-float(e,"+1 fragment")
+float("+1 fragment")
 }
 
 }
 
-/* CLICK PROCESSOR */
+/* CLICK PROCESS */
 
 setInterval(()=>{
 
@@ -413,44 +425,65 @@ combo++
 
 exp++
 
-while(exp>=expNeeded(level)){
-exp-=expNeeded(level)
+if(exp>=200){
+exp=0
 level++
 }
-
-float({}, "+"+gain)
 
 },5)
 
 /* COMBO RESET */
 
 setInterval(()=>{
-
-if(Date.now()-lastClick>3000){
-combo=0
-}
-
+if(Date.now()-lastClick>3000) combo=0
 },200)
 
-/* STORY CLAIM */
+/* SHOP */
+
+function buyCoupon(id){
+
+if(id===1 && coupon1Stock>0){
+coins+=100
+coupon1Stock--
+}
+
+if(id===2 && coupon2Stock>0){
+coins+=500
+coupon2Stock--
+}
+
+}
+
+/* FRAGMENT */
+
+function buyFragment(){
+if(coins>=200){
+coins-=200
+fragments++
+}
+}
+
+/* UPGRADES */
+
+function buyUpgrade(id){
+
+if(id===1 && coins>=150){coins-=150;power+=1}
+if(id===2 && coins>=500){coins-=500;power+=2}
+if(id===3 && fragments>=10){fragments-=10;power+=5}
+if(id===4 && fragments>=15){fragments-=15;power+=3}
+if(id===5 && fragments>=50){fragments-=50;power*=2}
+
+}
+
+/* STORY */
 
 function claimStory(){
-
-if(storyStage>=storyGoals.length){
-float({}, "All complete")
-return
-}
 
 if(clicks>=storyGoals[storyStage]){
 
 coins+=storyCoins[storyStage]
 exp+=storyExp[storyStage]
-
 storyStage++
-
-}else{
-
-float({}, "Not Ready")
 
 }
 
@@ -463,7 +496,7 @@ function claimDaily(){
 let now=Date.now()
 
 if(now-lastDailyClaim<86400000){
-float({}, "Already Claimed")
+float("Already Claimed")
 return
 }
 
@@ -471,13 +504,8 @@ if(dailyClicks>=2000){
 
 coins+=200
 exp+=50
-
 dailyClicks=0
 lastDailyClaim=now
-
-}else{
-
-float({}, "Not Ready")
 
 }
 
@@ -492,13 +520,10 @@ document.getElementById("coins").innerText=coins
 document.getElementById("fragments").innerText=fragments
 document.getElementById("combo").innerText=combo
 
-let need=expNeeded(level)
+document.getElementById("coupon1Stock").innerText=coupon1Stock
+document.getElementById("coupon2Stock").innerText=coupon2Stock
 
-document.getElementById("levelText").innerText=
-"LEVEL "+level+" | "+exp+" / "+need+" EXP"
-
-document.getElementById("levelFill").style.width=
-(exp/need*100)+"%"
+document.getElementById("levelText").innerText="LEVEL "+level+" | "+exp+" / 200 EXP"
 
 }
 
@@ -530,6 +555,14 @@ load()
 
 setInterval(update,100)
 setInterval(save,2000)
+
+function openModal(id){
+document.getElementById(id).style.display="block"
+}
+
+function closeModal(id){
+document.getElementById(id).style.display="none"
+}
 
 </script>
 

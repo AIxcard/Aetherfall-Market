@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Aetherfall | Nexus Prime</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
@@ -12,32 +11,40 @@
             --text: #f8fafc; --card-bg: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
             --grad-action: linear-gradient(180deg, #4f46e5 0%, #3730a3 100%);
         }
-        * { -webkit-tap-highlight-color: transparent; touch-action: manipulation; -webkit-user-select: none; user-select: none; box-sizing: border-box; }
-        body, html { margin: 0; height: 100%; overflow: hidden; background: var(--bg); font-family: 'Rajdhani', sans-serif; color: var(--text); width: 100%; position: fixed; }
+
+        body, html { margin: 0; height: 100%; overflow: hidden; background: var(--bg); font-family: 'Rajdhani', sans-serif; color: var(--text); user-select: none; }
         #layout { display: grid; grid-template-columns: 300px 1fr 340px; height: 100vh; }
-        @media (max-width: 1000px) { #layout { grid-template-columns: 1fr; display: block; overflow-y: auto; } }
-        .side-panel { background: var(--panel); border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; z-index: 10; height: 100%; }
+        .side-panel { background: var(--panel); border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; z-index: 10; }
         .right-panel { border-right: none; border-left: 1px solid var(--border); overflow-y: auto; }
         #center-area { display: flex; flex-direction: column; align-items: center; padding-top: 20px; background: radial-gradient(circle at center, #0a1128 0%, #010206 100%); position: relative; }
-        header { font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; letter-spacing: 8px; background: linear-gradient(to bottom, #fff 20%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
+        header { font-family: 'Orbitron', sans-serif; font-size: 38px; font-weight: 900; letter-spacing: 10px; background: linear-gradient(to bottom, #fff 20%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
+
         .bar-outer { background: #000; height: 32px; border-radius: 4px; border: 1px solid var(--border); position: relative; overflow: hidden; width: 85%; max-width: 600px; margin-bottom: 15px; }
         .fill { height: 100%; background: linear-gradient(90deg, #1e3a8a, #7c3aed, #c084fc); width: 0%; transition: width 0.3s; }
-        .bar-content { position: absolute; width: 100%; height: 100%; top:0; z-index: 6; display: flex; justify-content: space-between; align-items: center; padding: 0 12px; font-family: 'Orbitron'; font-size: 10px; }
-        #stats-hud { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; width: 85%; }
+        .bar-content { position: absolute; width: 100%; height: 100%; top:0; z-index: 6; display: flex; justify-content: space-between; align-items: center; padding: 0 12px; box-sizing: border-box; font-family: 'Orbitron'; font-size: 10px; }
+
+        #stats-hud { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; width: 80%; }
         .stat-box { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255,255,255,0.1); padding: 8px; border-radius: 4px; text-align: center; }
         .stat-box small { font-size: 8px; text-transform: uppercase; opacity: 0.5; display: block; }
-        #sword { width: 240px; max-width: 65vw; cursor: pointer; transition: transform 0.05s; z-index: 5; }
-        #sword:active { transform: scale(0.92); }
+
+        #sword { width: 280px; cursor: pointer; transition: transform 0.05s; z-index: 5; filter: drop-shadow(0 0 25px rgba(124, 58, 237, 0.2)); }
+        #sword:active { transform: scale(0.92); filter: brightness(1.3); }
+
         .menuBtn { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); padding: 12px; margin-bottom: 8px; border-radius: 4px; cursor: pointer; font-family: 'Orbitron'; font-size: 9px; letter-spacing: 1.5px; text-align: center; }
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #02040a; border: 1px solid var(--accent); border-radius: 4px; width: 90%; max-width: 800px; height: 80vh; padding: 25px; z-index: 1000; overflow-y: auto; box-shadow: 0 0 40px #000; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #02040a; border: 1px solid var(--accent); border-radius: 4px; width: 85%; max-width: 800px; height: 75vh; padding: 30px; z-index: 1000; overflow-y: auto; box-shadow: 0 0 50px #000; }
+        .close { float: right; cursor: pointer; color: #ef4444; font-family: 'Orbitron'; }
+        
         .grid-shop { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .shop-card { background: var(--card-bg); padding: 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); min-height: 130px; display: flex; flex-direction: column; justify-content: space-between; }
-        .btn-action { background: var(--grad-action); border: none; color: white; height: 40px; width: 100%; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; border-radius: 2px; display: flex; align-items: center; justify-content: center; margin-top: 10px; }
-        .btn-action:disabled { background: #1a1a1a !important; color: #444; cursor: not-allowed; }
+        .shop-card { background: var(--card-bg); padding: 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: space-between; }
+        .btn-claim { background: var(--grad-action); border: none; color: white; padding: 10px; width: 100%; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; margin-top: 8px; border-radius: 2px;}
+        .btn-claim:disabled { background: #1a1a1a !important; color: #444; cursor: not-allowed; }
+
         .click-text { position: absolute; pointer-events: none; font-family: 'Orbitron'; font-weight: 900; animation: floatUp 0.6s ease-out forwards; z-index: 100; text-shadow: 0 0 5px #000; }
         @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-120px); opacity: 0; } }
-        input[type="text"] { background: #000; border: 1px solid var(--border); color: #fff; padding: 10px; font-family: 'Orbitron'; font-size: 12px; width: 100%; outline: none; }
-        .admin-panel { border: 2px dashed #ef4444; padding: 15px; margin-top: 20px; display: none; background: rgba(239, 68, 68, 0.05); }
+
+        /* Codes & Admin Styling */
+        input[type="text"] { background: #000; border: 1px solid var(--border); color: #fff; padding: 12px; font-family: 'Orbitron'; font-size: 12px; width: 100%; outline: none; margin-top: 10px; }
+        .admin-panel { border: 2px dashed #ef4444; padding: 15px; margin-top: 25px; display: none; background: rgba(239, 68, 68, 0.05); }
     </style>
 </head>
 <body>
@@ -45,14 +52,13 @@
 <div id="layout">
     <div class="side-panel">
         <h3 style="font-family:'Orbitron'; font-size: 11px; color:var(--accent); text-align: center;">AETHER OS</h3>
-        <div class="menuBtn" onclick="game.openModal('guide-m')">GUIDE</div>
-        <div class="menuBtn" onclick="game.openModal('forge-m')">FORGE</div>
-        <div class="menuBtn" onclick="game.openModal('shop-m')">FRAG SHOP</div>
-        <div class="menuBtn" onclick="game.openModal('coupon-m')">COUPON MARKET</div>
-        <div class="menuBtn" onclick="game.openModal('milestone-m')">MILESTONES</div>
-        <div class="menuBtn" onclick="game.openModal('inv-m')">INVENTORY</div>
-        <div class="menuBtn" onclick="game.openModal('leader-m')" style="color:var(--gold); border: 1px solid var(--gold);">🏆 LEADERBOARD</div>
-        <div class="menuBtn" onclick="game.openModal('settings-m')" style="margin-top:auto">⚙️ SETTINGS</div>
+        <div class="menuBtn" onclick="openModal('guide-m')">GUIDE</div>
+        <div class="menuBtn" onclick="openModal('forge-m')">FORGE</div>
+        <div class="menuBtn" onclick="openModal('shop-m')">FRAG SHOP</div>
+        <div class="menuBtn" onclick="openModal('coupon-m')">COUPON MARKET</div>
+        <div class="menuBtn" onclick="openModal('milestone-m')">MILESTONES</div>
+        <div class="menuBtn" onclick="openModal('inv-m')">INVENTORY</div>
+        <div class="menuBtn" onclick="openModal('settings-m')" style="margin-top:auto">⚙️ SETTINGS</div>
     </div>
 
     <div id="center-area">
@@ -62,7 +68,7 @@
             <div class="bar-content"><span id="lvDisplay">LV 01</span><span id="expDisplay">0 / 1,000 EXP</span></div>
         </div>
         <div id="stats-hud">
-            <div class="stat-box"><small>Clicks</small><span id="hud-clicks">0</span></div>
+            <div class="stat-box"><small>Total Clicks</small><span id="hud-clicks">0</span></div>
             <div class="stat-box"><small>Gold</small><span id="hud-gold" style="color:var(--gold)">0</span></div>
             <div class="stat-box"><small>Fragments</small><span id="hud-frags" style="color:var(--frag)">0</span></div>
             <div class="stat-box"><small>Combo</small><span id="hud-combo">0</span></div>
@@ -72,183 +78,167 @@
 
     <div class="side-panel right-panel">
         <h3 style="font-family:'Orbitron'; font-size: 11px; color:var(--accent);">OBJECTIVES</h3>
-        <div class="shop-card" style="border-left: 5px solid var(--accent); margin-bottom: 15px;">
-            <b id="st-ch">CH 1: PART 1</b>
-            <p id="st-obj" style="font-size:12px; font-weight:bold;"></p>
+        <div class="shop-card" style="border-left: 5px solid var(--accent); margin-bottom: 20px;">
+            <b id="st-ch" style="font-size:18px;">CH 1: PART 1</b>
+            <p id="st-obj" style="font-size:12px; font-weight:bold; margin:10px 0;"></p>
             <div class="bar-outer" style="height:12px; width:100%;"><div id="st-fill" class="fill"></div></div>
-            <button class="btn-action" id="st-btn" onclick="game.claimStory()">CLAIM PROGRESS</button>
+            <button class="btn-claim" id="st-btn" onclick="claimStory()">CLAIM PROGRESS</button>
         </div>
-        <div class="shop-card" style="border-left: 5px solid var(--frag); margin-bottom: 10px;">
-            <b>DAILY</b><p id="daily-text" style="font-size:11px;"></p>
-            <div class="bar-outer" style="height:8px; width:100%;"><div id="daily-fill" class="fill"></div></div>
-            <button class="btn-action" id="daily-btn" onclick="game.claimDaily()">CLAIM</button>
+        <div class="shop-card" style="border-left: 5px solid var(--frag); margin-bottom: 12px;">
+            <b>DAILY MISSION</b>
+            <div class="bar-outer" style="height:10px; width:100%; border-color:var(--frag);"><div id="daily-fill" class="fill" style="background:var(--frag)"></div></div>
+            <button class="btn-claim" id="daily-btn" onclick="claimDaily()">CLAIM DAILY</button>
         </div>
         <div class="shop-card" style="border-left: 5px solid var(--combo);">
-            <b>WEEKLY</b><p id="weekly-text" style="font-size:11px;"></p>
-            <div class="bar-outer" style="height:8px; width:100%;"><div id="weekly-fill" class="fill"></div></div>
-            <button class="btn-action" id="weekly-btn" onclick="game.claimWeekly()">CLAIM</button>
+            <b>WEEKLY MISSION</b>
+            <div class="bar-outer" style="height:10px; width:100%; border-color:var(--combo);"><div id="weekly-fill" class="fill" style="background:var(--combo)"></div></div>
+            <button class="btn-claim" id="weekly-btn" onclick="claimWeekly()">CLAIM WEEKLY</button>
         </div>
     </div>
 </div>
 
-<div id="guide-m" class="modal"><span onclick="game.closeModal('guide-m')" style="float:right; color:red; cursor:pointer;">[X]</span><h2 style="font-family:'Orbitron'">Guide</h2><p>1500 Combo = +1 Click Power.</p></div>
-<div id="forge-m" class="modal"><span onclick="game.closeModal('forge-m')" style="float:right; color:red; cursor:pointer;">[X]</span><h2 style="font-family:'Orbitron'">Forge</h2><div class="grid-shop"><div class="shop-card"><div><b>Auto-Core</b><br>2 Click/s</div><button class="btn-action" onclick="game.buyAuto()">10k G / 20 F</button></div><div class="shop-card"><div><b>Sharpener</b><br>+5 Clicks</div><button class="btn-action" onclick="game.buyPower('gold', 5000, 5)">5,000 G</button></div></div></div>
-<div id="shop-m" class="modal"><span onclick="game.closeModal('shop-m')" style="float:right; color:red; cursor:pointer;">[X]</span><h2 style="font-family:'Orbitron'">Frag Shop</h2><div class="grid-shop"><div class="shop-card"><div><b>Lesser</b><br>+2 Clicks</div><button class="btn-action" onclick="game.buyPower('frag', 15, 2)">15 FRAGS</button></div><div class="shop-card"><div><b>Stable</b><br>+5 Clicks</div><button class="btn-action" onclick="game.buyPower('frag', 40, 5)">40 FRAGS</button></div></div></div>
-<div id="coupon-m" class="modal"><span onclick="game.closeModal('coupon-m')" style="float:right; color:red; cursor:pointer;">[X]</span><h2 style="font-family:'Orbitron'">Coupons</h2><div class="grid-shop"><div class="shop-card"><div><b>Bronze</b><br>5 Baht</div><button class="btn-action" onclick="game.buyCoupon('Bronze', 5000)">5,000 G</button></div></div></div>
-<div id="milestone-m" class="modal"><span onclick="game.closeModal('milestone-m')" style="float:right; color:red; cursor:pointer;">[X]</span><h2 style="font-family:'Orbitron'">Milestones</h2><div id="milestoneList" class="grid-shop"></div></div>
-<div id="inv-m" class="modal"><span onclick="game.closeModal('inv-m')" style="float:right; color:red; cursor:pointer;">[X]</span><h2 style="font-family:'Orbitron'">Inventory</h2><div id="invList" class="grid-shop"></div></div>
-<div id="leader-m" class="modal"><span onclick="game.closeModal('leader-m')" style="float:right; color:red; cursor:pointer;">[X]</span><h2 style="font-family:'Orbitron'">Rankings</h2><div id="board-content"></div></div>
+<div id="milestone-m" class="modal"><span class="close" onclick="closeModal('milestone-m')">[X]</span><h2 style="font-family:'Orbitron'">Milestones</h2><div id="milestoneList" class="grid-shop"></div></div>
+<div id="guide-m" class="modal"><span class="close" onclick="closeModal('guide-m')">[X]</span><h2 style="font-family:'Orbitron'">Nexus Guide</h2><p>1500 Combo = +1 Click Power.</p></div>
+<div id="forge-m" class="modal"><span class="close" onclick="closeModal('forge-m')">[X]</span><h2 style="font-family:'Orbitron'">Forge</h2><div class="grid-shop"><div class="shop-card"><b>Auto-Core</b><button class="btn-claim" onclick="buyAuto()">10k G / 20 F</button></div><div class="shop-card"><b>Sharpener (+5)</b><button class="btn-claim" onclick="buyPower('gold', 5000, 5)">5,000 G</button></div></div></div>
+<div id="shop-m" class="modal"><span class="close" onclick="closeModal('shop-m')">[X]</span><h2 style="font-family:'Orbitron'">Frag Shop</h2><div class="grid-shop"><div class="shop-card"><b>Lesser (+2)</b><button class="btn-claim" onclick="buyPower('frag', 15, 2)">15 FRAGS</button></div></div></div>
+<div id="inv-m" class="modal"><span class="close" onclick="closeModal('inv-m')">[X]</span><h2 style="font-family:'Orbitron'">Inventory</h2><div id="invList" class="grid-shop"></div></div>
 
 <div id="settings-m" class="modal">
-    <span onclick="game.closeModal('settings-m')" style="float:right; color:red; cursor:pointer;">[X]</span>
+    <span class="close" onclick="closeModal('settings-m')">[X]</span>
     <h2 style="font-family:'Orbitron'">Settings & Codes</h2>
-    <div style="margin-bottom:20px;">
+    
+    <div style="margin-bottom:25px;">
         <p style="font-size:10px; color:var(--accent);">ENTER REDEMPTION CODE</p>
-        <input type="text" id="code-input" placeholder="Type code here...">
-        <button class="btn-action" onclick="game.redeemCode()">REDEEM CODE</button>
+        <input type="text" id="code-input" placeholder="Enter code here...">
+        <button class="btn-claim" onclick="redeemCode()">REDEEM</button>
     </div>
-    <hr style="border:0; border-top:1px solid #222;">
-    <button class="btn-action" style="background:#b91c1c" onclick="game.hardReset()">FACTORY RESET</button>
+
+    <button class="btn-claim" style="background:#b91c1c" onclick="hardReset()">FACTORY RESET</button>
 
     <div id="admin-panel" class="admin-panel">
-        <h3 style="color:#ef4444; font-family:'Orbitron'; margin-top:0;">INTERNAL ADMIN CONSOLE</h3>
+        <h3 style="color:#ef4444; font-family:'Orbitron'; margin-top:0;">ADMIN OVERRIDE</h3>
         <div class="grid-shop">
-            <button class="btn-action" onclick="game.adminAdd('gold')">INF GOLD</button>
-            <button class="btn-action" onclick="game.adminAdd('level')">INF LEVEL</button>
-            <button class="btn-action" onclick="game.adminAdd('op')">GET OP ARTIFACT</button>
+            <button class="btn-claim" onclick="adminMod('gold')">INF GOLD</button>
+            <button class="btn-claim" onclick="adminMod('level')">INF LEVEL</button>
+            <button class="btn-claim" onclick="adminMod('op')">OP ARTIFACT</button>
         </div>
     </div>
 </div>
 
 <script>
-const game = (function() {
-    let clicks=0, gold=0, frags=0, basePower=1, level=1, exp=0, combo=0, maxCombo=0, storyCh=1, storyPart=1;
-    let inv=[], milestonesClaimed=[], redeemedCodes=[], autoActive=false;
-    let dailyClicks=0, weeklyClicks=0, dailyClaimed=false, weeklyClaimed=false;
-    const SAVE_KEY = 'AETHER_FINAL_X';
+let clicks=0, gold=0, frags=0, basePower=1, level=1, exp=0, combo=0, storyCh=1, storyPart=1, inv=[];
+let dailyClaimed=false, weeklyClaimed=false, dailyClicks=0, weeklyClicks=0;
+let milestonesClaimed = [], redeemedCodes = [], autoActive = false;
 
-    function updateUI() {
-        document.getElementById('hud-clicks').innerText = clicks.toLocaleString();
-        document.getElementById('hud-gold').innerText = Math.floor(gold).toLocaleString();
-        document.getElementById('hud-frags').innerText = frags.toLocaleString();
-        document.getElementById('hud-combo').innerText = combo.toLocaleString();
-        document.getElementById('lvDisplay').innerText = `LV ${level}`;
-        let req = 1000 + (Math.pow(level, 2) * 110);
-        document.getElementById('levelFill').style.width = (exp/req*100) + "%";
-        document.getElementById('expDisplay').innerText = `${Math.floor(exp).toLocaleString()} / ${req.toLocaleString()} EXP`;
-        
-        let target = (storyCh <= 3 ? 4000 : 70000) * storyCh + (storyPart * (storyCh <= 3 ? 1000 : 30000));
-        document.getElementById('st-ch').innerText = (storyCh === 5 && storyPart === 10) ? "DONE" : `CH ${storyCh}: P${storyPart}`;
-        document.getElementById('st-obj').innerText = `${Math.min(100,(clicks/target)*100).toFixed(1)}%`;
-        document.getElementById('st-fill').style.width = Math.min(100,(clicks/target*100)) + "%";
-        document.getElementById('st-btn').disabled = (clicks < target);
-        
-        document.getElementById('daily-text').innerText = `${dailyClicks.toLocaleString()} / 30k`;
-        document.getElementById('daily-fill').style.width = Math.min(100, (dailyClicks/30000*100)) + "%";
-        document.getElementById('daily-btn').disabled = (dailyClicks < 30000 || dailyClaimed);
-        
-        document.getElementById('weekly-text').innerText = `${weeklyClicks.toLocaleString()} / 250k`;
-        document.getElementById('weekly-fill').style.width = Math.min(100, (weeklyClicks/250000*100)) + "%";
-        document.getElementById('weekly-btn').disabled = (weeklyClicks < 250000 || weeklyClaimed);
+function updateUI() {
+    document.getElementById('hud-clicks').innerText = clicks.toLocaleString();
+    document.getElementById('hud-gold').innerText = Math.floor(gold).toLocaleString();
+    document.getElementById('hud-frags').innerText = frags.toLocaleString();
+    document.getElementById('hud-combo').innerText = combo.toLocaleString();
+    document.getElementById('lvDisplay').innerText = `LV ${level < 10 ? '0'+level : level}`;
+    
+    let req = 1000 + (Math.pow(level, 2) * 110); 
+    document.getElementById('levelFill').style.width = (exp/req*100) + "%";
+    document.getElementById('expDisplay').innerText = `${Math.floor(exp).toLocaleString()} / ${req.toLocaleString()} EXP`;
 
-        renderMilestones();
-        renderInv();
-        save();
+    let target = (storyCh <= 3 ? 4000 : 70000) * storyCh + (storyPart * (storyCh <= 3 ? 1000 : 30000));
+    document.getElementById('st-ch').innerText = (storyCh === 5 && storyPart === 10) ? "DONE" : `CH ${storyCh}: P${storyPart}`;
+    document.getElementById('st-obj').innerText = `${Math.min(100,(clicks/target)*100).toFixed(1)}%`;
+    document.getElementById('st-fill').style.width = Math.min(100, (clicks/target*100)) + "%";
+    document.getElementById('st-btn').disabled = (clicks < target);
+
+    document.getElementById('daily-fill').style.width = Math.min(100, (dailyClicks/30000*100)) + "%";
+    document.getElementById('weekly-fill').style.width = Math.min(100, (weeklyClicks/250000*100)) + "%";
+    document.getElementById('daily-btn').disabled = (dailyClicks < 30000 || dailyClaimed);
+    document.getElementById('weekly-btn').disabled = (weeklyClicks < 250000 || weeklyClaimed);
+
+    renderMilestones();
+    save();
+}
+
+function handleHit(e) {
+    let isCrit = Math.random() < 0.10;
+    let hit = (basePower + Math.floor(combo / 1500)) * (isCrit ? 2 : 1);
+    clicks++; dailyClicks++; weeklyClicks++; combo++;
+    if(Math.random() < 0.01) gold += 5; 
+    if(Math.random() < 0.008) frags += 1;
+    exp += (0.4 * hit); 
+    if(exp >= (1000 + (Math.pow(level, 2) * 110))) { exp = 0; level++; }
+
+    if(e && e.clientX) {
+        const el = document.createElement('div');
+        el.className = 'click-text'; el.style.left = e.clientX + 'px'; el.style.top = e.clientY + 'px';
+        el.innerText = "+" + hit; document.body.appendChild(el);
+        setTimeout(() => el.remove(), 600);
     }
+    clearTimeout(window.ctimer);
+    window.ctimer = setTimeout(() => { combo = 0; updateUI(); }, 1800);
+    updateUI();
+}
 
-    function handleHit(e) {
-        let isCrit = Math.random() < 0.10;
-        let hit = (basePower + Math.floor(combo / 1500)) * (isCrit ? 2 : 1);
-        clicks++; dailyClicks++; weeklyClicks++; combo++;
-        if(combo > maxCombo) maxCombo = combo;
-        if(Math.random() < 0.01) gold += 5; 
-        if(Math.random() < 0.008) frags += 1;
-        exp += (0.4 * hit); 
-        if(exp >= (1000 + (Math.pow(level, 2) * 110))) { exp = 0; level++; }
-        if(e && e.clientX) {
-            const el = document.createElement('div');
-            el.className = 'click-text'; el.style.left = e.clientX + 'px'; el.style.top = e.clientY + 'px';
-            el.style.color = isCrit ? 'var(--gold)' : 'white';
-            el.innerText = "+" + hit; document.body.appendChild(el);
-            setTimeout(() => el.remove(), 600);
-        }
-        clearTimeout(window.ctimer);
-        window.ctimer = setTimeout(() => { combo = 0; updateUI(); }, 1800);
-        updateUI();
+function redeemCode() {
+    const input = document.getElementById('code-input');
+    const val = input.value.trim();
+    if(redeemedCodes.includes(val)) { alert("Used!"); return; }
+
+    if(val === "Aetherfall") {
+        if(level < 5) { alert("Requires Level 5!"); return; }
+        gold += 5000; frags += 7; redeemedCodes.push(val); alert("Added 5000G & 7F!");
+    } else if(val === "RELEASE") {
+        gold += 1000; frags += 5; redeemedCodes.push(val); alert("Added 1000G & 5F!");
+    } else if(val === "Ohnepixel") {
+        document.getElementById('admin-panel').style.display = "block"; alert("ADMIN UNLOCKED.");
+    } else {
+        alert("Invalid Code.");
     }
+    input.value = ""; updateUI();
+}
 
-    function save() {
-        const d = btoa(JSON.stringify({ clicks, gold, frags, basePower, level, exp, storyCh, storyPart, inv, dailyClaimed, weeklyClaimed, dailyClicks, weeklyClicks, milestonesClaimed, autoActive, redeemedCodes, maxCombo }));
-        localStorage.setItem(SAVE_KEY, d);
+function adminMod(type) {
+    if(type === 'gold') gold = 99999999;
+    if(type === 'level') level = 100;
+    if(type === 'op') { basePower += 9999; inv.push("OP Artifact"); }
+    updateUI();
+}
+
+function renderMilestones() {
+    let h = "";
+    for(let i=5; i<=100; i+=5) {
+        let done = milestonesClaimed.includes(i);
+        let g = i * 500; let f = i * 2;
+        h += `<div class="shop-card"><b>LV ${i}</b><small>+${g} Gold | +${f} Frags</small><button class="btn-claim" ${level < i || done ? 'disabled' : ''} onclick="claimM(${i},${g},${f})">${done ? 'DONE' : 'CLAIM'}</button></div>`;
     }
+    document.getElementById('milestoneList').innerHTML = h;
+}
 
-    function renderMilestones() {
-        let h = "";
-        for(let i=5; i<=100; i+=5) {
-            let done = milestonesClaimed.includes(i);
-            let gReward = i * 500; let fReward = i * 2;
-            h += `<div class="shop-card">
-                <b>LV ${i} REWARD</b>
-                <div style="font-size:11px; color:var(--gold);">+${gReward} Gold / +${fReward} Frags</div>
-                <button class="btn-action" ${level < i || done ? 'disabled' : ''} onclick="game.claimM(${i}, ${gReward}, ${fReward})">${done ? 'CLAIMED' : 'CLAIM'}</button>
-            </div>`;
-        }
-        document.getElementById('milestoneList').innerHTML = h;
+function claimM(l, g, f) { gold += g; frags += f; milestonesClaimed.push(l); updateUI(); }
+function buyPower(t, c, p) { if(t==='gold' && gold>=c){ gold-=c; basePower+=p; } if(t==='frag' && frags>=c){ frags-=c; basePower+=p; } updateUI(); }
+function buyAuto() { if(gold>=10000 && frags>=20 && !autoActive){ gold-=10000; frags-=20; autoActive=true; setInterval(()=>handleHit(null),500); updateUI(); } }
+function claimStory() { gold+=(storyCh*600); exp+=(storyCh*1200); storyPart++; if(storyPart>10){storyPart=1; storyCh++;} updateUI(); }
+function claimDaily() { gold+=500; frags+=1; exp+=1250; dailyClaimed=true; updateUI(); }
+function claimWeekly() { gold+=10000; frags+=10; exp+=5000; weeklyClaimed=true; updateUI(); }
+function openModal(id) { document.getElementById(id).style.display='block'; }
+function closeModal(id) { document.getElementById(id).style.display='none'; }
+function hardReset() { if(confirm("Wipe?")){ localStorage.clear(); location.reload(); } }
+
+function save() {
+    const data = btoa(JSON.stringify({ clicks, gold, frags, basePower, level, exp, storyCh, storyPart, inv, dailyClaimed, weeklyClaimed, dailyClicks, weeklyClicks, milestonesClaimed, autoActive, redeemedCodes }));
+    localStorage.setItem('AETHER_FINAL', data);
+}
+
+window.onload = function() {
+    const s = localStorage.getItem('AETHER_FINAL');
+    if(s) {
+        const d = JSON.parse(atob(s));
+        clicks=d.clicks; gold=d.gold; frags=d.frags; basePower=d.basePower; level=d.level; exp=d.exp;
+        storyCh=d.storyCh; storyPart=d.storyPart; inv=d.inv||[]; dailyClicks=d.dailyClicks;
+        weeklyClicks=d.weeklyClicks; dailyClaimed=d.dailyClaimed; weeklyClaimed=d.weeklyClaimed;
+        milestonesClaimed=d.milestonesClaimed; autoActive=d.autoActive; redeemedCodes=d.redeemedCodes||[];
+        if(autoActive) setInterval(()=>handleHit(null), 500);
     }
-
-    function renderInv() {
-        document.getElementById('invList').innerHTML = inv.map(i => `<div class="shop-card"><b>${i}</b></div>`).join('');
-    }
-
-    return {
-        init: function() {
-            const s = localStorage.getItem(SAVE_KEY);
-            if(s) {
-                const d = JSON.parse(atob(s));
-                clicks=d.clicks||0; gold=d.gold||0; frags=d.frags||0; basePower=d.basePower||1; level=d.level||1; exp=d.exp||0;
-                storyCh=d.storyCh||1; storyPart=d.storyPart||1; inv=d.inv||[]; dailyClicks=d.dailyClicks||0;
-                weeklyClicks=d.weeklyClicks||0; dailyClaimed=d.dailyClaimed||false; weeklyClaimed=d.weeklyClaimed||false;
-                milestonesClaimed=d.milestonesClaimed||[]; autoActive=d.autoActive||false; redeemedCodes=d.redeemedCodes||[];
-                maxCombo=d.maxCombo||0;
-                if(autoActive) setInterval(() => handleHit(null), 500);
-            }
-            updateUI();
-            document.getElementById('sword').addEventListener('touchstart', (e) => { e.preventDefault(); handleHit(e.touches[0]); }, {passive: false});
-            document.getElementById('sword').addEventListener('mousedown', (e) => handleHit(e));
-        },
-        redeemCode: function() {
-            const val = document.getElementById('code-input').value.trim();
-            if(redeemedCodes.includes(val)) { alert("Code already used!"); return; }
-            
-            if(val === "Aetherfall") {
-                if(level < 5) { alert("Requires Level 5!"); return; }
-                gold += 5000; frags += 7; redeemedCodes.push(val); alert("Redeemed: 5000 Gold & 7 Frags");
-            } else if(val === "RELEASE") {
-                gold += 1000; frags += 5; redeemedCodes.push(val); alert("Redeemed: 1000 Gold & 5 Frags");
-            } else if(val === "Ohnepixel") {
-                document.getElementById('admin-panel').style.display = 'block'; alert("ADMIN ACCESS GRANTED.");
-            } else { alert("Invalid Code."); }
-            document.getElementById('code-input').value = ""; updateUI();
-        },
-        adminAdd: function(type) {
-            if(type==='gold') gold = 99999999;
-            if(type==='level') level = 100;
-            if(type==='op') { basePower += 9999; inv.push("OP Artifact"); }
-            updateUI();
-        },
-        claimM: (lvl, g, f) => { if(level>=lvl && !milestonesClaimed.includes(lvl)){ gold+=g; frags+=f; milestonesClaimed.push(lvl); updateUI(); }},
-        buyPower: (t, c, p) => { if(t==='gold' && gold>=c){ gold-=c; basePower+=p; } if(t==='frag' && frags>=c){ frags-=c; basePower+=p; } updateUI(); },
-        buyAuto: () => { if(gold>=10000 && frags>=20 && !autoActive){ gold-=10000; frags-=20; autoActive=true; setInterval(() => handleHit(null), 500); } updateUI(); },
-        claimStory: () => { gold+=(storyCh*600); exp+=(storyCh*1200); storyPart++; if(storyPart>10){storyPart=1; storyCh++;} updateUI(); },
-        claimDaily: () => { gold+=500; frags+=1; exp+=1250; dailyClaimed=true; updateUI(); },
-        claimWeekly: () => { gold+=10000; frags+=10; exp+=5000; weeklyClaimed=true; updateUI(); },
-        buyCoupon: (n, c) => { if(gold>=c){ gold-=c; inv.push(n + " Coupon"); } updateUI(); },
-        openModal: (id) => document.getElementById(id).style.display='block',
-        closeModal: (id) => document.getElementById(id).style.display='none',
-        hardReset: () => { if(confirm("WIPE PROGRESS?")){ localStorage.clear(); location.reload(); } }
-    };
-})();
-window.onload = game.init;
+    document.getElementById('sword').addEventListener('click', (e) => handleHit(e));
+    updateUI();
+};
 </script>
 </body>
 </html>

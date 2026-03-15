@@ -8,9 +8,9 @@
 
 body{
 margin:0;
+font-family:Segoe UI;
 background:#050816;
 color:white;
-font-family:Segoe UI;
 overflow:hidden;
 }
 
@@ -19,8 +19,8 @@ text-align:center;
 font-size:34px;
 padding:15px;
 color:#a78bfa;
-letter-spacing:3px;
 font-weight:700;
+letter-spacing:3px;
 }
 
 #stats{
@@ -33,7 +33,7 @@ margin-bottom:10px;
 .stat{
 background:#0f172a;
 border:1px solid #1e3a8a;
-padding:8px 18px;
+padding:10px 18px;
 border-radius:10px;
 text-align:center;
 }
@@ -104,7 +104,7 @@ background:#1e293b;
 height:16px;
 border-radius:6px;
 overflow:hidden;
-margin-top:5px;
+margin-top:6px;
 }
 
 .fill{
@@ -264,13 +264,14 @@ Goal: 2000 clicks
 </div>
 
 <div id="guide" class="modal">
+
 <div class="close" onclick="closeGuide()">X</div>
 
 <h2>Guide</h2>
 
 <p>Click the sword to gain clicks.</p>
-<p>Combos increase your power.</p>
-<p>Fragments unlock special upgrades.</p>
+<p>Build combos for extra power.</p>
+<p>Fragments unlock powerful upgrades.</p>
 
 </div>
 
@@ -290,14 +291,14 @@ Cost: 3000 Coins
 <div class="shopItem">
 Sharpen Blade<br>
 +2 power<br>
-Cost: 800
+Cost: 800 Coins
 <button onclick="buyPower()">Buy</button>
 </div>
 
 <div class="shopItem">
 Ancient Core (Permanent)<br>
 +10 power<br>
-Cost: 10000
+Cost: 10000 Coins
 <button onclick="buyAncient()">Buy</button>
 </div>
 
@@ -369,26 +370,58 @@ let ancient=false
 let f1=10,f2=6,f3=4
 let c1=5,c2=3,c3=1
 
+let storyStage=0
+let dailyClicks=0
+
 let lastClick=0
 
-const storyGoals=[100,500,2000,5000,10000,50000,100000,500000,1000000,5000000,10000000,50000000,100000000]
+const storyGoals=[
+100,500,2000,5000,10000,50000,100000,500000,
+1000000,5000000,10000000,50000000,100000000
+]
+
+const storyRewards=[
+20,40,80,120,200,350,600,900,
+1500,2500,4000,7000,12000
+]
+
+const lorePages=[
+
+`Long before the kingdoms rose, the world of Aetherfall was quiet. The skies shimmered with fragments of ancient energy drifting slowly across the horizon. Scholars believed these fragments were remnants of something far older than civilization itself.`,
+
+`When the first explorers touched the fragments, they discovered something strange. The shards resonated with human willpower. The more effort someone exerted, the brighter the fragments glowed.`,
+
+`Soon warriors began training with them. By striking enchanted weapons again and again, they learned to harness fragment energy. Each strike strengthened both the blade and the wielder.`,
+
+`But fragments were unstable. If someone pushed too far, the energy collapsed into chaos. Entire regions vanished in a storm of light, leaving behind only scattered shards.`,
+
+`Now a new wielder rises. Armed with a blade and the will to endure, they will gather fragments, master their power, and uncover the truth behind the ancient collapse of Aetherfall.`
+
+]
+
+let loreIndex=0
 
 function save(){
-localStorage.setItem("aetherfall",JSON.stringify({clicks,coins,fragments,power}))
+localStorage.setItem("aetherfallSave",JSON.stringify({
+clicks,coins,fragments,power,auto,ancient,storyStage
+}))
 }
 
 function load(){
-let s=localStorage.getItem("aetherfall")
+let s=localStorage.getItem("aetherfallSave")
 if(!s)return
 s=JSON.parse(s)
+
 clicks=s.clicks||0
 coins=s.coins||0
 fragments=s.fragments||0
 power=s.power||1
+auto=s.auto||false
+ancient=s.ancient||false
+storyStage=s.storyStage||0
 }
 
 load()
-
 setInterval(save,2000)
 
 const sword=document.getElementById("sword")
@@ -405,6 +438,7 @@ lastClick=now
 let gain=power+Math.floor(combo/30)
 
 clicks+=gain
+dailyClicks+=gain
 
 if(combo%50==0)coins+=5
 if(combo%150==0)fragments++
@@ -416,17 +450,13 @@ update()
 }
 
 function float(e,t){
-
 let d=document.createElement("div")
 d.className="float"
 d.innerText=t
 d.style.left=e.pageX+"px"
 d.style.top=e.pageY+"px"
-
 document.body.appendChild(d)
-
 setTimeout(()=>d.remove(),1000)
-
 }
 
 function buyAuto(){
@@ -438,21 +468,41 @@ setInterval(()=>{clicks+=power;update()},1000)
 }
 
 function buyPower(){
-if(coins>=800){coins-=800;power+=2;update()}
+if(coins>=800){coins-=800;power+=2}
 }
 
 function buyAncient(){
 if(ancient)return
-if(coins>=10000){coins-=10000;power+=10;ancient=true;update()}
+if(coins>=10000){coins-=10000;power+=10;ancient=true}
 }
 
-function buyF1(){if(fragments>=10&&f1>0){fragments-=10;power+=2;f1--;update()}}
-function buyF2(){if(fragments>=30&&f2>0){fragments-=30;power+=4;f2--;update()}}
-function buyF3(){if(fragments>=40&&f3>0){fragments-=40;power+=3;f3--;update()}}
+function buyF1(){if(fragments>=10&&f1>0){fragments-=10;power+=2;f1--}}
+function buyF2(){if(fragments>=30&&f2>0){fragments-=30;power+=4;f2--}}
+function buyF3(){if(fragments>=40&&f3>0){fragments-=40;power+=3;f3--}}
 
-function buyC1(){if(coins>=300&&c1>0){coins-=300;c1--;update()}}
-function buyC2(){if(coins>=700&&c2>0){coins-=700;c2--;update()}}
-function buyC3(){if(coins>=1500&&c3>0){coins-=1500;c3--;update()}}
+function buyC1(){if(coins>=300&&c1>0){coins-=300;c1--}}
+function buyC2(){if(coins>=700&&c2>0){coins-=700;c2--}}
+function buyC3(){if(coins>=1500&&c3>0){coins-=1500;c3--}}
+
+function claimStory(){
+
+if(storyStage>=storyGoals.length)return
+
+if(clicks>=storyGoals[storyStage]){
+coins+=storyRewards[storyStage]
+storyStage++
+}
+
+}
+
+function claimDaily(){
+
+if(dailyClicks>=2000){
+coins+=100
+dailyClicks=0
+}
+
+}
 
 function update(){
 
@@ -469,6 +519,34 @@ document.getElementById("c1").innerText=c1
 document.getElementById("c2").innerText=c2
 document.getElementById("c3").innerText=c3
 
+document.getElementById("loreText").innerText=lorePages[loreIndex]
+document.getElementById("lorePage").innerText=(loreIndex+1)+"/"+lorePages.length
+
+if(storyStage<storyGoals.length){
+
+let g=storyGoals[storyStage]
+let p=Math.min(clicks/g*100,100)
+
+document.getElementById("storyText").innerText=
+"Reach "+g.toLocaleString()+" clicks | Reward: "+storyRewards[storyStage]+" coins"
+
+document.getElementById("storyFill").style.width=p+"%"
+
+}
+
+let d=Math.min(dailyClicks/2000*100,100)
+document.getElementById("dailyFill").style.width=d+"%"
+
+}
+
+function nextLore(){
+if(loreIndex<lorePages.length-1)loreIndex++
+update()
+}
+
+function prevLore(){
+if(loreIndex>0)loreIndex--
+update()
 }
 
 function openLore(){document.getElementById("lore").style.display="block"}

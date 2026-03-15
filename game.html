@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Aetherfall | Hardcore Nexus</title>
+    <title>Aetherfall | Nexus Master</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -40,13 +40,10 @@
         .btn-claim { background: var(--grad-action); border: none; color: white; padding: 10px; width: 100%; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; margin-top: 8px; border-radius: 2px;}
         .btn-claim:disabled { background: #1a1a1a !important; color: #444; cursor: not-allowed; }
 
-        .timer-text { font-family: 'Orbitron'; font-size: 9px; color: var(--accent); display: block; margin-top: 5px; }
-        
-        /* Mission Display Fixes */
-        .story-header { font-size: 18px !important; color: #fff; text-shadow: 0 0 10px var(--accent); }
-        .story-obj-text { font-size: 15px !important; margin: 10px 0; color: var(--accent); font-weight: 900; }
-        .mission-sub { font-size: 14px !important; margin: 5px 0; }
-        
+        /* Milestone Tracker Styles */
+        .milestone-track { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .arrow-down { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 15 =px solid var(--accent); margin: 5px 0; }
+
         .click-text { position: absolute; pointer-events: none; font-family: 'Orbitron'; font-weight: 900; animation: floatUp 0.6s ease-out forwards; z-index: 100; text-shadow: 0 0 5px #000; }
         @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
     </style>
@@ -93,46 +90,57 @@
 
         <div class="shop-card" style="border-left: 3px solid var(--frag); margin-bottom: 12px;">
             <b class="mission-sub">DAILY MISSION</b><span id="daily-timer" class="timer-text"></span>
-            <p style="font-size:13px; margin:5px 0;">Goal: 30,000 Clicks</p>
+            <div class="bar-outer" style="height:8px; width:100%; border:none; background:#222;"><div id="daily-fill" class="fill" style="background:var(--frag)"></div></div>
+            <p id="daily-text" style="font-size:11px; margin:5px 0;">Goal: 30,000 Clicks</p>
             <button class="btn-claim" id="daily-btn" onclick="claimDaily()">CLAIM DAILY</button>
         </div>
 
         <div class="shop-card" style="border-left: 3px solid var(--combo);">
             <b class="mission-sub">WEEKLY MISSION</b><span id="weekly-timer" class="timer-text"></span>
-            <p style="font-size:13px; margin:5px 0;">Goal: 250,000 Clicks</p>
+            <div class="bar-outer" style="height:8px; width:100%; border:none; background:#222;"><div id="weekly-fill" class="fill" style="background:var(--combo)"></div></div>
+            <p id="weekly-text" style="font-size:11px; margin:5px 0;">Goal: 250,000 Clicks</p>
             <button class="btn-claim" id="weekly-btn" onclick="claimWeekly()">CLAIM WEEKLY</button>
         </div>
     </div>
 </div>
 
-<div id="settings-m" class="modal">
-    <span class="close" onclick="closeModal('settings-m')">[X]</span>
-    <h2 style="font-family:'Orbitron'">Settings</h2>
-    <p style="font-size:12px; opacity:0.6;">Warning: This action is irreversible.</p>
-    <button class="btn-claim" style="background:#b91c1c; margin-top:20px" onclick="hardReset()">FACTORY RESET</button>
-</div>
+<div id="milestone-m" class="modal"><span class="close" onclick="closeModal('milestone-m')">[X]</span><h2 style="font-family:'Orbitron'; text-align:center;">Milestone Path</h2><div id="milestoneList" class="milestone-track"></div></div>
 
-<div id="coupon-m" class="modal">
-    <span class="close" onclick="closeModal('coupon-m')">[X]</span>
-    <h2 style="font-family:'Orbitron'">Coupon Market</h2>
+<div id="forge-m" class="modal">
+    <span class="close" onclick="closeModal('forge-m')">[X]</span>
+    <h2 style="font-family:'Orbitron'">Forge</h2>
     <div class="grid-shop">
-        <div class="shop-card"><b>Bronze</b><br>5 Baht OFF<br>Limit: 3/wk<button class="btn-claim" id="c-b" onclick="buyCoupon('Bronze', 5000, 5, 'b')">5,000 Gold</button></div>
-        <div class="shop-card"><b>Silver</b><br>10 Baht OFF<br>Limit: 2/wk<button class="btn-claim" id="c-s" onclick="buyCoupon('Silver', 15000, 10, 's')">15,000 Gold</button></div>
-        <div class="shop-card"><b>Gold</b><br>25 Baht OFF<br>Limit: 1/wk<button class="btn-claim" id="c-g" onclick="buyCoupon('Gold', 50000, 25, 'g')">50,000 Gold</button></div>
+        <div class="shop-card"><b>Auto-Core v1</b><br>Clicks 2x per sec<br>Cost: 10,000 Gold + 20 Frags<button class="btn-claim" id="buy-auto" onclick="buyAuto()">PURCHASE</button></div>
+        <div class="shop-card"><b>Sharpener</b><br>Permanent +5 Power<br>Cost: 5,000 Gold<button class="btn-claim" onclick="buyForgePower(5000, 5)">BUY</button></div>
     </div>
 </div>
 
-<div id="milestone-m" class="modal"><span class="close" onclick="closeModal('milestone-m')">[X]</span><h2 style="font-family:'Orbitron'">Level Rewards</h2><div id="milestoneList" class="grid-shop"></div></div>
+<div id="shop-m" class="modal">
+    <span class="close" onclick="closeModal('shop-m')">[X]</span>
+    <h2 style="font-family:'Orbitron'">Frag Shop</h2>
+    <div class="grid-shop">
+        <div class="shop-card"><b>Aether Core</b><br>Permanent +15 Power<br>Cost: 50 Frags<button class="btn-claim" onclick="buyFragPower(50, 15)">BUY</button></div>
+        <div class="shop-card"><b>Void Blade</b><br>Permanent +50 Power<br>Cost: 150 Frags<button class="btn-claim" onclick="buyFragPower(150, 50)">BUY</button></div>
+    </div>
+</div>
+
+<div id="guide-m" class="modal">
+    <span class="close" onclick="closeModal('guide-m')">[X]</span>
+    <h2 style="font-family:'Orbitron'">The Nexus Guide</h2>
+    <p><b>Basics:</b> Click the Aether Sword to generate EXP and resources. Every click has a 1% chance for 5 Gold and a 0.8% chance for 1 Fragment.</p>
+    <p><b>Combo:</b> Maintaining a click speed builds a combo. Every 100 combo adds +1 bonus power to your clicks.</p>
+    <p><b>Progression:</b> Chapters 1-3 are beginner friendly. Chapter 4 and 5 are designed for veterans. Reaching Part 10 of Chapter 5 marks the completion of the story.</p>
+</div>
+
+<div id="settings-m" class="modal"><span class="close" onclick="closeModal('settings-m')">[X]</span><h2 style="font-family:'Orbitron'">Settings</h2><button class="btn-claim" style="background:#b91c1c; margin-top:20px" onclick="hardReset()">FACTORY RESET</button></div>
+<div id="coupon-m" class="modal"><span class="close" onclick="closeModal('coupon-m')">[X]</span><h2 style="font-family:'Orbitron'">Coupon Market</h2><div class="grid-shop"><div class="shop-card"><b>Bronze</b><br>5,000 Gold<button class="btn-claim" onclick="buyCoupon('Bronze', 5000)">BUY</button></div><div class="shop-card"><b>Gold</b><br>50,000 Gold<button class="btn-claim" onclick="buyCoupon('Gold', 50000)">BUY</button></div></div></div>
 <div id="inv-m" class="modal"><span class="close" onclick="closeModal('inv-m')">[X]</span><h2 style="font-family:'Orbitron'">Inventory</h2><div id="invList" class="grid-shop"></div></div>
-<div id="forge-m" class="modal"><span class="close" onclick="closeModal('forge-m')">[X]</span><h2 style="font-family:'Orbitron'">Forge</h2><p>Nothing currently in Forge.</p></div>
-<div id="shop-m" class="modal"><span class="close" onclick="closeModal('shop-m')">[X]</span><h2 style="font-family:'Orbitron'">Frag Shop</h2><p>Nothing currently in Frag Shop.</p></div>
-<div id="guide-m" class="modal"><span class="close" onclick="closeModal('guide-m')">[X]</span><h2 style="font-family:'Orbitron'">Guide</h2><p>Infinite loop at Ch 5 Part 10 enabled. Daily/Weekly resets at midnight.</p></div>
 
 <script>
-let clicks=0, gold=0, frags=0, basePower=1, level=1, exp=0, combo=0, storyCh=1, storyPart=1, discount=0, inv=[];
+let clicks=0, gold=0, frags=0, basePower=1, level=1, exp=0, combo=0, storyCh=1, storyPart=1, inv=[];
 let dailyClaimed=false, weeklyClaimed=false, dailyClicks=0, weeklyClicks=0;
-let stock = { b: 3, s: 2, g: 1 };
 let milestonesClaimed = [];
+let autoActive = false;
 
 function updateUI() {
     document.getElementById('hud-clicks').innerText = clicks.toLocaleString();
@@ -141,19 +149,29 @@ function updateUI() {
     document.getElementById('hud-combo').innerText = combo.toLocaleString();
     document.getElementById('lvDisplay').innerText = `LV ${level < 10 ? '0'+level : level}`;
     
-    // HARD LEVELING MATH
     let req = 1000 + (Math.pow(level, 2) * 110); 
     document.getElementById('levelFill').style.width = (exp/req*100) + "%";
     document.getElementById('expDisplay').innerText = `${Math.floor(exp).toLocaleString()} / ${req.toLocaleString()} EXP`;
 
-    // HARD STORY MATH
-    document.getElementById('st-ch').innerText = `CH ${storyCh}: PART ${storyPart}`;
-    let target = (storyCh * 25000) + (storyPart * 5000); 
-    document.getElementById('st-obj').innerText = `Required: ${target.toLocaleString()} Clicks`;
-    document.getElementById('st-fill').style.width = Math.min(100, (clicks/target)*100) + "%";
-    document.getElementById('st-btn').disabled = (clicks < target);
-    document.getElementById('st-rew').innerText = `REWARD: ${(storyCh * 500)} Gold | ${(storyCh * 1000)} EXP`;
+    // STORY LOGIC
+    let isComplete = (storyCh === 5 && storyPart === 10);
+    document.getElementById('st-ch').innerText = isComplete ? "STORY COMPLETED" : `CH ${storyCh}: PART ${storyPart}`;
+    
+    // Chapter Difficulty logic
+    let targetBase = storyCh <= 3 ? 5000 : 50000;
+    let targetIncr = storyCh <= 3 ? 1000 : 25000;
+    let target = isComplete ? clicks : (storyCh * targetBase) + (storyPart * targetIncr);
+    
+    let progressPerc = Math.min(100, (clicks/target)*100).toFixed(1);
+    document.getElementById('st-obj').innerText = isComplete ? "The End of Aetherfall" : `Progress: ${progressPerc}% (${clicks.toLocaleString()} / ${target.toLocaleString()} Clicks)`;
+    document.getElementById('st-fill').style.width = progressPerc + "%";
+    document.getElementById('st-btn').disabled = (clicks < target || isComplete);
+    document.getElementById('st-btn').innerText = isComplete ? "COMPLETED" : "CLAIM STORY PROGRESS";
+    document.getElementById('st-rew').innerText = isComplete ? "Master of the Nexus" : `REWARD: ${(storyCh * 500)} Gold | ${(storyCh * 1000)} EXP`;
 
+    // Missions UI
+    document.getElementById('daily-fill').style.width = Math.min(100, (dailyClicks/30000)*100) + "%";
+    document.getElementById('weekly-fill').style.width = Math.min(100, (weeklyClicks/250000)*100) + "%";
     document.getElementById('daily-btn').disabled = (dailyClicks < 30000 || dailyClaimed);
     document.getElementById('weekly-btn').disabled = (weeklyClicks < 250000 || weeklyClaimed);
 
@@ -162,32 +180,47 @@ function updateUI() {
 }
 
 document.getElementById('sword').addEventListener('click', (e) => {
+    handleHit(e);
+});
+
+function handleHit(e) {
     let hit = basePower + Math.floor(combo / 100);
     clicks++; dailyClicks++; weeklyClicks++; combo++;
     
-    if(Math.random() < 0.0005) gold += 15; // 100x Harder gold
-    exp += (0.35 * hit); 
+    // Updated drop rates
+    if(Math.random() < 0.01) gold += 5; 
+    if(Math.random() < 0.008) frags += 1;
     
+    exp += (0.35 * hit); 
     let req = 1000 + (Math.pow(level, 2) * 110);
     if(exp >= req) { exp = 0; level++; if(level > 100) level = 100; }
     
-    const el = document.createElement('div'); el.className = 'click-text';
-    el.style.left = e.clientX + 'px'; el.style.top = e.clientY + 'px'; el.innerText = "+" + hit;
-    document.body.appendChild(el); setTimeout(() => el.remove(), 600);
+    if(e) {
+        const el = document.createElement('div'); el.className = 'click-text';
+        el.style.left = e.clientX + 'px'; el.style.top = e.clientY + 'px'; el.innerText = "+" + hit;
+        document.body.appendChild(el); setTimeout(() => el.remove(), 600);
+    }
 
     clearTimeout(window.ctimer);
     window.ctimer = setTimeout(() => { combo = 0; updateUI(); }, 1800);
     updateUI();
-});
+}
+
+function buyAuto() {
+    if(gold >= 10000 && frags >= 20 && !autoActive) {
+        gold -= 10000; frags -= 20; autoActive = true;
+        setInterval(() => handleHit(null), 500);
+        updateUI();
+    }
+}
+
+function buyForgePower(cost, p) { if(gold >= cost) { gold -= cost; basePower += p; updateUI(); } }
+function buyFragPower(cost, p) { if(frags >= cost) { frags -= cost; basePower += p; updateUI(); } }
 
 function claimStory() {
-    gold += (storyCh * 500);
-    exp += (storyCh * 1000);
+    gold += (storyCh * 500); exp += (storyCh * 1000);
     storyPart++;
-    if(storyPart > 10) { 
-        if(storyCh >= 5) { storyPart = 1; storyCh = 5; } // CH 5 Loop
-        else { storyPart = 1; storyCh++; }
-    }
+    if(storyPart > 10) { storyPart = 1; storyCh++; }
     updateUI();
 }
 
@@ -195,16 +228,22 @@ function renderMilestones() {
     let h = "";
     for(let i=5; i<=100; i+=5) {
         let done = milestonesClaimed.includes(i);
-        h += `<div class="shop-card"><b>LV ${i}</b><br><button class="btn-claim" ${level < i || done ? 'disabled' : ''} onclick="claimM(${i})">${done ? 'GOT' : 'CLAIM'}</button></div>`;
+        h += `<div class="shop-card" style="width:250px; text-align:center;">
+                <b>LEVEL ${i} REWARD</b><br>
+                <small>${i*300} Gold | ${i} Fragments</small><br>
+                <button class="btn-claim" ${level < i || done ? 'disabled' : ''} onclick="claimM(${i})">
+                    ${done ? 'COLLECTED' : (level >= i ? 'CLAIM' : 'LOCKED')}
+                </button>
+              </div>`;
+        if(i < 100) h += `<div class="arrow-down"></div>`;
     }
     document.getElementById('milestoneList').innerHTML = h;
 }
 
-function claimM(l) { gold += (l*200); frags += (l); milestonesClaimed.push(l); updateUI(); }
-function claimDaily() { gold += 1000; exp += 5000; dailyClaimed = true; updateUI(); }
-function claimWeekly() { gold += 10000; exp += 40000; frags += 20; weeklyClaimed = true; updateUI(); }
-
-function buyCoupon(n, c, v, t) { if(gold >= c && stock[t] > 0) { gold -= c; stock[t]--; inv.push(n + " Coupon"); renderInv(); updateUI(); } }
+function claimM(l) { gold += (l*300); frags += l; milestonesClaimed.push(l); updateUI(); }
+function claimDaily() { gold += 1500; dailyClaimed = true; updateUI(); }
+function claimWeekly() { gold += 10000; frags += 25; weeklyClaimed = true; updateUI(); }
+function buyCoupon(n, c) { if(gold >= c) { gold -= c; inv.push(n + " Coupon"); renderInv(); updateUI(); } }
 function renderInv() { document.getElementById('invList').innerHTML = inv.map(i => `<div class="shop-card"><b>${i}</b></div>`).join(''); }
 function openModal(id) { document.getElementById(id).style.display='block'; }
 function closeModal(id) { document.getElementById(id).style.display='none'; }
@@ -216,16 +255,18 @@ function updateTimers() {
     document.getElementById('daily-timer').innerText = formatTime(nD - now);
     const nW = new Date(now); nW.setDate(now.getDate() + (1 + 7 - now.getDay()) % 7 || 7); nW.setHours(24,0,0,0);
     document.getElementById('weekly-timer').innerText = formatTime(nW - now);
-    if((nW - now) <= 1000) { stock = {b:3,s:2,g:1}; weeklyClaimed=false; }
+    
+    if(nD - now <= 1000) { dailyClicks = 0; dailyClaimed = false; }
+    if(nW - now <= 1000) { weeklyClicks = 0; weeklyClaimed = false; }
 }
 function formatTime(ms) { let s=Math.floor(ms/1000); let m=Math.floor(s/60); let h=Math.floor(m/60); return `${Math.floor(h/24)}d ${h%24}h ${m%60}m`; }
 
-function save() { localStorage.setItem('aether_vFINAL_FIX', JSON.stringify({clicks, gold, frags, basePower, level, exp, storyCh, storyPart, inv, dailyClaimed, weeklyClaimed, dailyClicks, weeklyClicks, stock, milestonesClaimed})); }
+function save() { localStorage.setItem('aether_master_v3', JSON.stringify({clicks, gold, frags, basePower, level, exp, storyCh, storyPart, inv, dailyClaimed, weeklyClaimed, dailyClicks, weeklyClicks, milestonesClaimed, autoActive})); }
 function load() {
-    let s = localStorage.getItem('aether_vFINAL_FIX');
+    let s = localStorage.getItem('aether_master_v3');
     if(s) {
         let d = JSON.parse(s); Object.assign(window, d); 
-        clicks=d.clicks||0; gold=d.gold||0; level=d.level||1; milestonesClaimed=d.milestonesClaimed||[];
+        if(autoActive) setInterval(() => handleHit(null), 500);
         renderInv();
     }
     updateUI();

@@ -96,15 +96,12 @@ animation:floatUp 1s forwards;
 #menuIcons{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:30px;
-justify-items:center;
-align-items:center;
+gap:20px;
 }
 
 .menuBtn{
-width:160px;
-height:160px;
-font-size:28px;
+width:110px;
+height:110px;
 background:#0f172a;
 border:1px solid #1e3a8a;
 border-radius:12px;
@@ -114,6 +111,10 @@ align-items:center;
 justify-content:center;
 cursor:pointer;
 text-align:center;
+}
+
+.menuBtn .icon{
+font-size:36px;
 }
 
 .menuBtn:hover{
@@ -245,10 +246,10 @@ cursor:pointer;
 
 <div id="menuIcons">
 
-<div class="menuBtn" onclick="openLore()">📘<br>Lore</div>
-<div class="menuBtn" onclick="openGuide()">❓<br>Guide</div>
-<div class="menuBtn" onclick="openUpgrades()">⚡<br>Upgrades</div>
-<div class="menuBtn" onclick="openShop()">🛒<br>Shop</div>
+<div class="menuBtn" onclick="openLore()"><div class="icon">📘</div>Lore</div>
+<div class="menuBtn" onclick="openGuide()"><div class="icon">❓</div>Guide</div>
+<div class="menuBtn" onclick="openUpgrades()"><div class="icon">⚡</div>Upgrades</div>
+<div class="menuBtn" onclick="openShop()"><div class="icon">🛒</div>Shop</div>
 
 </div>
 
@@ -300,19 +301,12 @@ Reward: 80 Coins
 <!-- LORE -->
 
 <div id="lore" class="modal">
-
 <div class="close" onclick="closeLore()">X</div>
-
 <h2>Aetherfall Chronicle</h2>
-
 <p id="loreText"></p>
-
-<br>
-
 <button onclick="prevLore()">←</button>
 <span id="lorePage"></span>
 <button onclick="nextLore()">→</button>
-
 </div>
 
 <!-- GUIDE -->
@@ -414,11 +408,44 @@ Stock: <span id="c20">2</span>
 
 <script>
 
-/* SAVE SYSTEM */
+/* GAME VARIABLES */
+
+let clicks=0
+let coins=0
+let fragments=0
+let combo=0
+let clickPower=1
+
+let storyIndex=0
+let dailyClaimed=false
+
+let coupon5=10
+let coupon10=5
+let coupon20=2
+
+let lastClick=0
+
+/* LOAD SAVE */
+
+function loadGame(){
+let data=localStorage.getItem("aetherfallSave")
+if(!data)return
+let save=JSON.parse(data)
+
+clicks=save.clicks||0
+coins=save.coins||0
+fragments=save.fragments||0
+combo=save.combo||0
+clickPower=save.clickPower||1
+storyIndex=save.storyIndex||0
+coupon5=save.coupon5??10
+coupon10=save.coupon10??5
+coupon20=save.coupon20??2
+}
 
 function saveGame(){
 
-const save={
+let save={
 clicks,
 coins,
 fragments,
@@ -434,67 +461,175 @@ localStorage.setItem("aetherfallSave",JSON.stringify(save))
 
 }
 
-function loadGame(){
+setInterval(saveGame,2000)
 
-const data=localStorage.getItem("aetherfallSave")
-if(!data) return
+loadGame()
 
-const save=JSON.parse(data)
+/* CLICK SYSTEM */
 
-clicks=save.clicks||0
-coins=save.coins||0
-fragments=save.fragments||0
-combo=save.combo||0
-clickPower=save.clickPower||1
-storyIndex=save.storyIndex||0
-coupon5=save.coupon5??10
-coupon10=save.coupon10??5
-coupon20=save.coupon20??2
+const sword=document.getElementById("sword")
+
+sword.onclick=(e)=>{
+
+let now=Date.now()
+
+if(now-lastClick>2000) combo=0
+lastClick=now
+
+combo++
+
+let gain=clickPower+Math.floor(combo/25)
+
+clicks+=gain
+
+if(combo%50==0) coins+=5
+if(combo%150==0) fragments++
+
+spawnText(e,"+"+gain)
+
+update()
 
 }
 
-/* LORE SYSTEM */
+function spawnText(e,text){
+
+let t=document.createElement("div")
+t.className="float"
+t.innerText=text
+t.style.left=e.pageX+"px"
+t.style.top=e.pageY+"px"
+
+document.body.appendChild(t)
+setTimeout(()=>t.remove(),1000)
+
+}
+
+/* LORE */
 
 const lorePages=[
-
 "The sky was not always silent.",
-
-"Long before kingdoms, fragments of power drifted across the world.",
-
+"Long before kingdoms fragments of power drifted across the world.",
 "One blade fell with them — forged from celestial energy.",
-
 "Scholars named the event Aetherfall.",
-
-"The blade absorbed fragments every time it struck.",
-
-"Over centuries it became an artifact of endless power.",
-
-"But the sword is not complete.",
-
-"It is only one piece of something far greater.",
-
-"And every strike awakens what waits beyond the sky."
-
+"The blade absorbs fragments with every strike.",
+"But the sword is only one piece of something far greater."
 ]
 
 let lorePage=0
 
 function updateLore(){
-
 document.getElementById("loreText").innerText=lorePages[lorePage]
+document.getElementById("lorePage").innerText=(lorePage+1)+" / "+lorePages.length
+}
 
-document.getElementById("lorePage").innerText=
-(lorePage+1)+" / "+lorePages.length
+function nextLore(){if(lorePage<lorePages.length-1){lorePage++;updateLore()}}
+function prevLore(){if(lorePage>0){lorePage--;updateLore()}}
+
+/* MISSIONS */
+
+const storyGoals=[100,500,1000,3000,5000,10000,20000]
+const storyRewards=[15,25,40,60,80,120,180]
+
+function updateStory(){
+
+let goal=storyGoals[storyIndex]
+
+let percent=Math.min(100,(clicks/goal)*100)
+
+document.getElementById("storyTitle").innerText="Storyline "+(storyIndex+1)
+document.getElementById("storyGoal").innerText=goal
+document.getElementById("storyReward").innerText=storyRewards[storyIndex]
+
+document.getElementById("storyFill").style.width=percent+"%"
+document.getElementById("storyPercent").innerText=Math.floor(percent)+"%"
 
 }
 
-function nextLore(){
-if(lorePage<lorePages.length-1){lorePage++;updateLore()}
+function claimStory(){
+
+let goal=storyGoals[storyIndex]
+
+if(clicks<goal) return
+
+coins+=storyRewards[storyIndex]
+
+storyIndex++
+
+if(storyIndex>=storyGoals.length) storyIndex=storyGoals.length-1
+
+update()
+
 }
 
-function prevLore(){
-if(lorePage>0){lorePage--;updateLore()}
+function updateDaily(){
+
+let percent=Math.min(100,(clicks/2000)*100)
+
+document.getElementById("dailyFill").style.width=percent+"%"
+document.getElementById("dailyPercent").innerText=Math.floor(percent)+"%"
+
 }
+
+function claimDaily(){
+
+if(dailyClaimed) return
+if(clicks<2000) return
+
+coins+=80
+dailyClaimed=true
+
+update()
+
+}
+
+/* SHOP */
+
+function buyFragPower(){if(fragments>=10){fragments-=10;clickPower+=2;update()}}
+function buyFragEnergy(){if(fragments>=25){fragments-=25;clickPower+=4;update()}}
+function buyComboBoost(){if(fragments>=40){fragments-=40;clickPower+=3;update()}}
+function buyFragGen(){if(fragments>=60){fragments-=60;setInterval(()=>{fragments++},300000)}}
+
+function buyAutoClick(){
+if(coins<3000)return
+coins-=3000
+setInterval(()=>{clicks+=clickPower;if(Math.random()<0.2)coins++;update()},2000)
+}
+
+function buyC5(){if(coins>=300&&coupon5>0){coins-=300;coupon5--;update()}}
+function buyC10(){if(coins>=700&&coupon10>0){coins-=700;coupon10--;update()}}
+function buyC20(){if(coins>=1500&&coupon20>0){coins-=1500;coupon20--;update()}}
+
+/* UI */
+
+function openLore(){document.getElementById("lore").style.display="block";updateLore()}
+function closeLore(){document.getElementById("lore").style.display="none"}
+
+function openGuide(){document.getElementById("guide").style.display="block"}
+function closeGuide(){document.getElementById("guide").style.display="none"}
+
+function openShop(){document.getElementById("shopPopup").style.display="block"}
+function closeShop(){document.getElementById("shopPopup").style.display="none"}
+
+function openUpgrades(){document.getElementById("upgrades").style.display="block"}
+function closeUpgrades(){document.getElementById("upgrades").style.display="none"}
+
+function update(){
+
+document.getElementById("clicks").innerText=Math.floor(clicks)
+document.getElementById("coins").innerText=coins
+document.getElementById("fragments").innerText=fragments
+document.getElementById("combo").innerText=combo
+
+document.getElementById("c5").innerText=coupon5
+document.getElementById("c10").innerText=coupon10
+document.getElementById("c20").innerText=coupon20
+
+updateStory()
+updateDaily()
+
+}
+
+update()
 
 </script>
 

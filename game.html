@@ -11,17 +11,22 @@ margin:0;
 height:100%;
 overflow:hidden;
 background:#050816;
-font-family:Segoe UI,Arial;
+font-family:'Segoe UI',Arial;
 color:white;
 }
 
+/* TITLE */
+
 header{
 text-align:center;
-font-size:38px;
-padding:18px;
+font-size:40px;
+padding:20px;
 color:#a78bfa;
 font-weight:bold;
+letter-spacing:3px;
 }
+
+/* BACK BUTTON */
 
 #backBtn{
 position:absolute;
@@ -34,6 +39,8 @@ border-radius:8px;
 color:white;
 cursor:pointer;
 }
+
+/* LEVEL */
 
 #levelWrap{
 width:520px;
@@ -63,6 +70,8 @@ transform:translate(-50%,-50%);
 font-size:12px;
 }
 
+/* STATS */
+
 #stats{
 display:flex;
 justify-content:center;
@@ -77,6 +86,14 @@ padding:10px 18px;
 border-radius:8px;
 text-align:center;
 }
+
+/* COLORS */
+
+.coin{color:#facc15}
+.fragment{color:#22d3ee}
+.combo{color:#f472b6}
+
+/* LAYOUT */
 
 #layout{
 display:grid;
@@ -98,7 +115,14 @@ justify-content:center;
 #sword{
 width:280px;
 cursor:pointer;
+transition:.1s;
 }
+
+#sword:active{
+transform:scale(.9);
+}
+
+/* MENU */
 
 .menuBtn{
 background:#0f172a;
@@ -114,6 +138,8 @@ cursor:pointer;
 background:#1e293b;
 }
 
+/* MISSIONS */
+
 .missionBox{
 background:#020617;
 border:1px solid #2563eb;
@@ -121,6 +147,8 @@ padding:14px;
 border-radius:10px;
 margin-bottom:15px;
 }
+
+/* MODALS */
 
 .modal{
 display:none;
@@ -144,6 +172,8 @@ right:14px;
 cursor:pointer;
 }
 
+/* SHOP */
+
 .shopItem{
 background:#0f172a;
 border:1px solid #1e3a8a;
@@ -151,6 +181,8 @@ padding:10px;
 border-radius:8px;
 margin-bottom:10px;
 }
+
+/* BUTTONS */
 
 button{
 margin-top:6px;
@@ -161,6 +193,8 @@ color:white;
 border-radius:6px;
 cursor:pointer;
 }
+
+/* MILESTONES */
 
 .carousel{
 display:flex;
@@ -200,6 +234,8 @@ padding:10px;
 border-radius:8px;
 }
 
+/* FLOATING TEXT */
+
 .float{
 position:absolute;
 pointer-events:none;
@@ -212,6 +248,8 @@ animation:floatUp 1s forwards;
 100%{opacity:0;transform:translateY(-60px)}
 }
 
+.crit{color:#c084fc}
+
 </style>
 </head>
 
@@ -223,7 +261,7 @@ animation:floatUp 1s forwards;
 
 <div id="levelWrap">
 
-<div id="levelText">Level 1</div>
+<div id="levelText">Level 1 — 0 EXP</div>
 
 <div class="bar">
 <div id="levelFill" class="fill"></div>
@@ -235,9 +273,12 @@ animation:floatUp 1s forwards;
 <div id="stats">
 
 <div class="stat">Clicks<br><span id="clicks">0</span></div>
-<div class="stat">Coins<br><span id="coins">0</span></div>
-<div class="stat">Fragments<br><span id="fragments">0</span></div>
-<div class="stat">Combo<br><span id="combo">0</span></div>
+
+<div class="stat coin">Coins<br><span id="coins">0</span></div>
+
+<div class="stat fragment">Fragments<br><span id="fragments">0</span></div>
+
+<div class="stat combo">Combo<br><span id="combo">0</span></div>
 
 </div>
 
@@ -245,6 +286,8 @@ animation:floatUp 1s forwards;
 
 <div class="panel">
 
+<div class="menuBtn" onclick="openModal('lore')">📘 Lore</div>
+<div class="menuBtn" onclick="openModal('guide')">❓ Guide</div>
 <div class="menuBtn" onclick="openModal('shop')">🛒 Shop</div>
 <div class="menuBtn" onclick="openModal('upgrades')">⚡ Upgrades</div>
 <div class="menuBtn" onclick="openModal('milestones')">🏆 Milestones</div>
@@ -260,6 +303,7 @@ animation:floatUp 1s forwards;
 <div class="missionBox">
 
 <h3>Storyline</h3>
+
 <div id="storyText"></div>
 
 <div class="bar">
@@ -267,7 +311,7 @@ animation:floatUp 1s forwards;
 <span id="storyPercent" class="barText">0%</span>
 </div>
 
-<button onclick="claimStory()">Claim Reward</button>
+<button onclick="claimStory()">Claim</button>
 
 </div>
 
@@ -285,100 +329,11 @@ Reward: 200 coins
 
 <div id="dailyTimer"></div>
 
-<button onclick="claimDaily()">Claim Daily</button>
+<button onclick="claimDaily()">Claim</button>
 
 </div>
 
 </div>
-
-</div>
-
-<!-- SHOP -->
-
-<div id="shop" class="modal">
-<div class="close" onclick="closeModal('shop')">X</div>
-
-<h2>Coupon Shop</h2>
-
-<div class="shopItem">5฿ Coupon | 1500 coins | Stock <span id="stock5"></span>
-<button onclick="buyCoupon(5)">Buy</button></div>
-
-<div class="shopItem">10฿ Coupon | 4500 coins | Stock <span id="stock10"></span>
-<button onclick="buyCoupon(10)">Buy</button></div>
-
-<div class="shopItem">25฿ Coupon | 12000 coins | Stock <span id="stock25"></span>
-<button onclick="buyCoupon(25)">Buy</button></div>
-
-<div class="shopItem">50฿ Coupon | 30000 coins | Stock <span id="stock50"></span>
-<button onclick="buyCoupon(50)">Buy</button></div>
-
-</div>
-
-<!-- UPGRADES -->
-
-<div id="upgrades" class="modal">
-<div class="close" onclick="closeModal('upgrades')">X</div>
-
-<h2>Upgrades</h2>
-
-<div class="shopItem">
-Combo Stabilizer  
-Cost: 200 fragments  
-<b>PERMANENT</b>
-<button onclick="buyComboBoost()">Buy</button>
-</div>
-
-<div class="shopItem">
-Fragment Extractor  
-Cost: 180 fragments
-<button onclick="buyExtractor()">Buy</button>
-</div>
-
-<div class="shopItem">
-Resonance Overdrive  
-+10 click power  
-Cost: 500 fragments  
-<b>PERMANENT</b>
-<button onclick="buyOverdrive()">Buy</button>
-</div>
-
-<div class="shopItem">
-Autoclicker  
-1 click/sec  
-Cost: 120 fragments  
-<b>PERMANENT</b>
-<button onclick="buyAuto()">Buy</button>
-</div>
-
-</div>
-
-<!-- MILESTONES -->
-
-<div id="milestones" class="modal">
-<div class="close" onclick="closeModal('milestones')">X</div>
-
-<h2 style="text-align:center;">Level Milestones</h2>
-
-<div class="carousel">
-
-<button type="button" onclick="prevMilestone()">←</button>
-
-<div id="milestoneCards"></div>
-
-<button type="button" onclick="nextMilestone()">→</button>
-
-</div>
-
-<h3 id="milestoneTitle"></h3>
-
-<div class="rewardBox">
-
-<div class="reward">Coins: <span id="mCoins"></span></div>
-<div class="reward">Fragments: <span id="mFrags"></span></div>
-
-</div>
-
-<button onclick="claimMilestone()">Claim Rewards</button>
 
 </div>
 
@@ -392,12 +347,16 @@ let fragments=0
 let combo=0
 let power=1
 
-let comboBoost=1
-let fragmentBoost=1
-
 let level=1
 let exp=0
 
+let dailyClicks=0
+let lastDailyClaim=0
+
+let storyStage=0
+
+let fragmentBoost=1
+let comboBoost=1
 let autoclicker=false
 
 let stock5=5
@@ -405,49 +364,24 @@ let stock10=3
 let stock25=2
 let stock50=1
 
+let lastWeeklyReset=Date.now()
+
 let milestoneIndex=0
 let claimedMilestones=[]
 
 let clickLock=false
 let lastClick=Date.now()
 
-/* CLICK SYSTEM */
-
-const sword=document.getElementById("sword")
-
-sword.onclick=e=>{
-
-if(clickLock) return
-clickLock=true
-setTimeout(()=>clickLock=false,16)
-
-if(Date.now()-lastClick>3000) combo=0
-lastClick=Date.now()
-
-let gain = power + Math.floor((combo/30)*comboBoost)
-
-clicks+=gain
-combo++
-
-/* RANDOM REWARDS */
-
-if(Math.random()<0.005){coins+=10;float(e,"+10 coin")}
-if(Math.random()<0.001){fragments++;float(e,"+1 fragment")}
-
-float(e,"+"+gain)
-
-}
-
 /* FLOAT */
 
-function float(e,t){
+function float(e,t,cls=""){
 
 let d=document.createElement("div")
-d.className="float"
+d.className="float "+cls
 d.innerText=t
 
-d.style.left=e.pageX+"px"
-d.style.top=e.pageY+"px"
+d.style.left=(e.pageX||window.innerWidth/2)+"px"
+d.style.top=(e.pageY||window.innerHeight/2)+"px"
 
 document.body.appendChild(d)
 
@@ -455,121 +389,73 @@ setTimeout(()=>d.remove(),1000)
 
 }
 
-/* UPGRADES */
+/* EXP */
 
-function buyComboBoost(){
-if(fragments>=200){
-fragments-=200
-comboBoost+=0.5
-}
+function expNeeded(lvl){
+return Math.min(200 + lvl*lvl*5,50000)
 }
 
-function buyExtractor(){
-if(fragments>=180){
-fragments-=180
-fragmentBoost+=1
-}
-}
+function gainExp(v){
 
-function buyOverdrive(){
-if(fragments>=500){
-fragments-=500
-power+=10
-}
+exp+=v
+
+while(exp>=expNeeded(level) && level<100){
+exp-=expNeeded(level)
+level++
 }
 
-function buyAuto(){
+}
 
-if(fragments>=120 && !autoclicker){
+/* CLICK */
 
-fragments-=120
-autoclicker=true
+const sword=document.getElementById("sword")
+
+sword.onclick=e=>{
+
+if(clickLock)return
+clickLock=true
+setTimeout(()=>clickLock=false,16)
+
+lastClick=Date.now()
+
+let gain=power+Math.floor((combo/30)*comboBoost)
+
+/* CRIT */
+
+if(Math.random()<0.05){
+gain*=5
+float(e,"CRITICAL!", "crit")
+}
+
+clicks+=gain
+dailyClicks+=gain
+combo++
+
+gainExp(.02)
+
+/* RNG */
+
+if(Math.random()<.005){
+coins+=10
+float(e,"+10 coin")
+}
+
+if(Math.random()<.001){
+fragments++
+float(e,"+1 fragment")
+}
+
+if(combo%(150/fragmentBoost)==0)fragments++
+
+float(e,"+"+gain)
+
+}
+
+/* COMBO RESET */
 
 setInterval(()=>{
-clicks+=power
-},1000)
-
-}
-
-}
-
-/* COUPONS */
-
-function buyCoupon(v){
-
-if(level<15){
-alert("Coupons unlock at level 15")
-return
-}
-
-if(v==5 && coins>=1500 && stock5>0){coins-=1500;stock5--}
-if(v==10 && coins>=4500 && stock10>0){coins-=4500;stock10--}
-if(v==25 && coins>=12000 && stock25>0){coins-=12000;stock25--}
-if(v==50 && coins>=30000 && stock50>0){coins-=30000;stock50--}
-
-}
-
-/* MILESTONES */
-
-function milestoneLevel(){return (milestoneIndex+1)*5}
-
-function drawMilestones(){
-
-let cards=""
-
-for(let i=milestoneIndex-1;i<=milestoneIndex+1;i++){
-
-if(i<0||i>19)continue
-
-let lvl=(i+1)*5
-
-cards+=`<div class="card ${i==milestoneIndex?"active":""}">Lv ${lvl}</div>`
-
-}
-
-document.getElementById("milestoneCards").innerHTML=cards
-
-let lvl=milestoneLevel()
-
-document.getElementById("milestoneTitle").innerText="Level "+lvl+" Rewards"
-
-document.getElementById("mCoins").innerText=lvl*100
-document.getElementById("mFrags").innerText=Math.floor(lvl/5)
-
-}
-
-function nextMilestone(){if(milestoneIndex<19)milestoneIndex++;drawMilestones()}
-function prevMilestone(){if(milestoneIndex>0)milestoneIndex--;drawMilestones()}
-
-function claimMilestone(){
-
-let lvl=milestoneLevel()
-
-if(level>=lvl && !claimedMilestones.includes(lvl)){
-
-coins+=lvl*100
-fragments+=Math.floor(lvl/5)
-
-claimedMilestones.push(lvl)
-
-}
-
-}
-
-/* MODALS */
-
-function openModal(id){
-
-document.getElementById(id).style.display="block"
-drawMilestones()
-
-}
-
-function closeModal(id){
-
-document.getElementById(id).style.display="none"
-
-}
+if(Date.now()-lastClick>3000)combo=0
+},100)
 
 /* UPDATE */
 
@@ -580,12 +466,9 @@ document.getElementById("coins").innerText=coins
 document.getElementById("fragments").innerText=fragments
 document.getElementById("combo").innerText=combo
 
-document.getElementById("stock5").innerText=stock5
-document.getElementById("stock10").innerText=stock10
-document.getElementById("stock25").innerText=stock25
-document.getElementById("stock50").innerText=stock50
-
 }
+
+setInterval(update,200)
 
 /* SAVE */
 
@@ -593,7 +476,7 @@ function save(){
 
 localStorage.setItem("aetherfall_save",JSON.stringify({
 
-clicks,coins,fragments,combo,power,level,comboBoost,fragmentBoost,stock5,stock10,stock25,stock50,claimedMilestones
+clicks,coins,fragments,combo,power,level,exp
 
 }))
 
@@ -607,22 +490,18 @@ if(!s)return
 
 let data=JSON.parse(s)
 
-for(let k in data){
-window[k]=data[k]
-}
+for(let k in data)window[k]=data[k]
 
 }
 
 load()
 
-setInterval(()=>{
-update()
-save()
-},500)
+setInterval(save,1000)
 
 </script>
 
 <script src="cursor.js"></script>
 
 </body>
+</html>
 </html>

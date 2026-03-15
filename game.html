@@ -23,11 +23,31 @@ font-weight:700;
 letter-spacing:3px;
 }
 
+#levelBarWrap{
+width:500px;
+margin:auto;
+text-align:center;
+}
+
+#levelBar{
+height:16px;
+background:#1e293b;
+border-radius:8px;
+overflow:hidden;
+margin-top:5px;
+}
+
+#levelFill{
+height:100%;
+background:#8b5cf6;
+width:0%;
+}
+
 #stats{
 display:flex;
 justify-content:center;
 gap:25px;
-margin-bottom:10px;
+margin-top:15px;
 }
 
 .stat{
@@ -41,7 +61,7 @@ text-align:center;
 #layout{
 display:grid;
 grid-template-columns:300px 1fr 300px;
-height:calc(100vh - 120px);
+height:calc(100vh - 160px);
 }
 
 .panel{
@@ -172,6 +192,11 @@ animation:floatUp 1s forwards;
 
 <header>AETHERFALL</header>
 
+<div id="levelBarWrap">
+<div id="levelText">Level 1 — 0 / 200 EXP</div>
+<div id="levelBar"><div id="levelFill"></div></div>
+</div>
+
 <div id="stats">
 
 <div class="stat">Clicks<br><span id="clicks">0</span></div>
@@ -207,6 +232,11 @@ Upgrades
 Shop
 </div>
 
+<div class="menuBtn" onclick="openMilestones()">
+<div class="icon">🏆</div>
+Milestones
+</div>
+
 </div>
 
 </div>
@@ -227,6 +257,8 @@ Shop
 <div id="storyFill" class="fill"></div>
 </div>
 
+<div id="storyPercent"></div>
+
 <button onclick="claimStory()">Claim</button>
 
 </div>
@@ -241,6 +273,8 @@ Goal: 2000 clicks
 <div id="dailyFill" class="fill"></div>
 </div>
 
+<div id="dailyTimer"></div>
+
 <button onclick="claimDaily()">Claim</button>
 
 </div>
@@ -249,111 +283,16 @@ Goal: 2000 clicks
 
 </div>
 
+<div id="milestones" class="modal">
+<div class="close" onclick="closeMilestones()">X</div>
+<h2>Level Milestones</h2>
+<div id="milestoneList"></div>
+</div>
+
 <div id="lore" class="modal">
-
 <div class="close" onclick="closeLore()">X</div>
-
 <h2>Aetherfall Chronicle</h2>
-
 <p id="loreText"></p>
-
-<button onclick="prevLore()">←</button>
-<span id="lorePage"></span>
-<button onclick="nextLore()">→</button>
-
-</div>
-
-<div id="guide" class="modal">
-
-<div class="close" onclick="closeGuide()">X</div>
-
-<h2>Guide</h2>
-
-<p>Click the sword to gain clicks.</p>
-<p>Build combos for extra power.</p>
-<p>Fragments unlock powerful upgrades.</p>
-
-</div>
-
-<div id="upgrades" class="modal">
-
-<div class="close" onclick="closeUpgrades()">X</div>
-
-<h2>Upgrades</h2>
-
-<div class="shopItem">
-Auto Clicker (Permanent)<br>
-1 click per second<br>
-Cost: 3000 Coins
-<button onclick="buyAuto()">Buy</button>
-</div>
-
-<div class="shopItem">
-Sharpen Blade<br>
-+2 power<br>
-Cost: 800 Coins
-<button onclick="buyPower()">Buy</button>
-</div>
-
-<div class="shopItem">
-Ancient Core (Permanent)<br>
-+10 power<br>
-Cost: 10000 Coins
-<button onclick="buyAncient()">Buy</button>
-</div>
-
-</div>
-
-<div id="shop" class="modal">
-
-<div class="close" onclick="closeShop()">X</div>
-
-<h2>Fragment Shop</h2>
-
-<div class="shopItem">
-Power Core (+2 power)<br>
-Cost: 10 fragments<br>
-Stock: <span id="f1"></span>
-<button onclick="buyF1()">Buy</button>
-</div>
-
-<div class="shopItem">
-Energy Core (+4 power)<br>
-Cost: 30 fragments<br>
-Stock: <span id="f2"></span>
-<button onclick="buyF2()">Buy</button>
-</div>
-
-<div class="shopItem">
-Combo Amplifier (+3 power)<br>
-Cost: 40 fragments<br>
-Stock: <span id="f3"></span>
-<button onclick="buyF3()">Buy</button>
-</div>
-
-<h2>Coupon Shop</h2>
-
-<div class="shopItem">
-5 Baht Coupon<br>
-Cost: 300 coins<br>
-Stock: <span id="c1"></span>
-<button onclick="buyC1()">Buy</button>
-</div>
-
-<div class="shopItem">
-10 Baht Coupon<br>
-Cost: 700 coins<br>
-Stock: <span id="c2"></span>
-<button onclick="buyC2()">Buy</button>
-</div>
-
-<div class="shopItem">
-20 Baht Coupon<br>
-Cost: 1500 coins<br>
-Stock: <span id="c3"></span>
-<button onclick="buyC3()">Buy</button>
-</div>
-
 </div>
 
 <script>
@@ -364,65 +303,32 @@ let fragments=0
 let combo=0
 let power=1
 
+let level=1
+let exp=0
+
 let auto=false
-let ancient=false
-
-let f1=10,f2=6,f3=4
-let c1=5,c2=3,c3=1
-
-let storyStage=0
-let dailyClicks=0
 
 let lastClick=0
+let dailyProgress=0
+let lastDailyClaim=0
 
-const storyGoals=[
-100,500,2000,5000,10000,50000,100000,500000,
-1000000,5000000,10000000,50000000,100000000
-]
+let lastShopReset=Date.now()
 
-const storyRewards=[
-20,40,80,120,200,350,600,900,
-1500,2500,4000,7000,12000
-]
+const storyGoals=[100,500,2000,10000,50000,200000,1000000,5000000,20000000,100000000]
+const storyRewards=[20,40,80,150,300,700,1500,2500,5000,10000]
+let storyStage=0
 
-const lorePages=[
-
-`Long before the kingdoms rose, the world of Aetherfall was quiet. The skies shimmered with fragments of ancient energy drifting slowly across the horizon. Scholars believed these fragments were remnants of something far older than civilization itself.`,
-
-`When the first explorers touched the fragments, they discovered something strange. The shards resonated with human willpower. The more effort someone exerted, the brighter the fragments glowed.`,
-
-`Soon warriors began training with them. By striking enchanted weapons again and again, they learned to harness fragment energy. Each strike strengthened both the blade and the wielder.`,
-
-`But fragments were unstable. If someone pushed too far, the energy collapsed into chaos. Entire regions vanished in a storm of light, leaving behind only scattered shards.`,
-
-`Now a new wielder rises. Armed with a blade and the will to endure, they will gather fragments, master their power, and uncover the truth behind the ancient collapse of Aetherfall.`
-
-]
-
-let loreIndex=0
-
-function save(){
-localStorage.setItem("aetherfallSave",JSON.stringify({
-clicks,coins,fragments,power,auto,ancient,storyStage
-}))
+function expNeeded(lvl){
+return Math.floor(200+(lvl*lvl*5))
 }
 
-function load(){
-let s=localStorage.getItem("aetherfallSave")
-if(!s)return
-s=JSON.parse(s)
-
-clicks=s.clicks||0
-coins=s.coins||0
-fragments=s.fragments||0
-power=s.power||1
-auto=s.auto||false
-ancient=s.ancient||false
-storyStage=s.storyStage||0
+function gainExp(v){
+exp+=v
+while(exp>=expNeeded(level) && level<100){
+exp-=expNeeded(level)
+level++
 }
-
-load()
-setInterval(save,2000)
+}
 
 const sword=document.getElementById("sword")
 
@@ -431,16 +337,16 @@ sword.onclick=e=>{
 let now=Date.now()
 
 if(now-lastClick>2000)combo=0
-
 combo++
 lastClick=now
 
 let gain=power+Math.floor(combo/30)
 
 clicks+=gain
-dailyClicks+=gain
+dailyProgress+=gain
 
-if(combo%50==0)coins+=5
+gainExp(0.3)
+
 if(combo%150==0)fragments++
 
 float(e,"+"+gain)
@@ -454,52 +360,31 @@ let d=document.createElement("div")
 d.className="float"
 d.innerText=t
 d.style.left=e.pageX+"px"
-d.style.top=e.pageY+"px"
+d.style.top=e.pageY+"px
 document.body.appendChild(d)
 setTimeout(()=>d.remove(),1000)
 }
 
-function buyAuto(){
-if(auto)return
-if(coins<3000)return
-coins-=3000
-auto=true
-setInterval(()=>{clicks+=power;update()},1000)
-}
-
-function buyPower(){
-if(coins>=800){coins-=800;power+=2}
-}
-
-function buyAncient(){
-if(ancient)return
-if(coins>=10000){coins-=10000;power+=10;ancient=true}
-}
-
-function buyF1(){if(fragments>=10&&f1>0){fragments-=10;power+=2;f1--}}
-function buyF2(){if(fragments>=30&&f2>0){fragments-=30;power+=4;f2--}}
-function buyF3(){if(fragments>=40&&f3>0){fragments-=40;power+=3;f3--}}
-
-function buyC1(){if(coins>=300&&c1>0){coins-=300;c1--}}
-function buyC2(){if(coins>=700&&c2>0){coins-=700;c2--}}
-function buyC3(){if(coins>=1500&&c3>0){coins-=1500;c3--}}
-
 function claimStory(){
-
 if(storyStage>=storyGoals.length)return
-
 if(clicks>=storyGoals[storyStage]){
 coins+=storyRewards[storyStage]
+gainExp(200)
 storyStage++
 }
-
 }
 
 function claimDaily(){
 
-if(dailyClicks>=2000){
-coins+=100
-dailyClicks=0
+let now=Date.now()
+
+if(now-lastDailyClaim<86400000)return
+
+if(dailyProgress>=2000){
+coins+=200
+gainExp(400)
+dailyProgress=0
+lastDailyClaim=now
 }
 
 }
@@ -511,57 +396,87 @@ document.getElementById("coins").innerText=coins
 document.getElementById("fragments").innerText=fragments
 document.getElementById("combo").innerText=combo
 
-document.getElementById("f1").innerText=f1
-document.getElementById("f2").innerText=f2
-document.getElementById("f3").innerText=f3
+let need=expNeeded(level)
+let p=Math.min((exp/need)*100,100)
 
-document.getElementById("c1").innerText=c1
-document.getElementById("c2").innerText=c2
-document.getElementById("c3").innerText=c3
+document.getElementById("levelText").innerText=
+"Level "+level+" — "+Math.floor(exp)+" / "+need+" EXP"
 
-document.getElementById("loreText").innerText=lorePages[loreIndex]
-document.getElementById("lorePage").innerText=(loreIndex+1)+"/"+lorePages.length
+document.getElementById("levelFill").style.width=p+"%"
 
 if(storyStage<storyGoals.length){
 
 let g=storyGoals[storyStage]
-let p=Math.min(clicks/g*100,100)
+let p=Math.min((clicks/g)*100,100)
 
 document.getElementById("storyText").innerText=
 "Reach "+g.toLocaleString()+" clicks | Reward: "+storyRewards[storyStage]+" coins"
 
 document.getElementById("storyFill").style.width=p+"%"
+document.getElementById("storyPercent").innerText=Math.floor(p)+"%"
 
 }
 
-let d=Math.min(dailyClicks/2000*100,100)
+let d=Math.min((dailyProgress/2000)*100,100)
 document.getElementById("dailyFill").style.width=d+"%"
 
+let now=Date.now()
+let diff=86400000-(now-lastDailyClaim)
+
+if(diff>0){
+
+let h=Math.floor(diff/3600000)
+let m=Math.floor((diff%3600000)/60000)
+
+document.getElementById("dailyTimer").innerText=
+"Ready in "+h+"h "+m+"m"
+
+}else{
+document.getElementById("dailyTimer").innerText="Ready"
 }
 
-function nextLore(){
-if(loreIndex<lorePages.length-1)loreIndex++
-update()
 }
 
-function prevLore(){
-if(loreIndex>0)loreIndex--
-update()
+function openMilestones(){
+document.getElementById("milestones").style.display="block"
+drawMilestones()
+}
+
+function closeMilestones(){
+document.getElementById("milestones").style.display="none"
+}
+
+function drawMilestones(){
+
+let box=document.getElementById("milestoneList")
+box.innerHTML=""
+
+for(let i=5;i<=100;i+=5){
+
+let d=document.createElement("div")
+
+let reward=i*50
+
+d.innerHTML=
+"Level "+i+" Reward: "+reward+" coins"
+
+if(level>=i){
+let b=document.createElement("button")
+b.innerText="Claim"
+b.onclick=()=>{coins+=reward;b.disabled=true}
+d.appendChild(b)
+}
+
+box.appendChild(d)
+
+}
+
 }
 
 function openLore(){document.getElementById("lore").style.display="block"}
 function closeLore(){document.getElementById("lore").style.display="none"}
 
-function openGuide(){document.getElementById("guide").style.display="block"}
-function closeGuide(){document.getElementById("guide").style.display="none"}
-
-function openUpgrades(){document.getElementById("upgrades").style.display="block"}
-function closeUpgrades(){document.getElementById("upgrades").style.display="none"}
-
-function openShop(){document.getElementById("shop").style.display="block"}
-function closeShop(){document.getElementById("shop").style.display="none"}
-
-update()
+setInterval(update,200)
 
 </script>
 

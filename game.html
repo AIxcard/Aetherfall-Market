@@ -52,10 +52,6 @@
         .reward-tag { display: block; font-size: 10px; color: var(--gold); margin-top: 5px; font-weight: bold; }
         .click-text { position: absolute; pointer-events: none; font-family: 'Orbitron'; font-weight: 900; animation: floatUp 0.6s ease-out forwards; z-index: 100; text-shadow: 0 0 5px #000; }
         @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-120px); opacity: 0; } }
-        
-        /* New Level Up Pop */
-        .lvl-up-pop { position: fixed; top: 20%; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 10px 20px; font-family: 'Orbitron'; border-radius: 40px; z-index: 2000; animation: bounceIn 0.5s ease; box-shadow: 0 0 20px var(--accent); }
-        @keyframes bounceIn { 0% { opacity: 0; transform: translateX(-50%) scale(0.5); } 70% { transform: translateX(-50%) scale(1.1); } 100% { opacity: 1; transform: translateX(-50%) scale(1); } }
     </style>
 </head>
 <body>
@@ -93,7 +89,7 @@
             <b id="st-ch">CH 1: PART 1</b>
             <p id="st-obj" style="font-size:12px; color:var(--accent); font-weight:bold;"></p>
             <div class="bar-outer" style="height:12px; width:100%;"><div id="st-fill" class="fill"></div></div>
-            <span class="reward-tag" id="st-reward-txt">REWARD: 600 Gold | 1200 EXP</span>
+            <span class="reward-tag">REWARD: 600 Gold | 1200 EXP</span>
             <button class="btn-action" id="st-btn" onclick="claimStory()">CLAIM PROGRESS</button>
         </div>
         <div class="shop-card" style="border-left: 5px solid var(--frag); margin-bottom: 12px;">
@@ -173,37 +169,13 @@
 </div>
 
 <script>
-let clicks=0, questClicks=0, gold=0, frags=0, basePower=1, level=1, exp=0, combo=0, storyCh=1, storyPart=1, inv=[];
+let clicks=0, gold=0, frags=0, basePower=1, level=1, exp=0, combo=0, storyCh=1, storyPart=1, inv=[];
 let dailyClaimed=false, weeklyClaimed=false, dailyClicks=0, weeklyClicks=0;
 let stock = { b: 3, s: 2, g: 1 };
 let milestonesClaimed = [], redeemedCodes = [];
 let autoActive = false;
 
 const SAVE_KEY = 'AETHERFALL_PERMANENT_SAVE';
-
-function getExpReq(lvl) {
-    return Math.min(50000, 1000 + (Math.pow(lvl, 2) * 110));
-}
-
-// Logic: Instant Multi-Level Jump
-function addExp(amount) {
-    if (level >= 100) return;
-    exp += amount;
-    let leveledUp = false;
-    while (exp >= getExpReq(level) && level < 100) {
-        exp -= getExpReq(level);
-        level++;
-        leveledUp = true;
-    }
-    if (leveledUp) {
-        const pop = document.createElement('div');
-        pop.className = 'lvl-up-pop';
-        pop.innerText = `LEVEL UP! NOW LV ${level}`;
-        document.body.appendChild(pop);
-        setTimeout(() => pop.remove(), 2000);
-    }
-    updateUI();
-}
 
 function updateUI() {
     document.getElementById('hud-clicks').innerText = clicks.toLocaleString();
@@ -212,28 +184,31 @@ function updateUI() {
     document.getElementById('hud-combo').innerText = combo.toLocaleString();
     document.getElementById('lvDisplay').innerText = `LV ${level}`;
     
-    let req = getExpReq(level);
+    let req = 1000 + (Math.pow(level, 2) * 110); 
     document.getElementById('levelFill').style.width = (exp/req*100) + "%";
-    document.getElementById('expDisplay').innerText = (level >= 100) ? "MAX LEVEL" : `${Math.floor(exp).toLocaleString()} / ${req.toLocaleString()} EXP`;
+    document.getElementById('expDisplay').innerText = `${Math.floor(exp).toLocaleString()} / ${req.toLocaleString()} EXP`;
 
-    let totalPartsIdx = ((storyCh - 1) * 10) + (storyPart - 1);
+    let isComplete = (storyCh === 5 && storyPart === 10);
+    
+    // --- UPDATED STORY MISSION VALUES ---
     let target = 0;
-    if (storyCh <= 2) target = (storyCh * 500) + (storyPart * 100);
-    else if (storyCh === 3) target = 4000 + (storyPart * 500);
-    else if (storyCh === 4) target = 15000 + (storyPart * 5000);
-    else if (storyCh === 5) target = 80000 + (storyPart * 20000);
-
-    let isComplete = (storyCh === 6);
-    let rewGold = 600 + (totalPartsIdx * 75);
-    let rewExp = 1200 + (totalPartsIdx * 150);
+    if (storyCh <= 2) {
+        target = (storyCh * 500) + (storyPart * 100); 
+    } else if (storyCh === 3) {
+        target = 4000 + (storyPart * 500);
+    } else if (storyCh === 4) {
+        target = 15000 + (storyPart * 5000);
+    } else if (storyCh === 5) {
+        target = 80000 + (storyPart * 20000);
+    }
 
     document.getElementById('st-ch').innerText = isComplete ? "COMPLETED" : `CH ${storyCh}: PART ${storyPart}`;
-    let prog = Math.min(100, (questClicks/target)*100);
-    document.getElementById('st-obj').innerText = isComplete ? "MAX RANK" : `${prog.toFixed(1)}% (${questClicks.toLocaleString()} / ${target.toLocaleString()})`;
+    let prog = Math.min(100, (clicks/target)*100);
+    document.getElementById('st-obj').innerText = isComplete ? "MAX RANK" : `${prog.toFixed(1)}% (${clicks.toLocaleString()} / ${target.toLocaleString()})`;
     document.getElementById('st-fill').style.width = prog + "%";
-    document.getElementById('st-reward-txt').innerText = `REWARD: ${rewGold.toLocaleString()} Gold | ${rewExp.toLocaleString()} EXP`;
-    document.getElementById('st-btn').disabled = (questClicks < target || isComplete);
+    document.getElementById('st-btn').disabled = (clicks < target || isComplete);
 
+    // --- UPDATED DAILY/WEEKLY MISSION VALUES ---
     document.getElementById('daily-prog-text').innerText = `${dailyClicks.toLocaleString()} / 5,000`;
     document.getElementById('weekly-prog-text').innerText = `${weeklyClicks.toLocaleString()} / 30,000`;
     document.getElementById('daily-fill').style.width = (dailyClicks/5000*100) + "%";
@@ -246,22 +221,25 @@ function updateUI() {
     save();
 }
 
+document.getElementById('sword').addEventListener('touchstart', (e) => { e.preventDefault(); handleHit(e.touches[0]); }, {passive: false});
+document.getElementById('sword').addEventListener('mousedown', (e) => handleHit(e));
+
 function handleHit(e) {
     let isCrit = Math.random() < 0.10;
     let hit = (basePower + Math.floor(combo / 1500)) * (isCrit ? 2 : 1);
     
-    clicks++; questClicks++; dailyClicks++; weeklyClicks++; combo++;
+    clicks++; dailyClicks++; weeklyClicks++; combo++;
     if(Math.random() < 0.01) gold += 5; 
     if(Math.random() < 0.008) frags += 1;
     
-    addExp(0.4 * hit); 
+    exp += (0.4 * hit); 
+    let req = 1000 + (Math.pow(level, 2) * 110);
+    if(exp >= req) { exp = 0; level++; }
     
-    if(e && (e.clientX || e.touches)) {
-        let x = e.clientX || e.touches[0].clientX;
-        let y = e.clientY || e.touches[0].clientY;
+    if(e && e.clientX) {
         const el = document.createElement('div');
         el.className = 'click-text';
-        el.style.left = x + 'px'; el.style.top = y + 'px';
+        el.style.left = e.clientX + 'px'; el.style.top = e.clientY + 'px';
         el.style.color = isCrit ? 'var(--gold)' : 'white';
         el.innerText = "+" + hit;
         document.body.appendChild(el);
@@ -272,24 +250,11 @@ function handleHit(e) {
     updateUI();
 }
 
-// Logic: Claim Story with Hard Reset to 0
-function claimStory() { 
-    let totalPartsIdx = ((storyCh - 1) * 10) + (storyPart - 1);
-    gold += (600 + (totalPartsIdx * 75)); 
-    addExp(1200 + (totalPartsIdx * 150));
-    questClicks = 0; 
-    storyPart++; 
-    if(storyPart > 10) { storyPart = 1; storyCh++; } 
-    updateUI(); 
-}
-
-function claimDaily() { gold += 500; frags += 1; addExp(1250); dailyClaimed = true; updateUI(); }
-function claimWeekly() { gold += 10000; frags += 10; addExp(5000); weeklyClaimed = true; updateUI(); }
-
 function redeemCode() {
     const input = document.getElementById('code-input');
     const val = input.value.trim();
     if(redeemedCodes.includes(val)) { alert("Code already used!"); return; }
+
     if(val === "Aetherfall") {
         if(level < 5) { alert("Requires Level 5!"); return; }
         gold += 5000; frags += 7; redeemedCodes.push(val); alert("Redeemed: 5000 Gold & 7 Frags");
@@ -322,6 +287,10 @@ function buyAuto() {
     }
 }
 
+function claimStory() { gold += (storyCh * 600); exp += (storyCh * 1200); storyPart++; if(storyPart > 10) { storyPart = 1; storyCh++; } updateUI(); }
+function claimDaily() { gold += 500; frags += 1; exp += 1250; dailyClaimed = true; updateUI(); }
+function claimWeekly() { gold+=10000; frags+=10; exp+=5000; weeklyClaimed=true; updateUI(); }
+
 function renderMilestones() {
     let h = "";
     for(let i=5; i<=100; i+=5) {
@@ -340,15 +309,14 @@ function closeModal(id) { document.getElementById(id).style.display='none'; }
 function hardReset() { if(confirm("WIPE ALL PROGRESS?")) { localStorage.clear(); location.reload(); } }
 
 function save() {
-    const data = { clicks, questClicks, gold, frags, basePower, level, exp, storyCh, storyPart, inv, dailyClaimed, weeklyClaimed, dailyClicks, weeklyClicks, milestonesClaimed, autoActive, stock, redeemedCodes };
+    const data = { clicks, gold, frags, basePower, level, exp, storyCh, storyPart, inv, dailyClaimed, weeklyClaimed, dailyClicks, weeklyClicks, milestonesClaimed, autoActive, stock, redeemedCodes };
     localStorage.setItem(SAVE_KEY, JSON.stringify(data));
 }
-
 function load() {
     const saved = localStorage.getItem(SAVE_KEY);
     if(saved) {
         const d = JSON.parse(saved);
-        clicks=d.clicks||0; questClicks=d.questClicks||0; gold=d.gold||0; frags=d.frags||0; basePower=d.basePower||1; 
+        clicks=d.clicks||0; gold=d.gold||0; frags=d.frags||0; basePower=d.basePower||1; 
         level=d.level||1; exp=d.exp||0; 
         storyCh=d.storyCh||1; storyPart=d.storyPart||1; inv=d.inv||[]; 
         dailyClicks=d.dailyClicks||0; weeklyClicks=d.weeklyClicks||0; 
@@ -359,11 +327,10 @@ function load() {
     }
     updateUI();
 }
-
-document.getElementById('sword').addEventListener('touchstart', (e) => { e.preventDefault(); handleHit(e); }, {passive: false});
-document.getElementById('sword').addEventListener('mousedown', (e) => handleHit(e));
 window.onload = load;
 </script>
-<script src="cursor.js"></script>
+    
+    <script src="cursor.js"></script>
+    
 </body>
 </html>

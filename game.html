@@ -17,7 +17,6 @@
 
         body, html { margin: 0; height: 100%; overflow: hidden; background: var(--bg); font-family: 'Rajdhani', sans-serif; color: var(--text); width: 100%; position: fixed; }
         
-        /* Mobile/iPad Optimization */
         #layout { 
             display: grid; 
             grid-template-columns: 280px 1fr 320px; 
@@ -25,15 +24,13 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
         
-        @media (max-width: 1100px) { 
-            #layout { grid-template-columns: 240px 1fr 280px; } 
-        }
+        @media (max-width: 1100px) { #layout { grid-template-columns: 240px 1fr 280px; } }
 
-        @media (max-width: 900px) { 
+        @media (max-width: 950px) { 
             #layout { display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; }
-            .side-panel { width: 100%; border-right: none; border-bottom: 1px solid var(--border); min-height: auto; }
-            #center-area { min-height: 500px; padding: 40px 10px; }
-            .right-panel { border-left: none; }
+            .side-panel { width: 100%; border-right: none; border-bottom: 1px solid var(--border); min-height: auto; padding: 15px; }
+            #center-area { min-height: 550px; padding: 20px 10px; flex-shrink: 0; }
+            .right-panel { border-left: none; border-top: 1px solid var(--border); }
         }
 
         .side-panel { background: var(--panel); border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; z-index: 10; overflow-y: auto; }
@@ -42,22 +39,22 @@
         #center-area { 
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
             padding-top: 20px; background: radial-gradient(circle at center, #0a1128 0%, #010206 100%); 
-            position: relative; overflow: hidden;
+            position: relative; overflow: hidden; flex: 1;
         }
         
         header { font-family: 'Orbitron', sans-serif; font-size: clamp(24px, 5vw, 38px); font-weight: 900; letter-spacing: 8px; background: linear-gradient(to bottom, #fff 20%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; text-align: center; }
 
-        .big-timer { font-family: 'Orbitron'; font-size: 12px; color: var(--gold); font-weight: 900; display: block; margin: 5px 0; }
+        .big-timer { font-family: 'Orbitron'; font-size: 11px; color: var(--gold); font-weight: 900; display: block; margin: 4px 0; }
 
         .bar-outer { background: #000; height: 32px; border-radius: 4px; border: 1px solid var(--border); position: relative; overflow: hidden; width: 90%; max-width: 600px; margin-bottom: 15px; }
-        .fill { height: 100%; background: linear-gradient(90deg, #1e3a8a, #7c3aed, #c084fc); width: 0%; transition: width 0.4s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        .fill { height: 100%; background: linear-gradient(90deg, #1e3a8a, #7c3aed, #c084fc); width: 0%; transition: width 0.35s ease-out; }
         .bar-content { position: absolute; width: 100%; height: 100%; top:0; z-index: 6; display: flex; justify-content: space-between; align-items: center; padding: 0 12px; font-family: 'Orbitron'; font-size: 10px; text-shadow: 1px 1px 2px #000; }
 
         #stats-hud { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; width: 90%; max-width: 500px; }
         .stat-box { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255,255,255,0.1); padding: 8px; border-radius: 4px; text-align: center; }
         .stat-box small { font-size: 8px; text-transform: uppercase; opacity: 0.5; display: block; }
 
-        #sword { width: 260px; max-width: 60vw; cursor: pointer; transition: transform 0.05s; z-index: 5; filter: drop-shadow(0 0 25px rgba(124, 58, 237, 0.2)); margin: 20px 0; }
+        #sword { width: 280px; max-width: 65vw; cursor: pointer; transition: transform 0.05s; z-index: 5; filter: drop-shadow(0 0 25px rgba(124, 58, 237, 0.2)); margin: 15px 0; }
         #sword:active { transform: scale(0.92); }
 
         .crit-active { animation: critFlash 0.3s ease-out; filter: drop-shadow(0 0 60px #fbbf24) brightness(1.8) !important; }
@@ -68,7 +65,7 @@
 
         .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #02040a; border: 1px solid var(--accent); border-radius: 8px; width: 95%; max-width: 800px; height: 85vh; padding: 25px; z-index: 1000; overflow-y: auto; box-shadow: 0 0 50px rgba(0,0,0,0.9); }
         
-        .grid-shop { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .grid-shop { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
         .shop-card { background: var(--card-bg); padding: 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); min-height: 130px; display: flex; flex-direction: column; justify-content: space-between; }
         
         .btn-action { background: var(--grad-action); border: none; color: white; height: 44px; width: 100%; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-top: 10px; font-weight: 900; }
@@ -111,16 +108,15 @@
 
     <div class="side-panel right-panel">
         <h3 style="font-family:'Orbitron'; font-size: 11px; color:var(--accent); margin-top: 0;">OBJECTIVES</h3>
-        
-        <div class="shop-card" style="border-left: 5px solid var(--accent); margin-bottom: 20px;">
+        <div class="shop-card" style="border-left: 4px solid var(--accent); margin-bottom: 20px;">
             <b id="st-ch">CH 1: PART 1</b>
             <p id="st-obj" style="font-size:12px; color:var(--accent); font-weight:bold;"></p>
             <div class="bar-outer" style="height:12px; width:100%; margin-bottom: 5px;"><div id="st-fill" class="fill"></div></div>
-            <span class="reward-tag" id="st-reward-txt" style="font-size:10px; color:var(--gold); font-weight:bold;">REWARD: 600 Gold | 1200 EXP</span>
+            <span class="reward-tag" id="st-reward-txt" style="font-size:10px; color:var(--gold); font-weight:bold;"></span>
             <button class="btn-action" id="st-btn" onclick="claimStory()">CLAIM PROGRESS</button>
         </div>
 
-        <div class="shop-card" style="border-left: 5px solid var(--frag); margin-bottom: 12px;">
+        <div class="shop-card" style="border-left: 4px solid var(--frag); margin-bottom: 12px;">
             <b>DAILY MISSION</b>
             <span id="daily-timer" class="big-timer"></span>
             <p id="daily-prog-text" style="font-size:11px; color:var(--frag);"></p>
@@ -128,7 +124,7 @@
             <button class="btn-action" id="daily-btn" onclick="claimDaily()">CLAIM DAILY</button>
         </div>
 
-        <div class="shop-card" style="border-left: 5px solid var(--combo);">
+        <div class="shop-card" style="border-left: 4px solid var(--combo);">
             <b>WEEKLY MISSION</b>
             <span id="weekly-timer" class="big-timer"></span>
             <p id="weekly-prog-text" style="font-size:11px; color:var(--combo);"></p>
@@ -141,7 +137,7 @@
 <div id="guide-m" class="modal">
     <span onclick="closeModal('guide-m')" style="float:right; cursor:pointer; color:red;">[X]</span>
     <h2 style="font-family:'Orbitron'">Nexus Guide</h2>
-    <p style="line-height:1.6;">Leveling scales up to 50k EXP. Clicks reset for every story quest. Combo builds every 1.5k hits. Mobile users can tap the sword with multiple fingers.</p>
+    <p style="line-height:1.6;">Leveling skip logic active: large EXP rewards will cycle through multiple levels automatically. Story quests reset to 0/X upon each claim. Max Level is 100.</p>
 </div>
 
 <div id="forge-m" class="modal">
@@ -201,7 +197,7 @@ function getExpReq(lvl) {
     return Math.min(50000, 1000 + (Math.pow(lvl, 2) * 110));
 }
 
-// FIX: Recursive Leveling (Multiple levels at once)
+// Logic to skip multiple levels if EXP reward is huge
 function addExp(amount) {
     if (level >= 100) return;
     exp += amount;
@@ -223,7 +219,7 @@ function updateUI() {
     document.getElementById('hud-frags').innerText = frags.toLocaleString();
     document.getElementById('hud-combo').innerText = combo.toLocaleString();
 
-    // Leveling Display
+    // Level Header Display
     if(level >= 100) {
         document.getElementById('lvDisplay').innerText = `LV 100`;
         document.getElementById('expDisplay').innerText = `MAX LEVEL`;
@@ -235,21 +231,21 @@ function updateUI() {
         document.getElementById('levelFill').style.width = (exp/req*100) + "%";
     }
 
-    // Story Quest Logic (Easier & Resets)
+    // Story Scaling (Starts at 100)
     let totalPartsIdx = ((storyCh - 1) * 10) + (storyPart - 1);
     let target = 100 + (totalPartsIdx * 150); 
-    let rewGold = 600 + (totalPartsIdx * 50);
-    let rewExp = 1200 + (totalPartsIdx * 100);
+    let rewGold = 600 + (totalPartsIdx * 75);
+    let rewExp = 1200 + (totalPartsIdx * 150);
 
     let isComplete = (storyCh >= 6);
     document.getElementById('st-ch').innerText = isComplete ? "CONQUERED" : `CH ${storyCh}: PART ${storyPart}`;
     let prog = Math.min(100, (questClicks/target)*100);
-    document.getElementById('st-obj').innerText = isComplete ? "ALL QUESTS CLEAR" : `${questClicks.toLocaleString()} / ${target.toLocaleString()} (${prog.toFixed(1)}%)`;
-    document.getElementById('st-reward-txt').innerText = `REWARD: ${rewGold} Gold | ${rewExp} EXP`;
+    document.getElementById('st-obj').innerText = isComplete ? "MAX PROGRESS" : `${questClicks.toLocaleString()} / ${target.toLocaleString()} (${prog.toFixed(1)}%)`;
+    document.getElementById('st-reward-txt').innerText = `REWARD: ${rewGold.toLocaleString()} Gold | ${rewExp.toLocaleString()} EXP`;
     document.getElementById('st-fill').style.width = prog + "%";
     document.getElementById('st-btn').disabled = (questClicks < target || isComplete);
 
-    // Daily/Weekly
+    // Missions
     document.getElementById('daily-prog-text').innerText = `${dailyClicks.toLocaleString()} / 5,000`;
     document.getElementById('weekly-prog-text').innerText = `${weeklyClicks.toLocaleString()} / 30,000`;
     document.getElementById('daily-fill').style.width = (dailyClicks/5000*100) + "%";
@@ -268,14 +264,15 @@ function updateUI() {
 
 function handleHit(e) {
     let isCrit = Math.random() < 0.10;
-    let hitValue = (basePower + Math.floor(combo / 1500)) * (isCrit ? 2 : 1);
+    let powerFromCombo = Math.floor(combo / 1500);
+    let hitValue = (basePower + powerFromCombo) * (isCrit ? 2 : 1);
     
     totalClicks++; questClicks++; dailyClicks++; weeklyClicks++; combo++;
     
     if(Math.random() < 0.01) gold += 5; 
     if(Math.random() < 0.008) frags += 1;
     
-    addExp(0.4 * (basePower + Math.floor(combo / 1500)) * (isCrit ? 2 : 1));
+    addExp(0.4 * hitValue);
 
     const sword = document.getElementById('sword');
     if(isCrit) {
@@ -283,16 +280,14 @@ function handleHit(e) {
         setTimeout(() => sword.classList.remove('crit-active'), 300);
     }
     
-    if(e && (e.clientX || e.touches)) {
-        let x = e.clientX || e.touches[0].clientX;
-        let y = e.clientY || e.touches[0].clientY;
-        const el = document.createElement('div');
-        el.className = 'click-text';
-        el.style.left = x + 'px'; el.style.top = y + 'px';
-        el.style.color = isCrit ? 'var(--gold)' : 'white';
-        el.innerText = isCrit ? "CRIT! +" + hitValue : "+" + hitValue;
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 600);
+    // Multi-touch support for iPad
+    if(e && (e.clientX || (e.touches && e.touches.length > 0))) {
+        let touches = e.touches ? e.touches : [e];
+        for (let i = 0; i < touches.length; i++) {
+            let x = touches[i].clientX;
+            let y = touches[i].clientY;
+            createFloatingText(x, y, isCrit, hitValue);
+        }
     }
 
     clearTimeout(window.ctimer);
@@ -300,22 +295,32 @@ function handleHit(e) {
     updateUI();
 }
 
+function createFloatingText(x, y, isCrit, val) {
+    const el = document.createElement('div');
+    el.className = 'click-text';
+    el.style.left = x + 'px'; el.style.top = y + 'px';
+    el.style.color = isCrit ? 'var(--gold)' : 'white';
+    el.style.fontSize = isCrit ? '20px' : '14px';
+    el.innerText = isCrit ? "CRIT! +" + val : "+" + val;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 600);
+}
+
 function claimStory() { 
     let totalPartsIdx = ((storyCh - 1) * 10) + (storyPart - 1);
-    gold += (600 + (totalPartsIdx * 50)); 
-    addExp(1200 + (totalPartsIdx * 100));
+    gold += (600 + (totalPartsIdx * 75)); 
+    addExp(1200 + (totalPartsIdx * 150));
     
-    questClicks = 0; // RESET FOR NEXT QUEST
+    questClicks = 0; // RESET counter for next quest
     storyPart++; 
     if(storyPart > 10) { storyPart = 1; storyCh++; } 
     updateUI(); 
 }
 
-// Rest of systems
 function claimDaily() { gold += 500; frags += 1; addExp(1250); dailyClaimed = true; updateUI(); }
 function claimWeekly() { gold += 10000; frags += 10; addExp(5000); weeklyClaimed = true; updateUI(); }
 function buyPower(t, c, p) { if(t === 'gold' && gold >= c) { gold -= c; basePower += p; } if(t === 'frag' && frags >= c) { frags -= c; basePower += p; } updateUI(); }
-function buyAuto() { if(gold >= 10000 && frags >= 20 && !autoActive) { gold -= 10000; frags -= 20; autoActive = true; setInterval(() => handleHit({}), 500); updateUI(); } }
+function buyAuto() { if(gold >= 10000 && frags >= 20 && !autoActive) { gold -= 10000; frags -= 20; autoActive = true; setInterval(() => handleHit(null), 500); updateUI(); } }
 function buyCoupon(n, c, t) { if(gold >= c && stock[t] > 0) { gold -= c; stock[t]--; inv.push(n); updateUI(); } }
 function openModal(id) { document.getElementById(id).style.display='block'; }
 function closeModal(id) { document.getElementById(id).style.display='none'; }
@@ -330,7 +335,7 @@ function renderMilestones() {
     document.getElementById('milestoneList').innerHTML = h;
 }
 function claimM(l) { gold += l*500; frags += l; milestonesClaimed.push(l); updateUI(); }
-function renderInv() { document.getElementById('invList').innerHTML = inv.length ? inv.map(i => `<div class="shop-card"><b>${i}</b></div>`).join('') : "<p style='opacity:0.5; text-align:center; width:100%'>Empty</p>"; }
+function renderInv() { document.getElementById('invList').innerHTML = inv.length ? inv.map(i => `<div class="shop-card"><b>${i}</b></div>`).join('') : "<p style='opacity:0.3; text-align:center; width:100%'>Empty</p>"; }
 
 function save() { localStorage.setItem(SAVE_KEY, JSON.stringify({ totalClicks, questClicks, gold, frags, basePower, level, exp, storyCh, storyPart, inv, dailyClaimed, weeklyClaimed, dailyClicks, weeklyClicks, milestonesClaimed, autoActive, stock, redeemedCodes })); }
 function load() {
@@ -338,7 +343,7 @@ function load() {
     if(s) {
         const d = JSON.parse(s);
         Object.assign(window, d); 
-        if(autoActive) setInterval(() => handleHit({}), 500);
+        if(autoActive) setInterval(() => handleHit(null), 500);
     }
     updateUI();
 }
@@ -357,6 +362,15 @@ setInterval(() => {
     document.getElementById('coupon-timer').innerText = formatTime(nextWeeklyReset - now);
 }, 1000);
 
+function redeemCode() {
+    const input = document.getElementById('code-input');
+    const val = input.value.trim().toUpperCase();
+    if(redeemedCodes.includes(val)) return;
+    if(val === "RELEASE") { gold += 1000; frags += 5; redeemedCodes.push(val); }
+    input.value = ""; updateUI();
+}
+
+// Mobile/iPad touch handling
 document.getElementById('sword').addEventListener('touchstart', (e) => { e.preventDefault(); handleHit(e); }, {passive: false});
 document.getElementById('sword').addEventListener('mousedown', (e) => handleHit(e));
 window.onload = load;

@@ -1,49 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login / Sign Up</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Access</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #0d1117; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #161b22; padding: 2rem; border: 1px solid #30363d; border-radius: 6px; width: 300px; text-align: center; }
+        h1 { font-size: 24px; margin-bottom: 20px; }
+        input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #30363d; background: #0d1117; color: white; border-radius: 6px; box-sizing: border-box; }
+        .btn-primary { background: #238636; color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+        .btn-primary:hover { background: #2ea043; }
+        .toggle { font-size: 12px; margin-top: 15px; color: #8b949e; }
+        a { color: #58a6ff; text-decoration: none; cursor: pointer; }
+        .logout-section { margin-top: 20px; border-top: 1px solid #30363d; padding-top: 10px; display: none; }
+    </style>
+
     <script type="module">
-      // I will give you the Config code for this section in the next step!
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-      // Your web app's Firebase configuration (Paste yours here later)
-      const firebaseConfig = { 
-          apiKey: "YOUR_API_KEY",
-          authDomain: "YOUR_PROJECT.firebaseapp.com",
-          projectId: "YOUR_PROJECT_ID",
-          storageBucket: "YOUR_PROJECT.appspot.com",
-          messagingSenderId: "ID",
-          appId: "APP_ID"
-      };
+        // --- PASTE YOUR FIREBASE CONFIG HERE ---
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "ID",
+            appId: "APP_ID"
+        };
+        // ---------------------------------------
 
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
 
-      // Sign Up Function
-      window.signUp = () => {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
-        createUserWithEmailAndPassword(auth, email, pass)
-          .then(() => { alert("Account Created!"); window.location.href="market.html"; })
-          .catch((error) => alert(error.message));
-      };
+        // SIGN UP
+        window.signUp = () => {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            createUserWithEmailAndPassword(auth, email, pass)
+                .then(() => {
+                    localStorage.setItem("userEmail", email);
+                    alert("Account Created!");
+                    window.location.href = "market.html";
+                })
+                .catch((error) => alert(error.message));
+        };
 
-      // Login Function
-      window.login = () => {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
-        signInWithEmailAndPassword(auth, email, pass)
-          .then(() => { window.location.href="market.html"; })
-          .catch((error) => alert(error.message));
-      };
+        // LOGIN
+        window.login = () => {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            signInWithEmailAndPassword(auth, email, pass)
+                .then(() => {
+                    localStorage.setItem("userEmail", email);
+                    window.location.href = "market.html";
+                })
+                .catch((error) => alert(error.message));
+        };
+
+        // LOGOUT
+        window.logout = () => {
+            signOut(auth).then(() => {
+                localStorage.removeItem("userEmail");
+                alert("Logged out!");
+                location.reload();
+            });
+        };
+
+        // Check if already logged in to show logout button
+        if (localStorage.getItem("userEmail")) {
+            document.getElementById('logoutArea').style.display = "block";
+        }
     </script>
 </head>
-<body style="background:#0d1117; color:white; font-family:sans-serif; text-align:center;">
-    <h2>Account Access</h2>
-    <input type="email" id="email" placeholder="Email"><br><br>
-    <input type="password" id="pass" placeholder="Password"><br><br>
-    <button onclick="login()">Login</button>
-    <button onclick="signUp()">Sign Up</button>
+<body>
+
+<div class="box">
+    <h1 id="header">Sign in</h1>
+    
+    <input type="email" id="email" placeholder="Email address">
+    <input type="password" id="pass" placeholder="Password">
+    
+    <button onclick="login()" class="btn-primary" id="mainBtn">Sign in</button>
+    <button onclick="signUp()" style="background:none; border:1px solid #30363d; color:#8b949e; width:100%; padding:8px; border-radius:6px; cursor:pointer;">Create account</button>
+
+    <div class="toggle">
+        <a href="index.html">← Back to Home</a>
+    </div>
+
+    <div id="logoutArea" class="logout-section">
+        <p style="font-size: 12px;">Logged in as: <br><b id="userDisplay"></b></p>
+        <button onclick="logout()" style="color: #f85149; background: none; border: none; cursor: pointer;">Sign Out</button>
+    </div>
+</div>
+
+<script>
+    // Show email if logged in
+    const user = localStorage.getItem("userEmail");
+    if(user) document.getElementById('userDisplay').innerText = user;
+</script>
+
 </body>
 </html>

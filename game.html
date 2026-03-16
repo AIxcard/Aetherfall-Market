@@ -120,7 +120,7 @@
     <span onclick="closeModal('guide-m')" style="float:right; cursor:pointer; color:red;">[X]</span>
     <h2 style="font-family:'Orbitron'">Nexus Guide</h2>
     <p style="line-height:1.6;">
-        Welcome to the Aetherfall Terminal. Clicks have a 1% chance for Gold and 0.8% for Fragments. Critical hits (10% chance) double your click value. Your damage scales with your <b>Combo</b>: for every 1,500 hits without stopping, you gain +1 Click to your base power. Chapter progression is linear, but requirements scale heavily in later stages. Bronze Coupons offer 5 Baht off, Silver 10 Baht, and Gold 25 Baht.
+        Welcome to the Aetherfall Terminal. Clicks have a 1% chance for Gold and 0.8% for Fragments. Critical hits (10% chance) double your click value. Your damage scales with your <b>Combo</b>: for every 1,500 hits without stopping, you gain +1 Click to your base power. Chapter progression is linear. Bronze Coupons offer 5 Baht off, Silver 10 Baht, and Gold 25 Baht.
     </p>
 </div>
 
@@ -138,7 +138,7 @@
     <h2 style="font-family:'Orbitron'">Fragment Shop</h2>
     <div class="grid-shop">
         <div class="shop-card"><div><b>Lesser Shard (+2)</b><br>A small fragment piece that permanently increases your power by +2.</div><button class="btn-action" onclick="buyPower('frag', 15, 2)">BUY: 15 FRAGS</button></div>
-        <div class="shop-card"><div><b>Stable Shard (+5)</b><br>A solid fragment core that permanently increases your power by +5.</div><button class="btn-action" onclick="buyPower('frag', 40, 5)">BUY: 40 FRAGS</button></div>
+        <div class="shop-card"><div><b>Stable Shard (+5)</b><br>A solid fragment core that permanently increases your power by +5.</div><button class="btn-action" onclick="buyPower('frag', 40, 5) ">BUY: 40 FRAGS</button></div>
         <div class="shop-card"><div><b>Greater Shard (+10)</b><br>A powerful fragment cluster that permanently increases your power by +10.</div><button class="btn-action" onclick="buyPower('frag', 80, 10)">BUY: 80 FRAGS</button></div>
     </div>
 </div>
@@ -192,18 +192,23 @@ function updateUI() {
     document.getElementById('hud-gold').innerText = Math.floor(gold).toLocaleString();
     document.getElementById('hud-frags').innerText = frags.toLocaleString();
     document.getElementById('hud-combo').innerText = combo.toLocaleString();
-    document.getElementById('lvDisplay').innerText = `LV ${level}`;
+
+    // EXP and Level Logic
+    let req = Math.min(50000, 1000 + (Math.pow(level, 2) * 110)); 
+    if(level >= 100) {
+        document.getElementById('lvDisplay').innerText = `LV 100`;
+        document.getElementById('expDisplay').innerText = `MAX LEVEL REACHED`;
+        document.getElementById('levelFill').style.width = "100%";
+    } else {
+        document.getElementById('lvDisplay').innerText = `LV ${level}`;
+        document.getElementById('expDisplay').innerText = `${Math.floor(exp).toLocaleString()} / ${req.toLocaleString()} EXP`;
+        document.getElementById('levelFill').style.width = (exp/req*100) + "%";
+    }
+
+    // Story Mission Logic (Easier Progression)
+    let totalParts = ((storyCh - 1) * 10) + (storyPart - 1);
+    let target = 100 + (totalParts * 150); 
     
-    let req = 1000 + (Math.pow(level, 2) * 110); 
-    document.getElementById('levelFill').style.width = (exp/req*100) + "%";
-    document.getElementById('expDisplay').innerText = `${Math.floor(exp).toLocaleString()} / ${req.toLocaleString()} EXP`;
-
-    let target = 0;
-    if (storyCh <= 2) target = (storyCh * 500) + (storyPart * 100); 
-    else if (storyCh === 3) target = 4000 + (storyPart * 500);
-    else if (storyCh === 4) target = 15000 + (storyPart * 5000);
-    else if (storyCh === 5) target = 80000 + (storyPart * 20000);
-
     let isComplete = (storyCh === 5 && storyPart === 10);
     document.getElementById('st-ch').innerText = isComplete ? "COMPLETED" : `CH ${storyCh}: PART ${storyPart}`;
     let prog = Math.min(100, (clicks/target)*100);
@@ -235,9 +240,11 @@ function handleHit(e) {
     if(Math.random() < 0.01) gold += 5; 
     if(Math.random() < 0.008) frags += 1;
     
-    exp += (0.4 * hit); 
-    let req = 1000 + (Math.pow(level, 2) * 110);
-    if(exp >= req) { exp = 0; level++; }
+    if(level < 100) {
+        exp += (0.4 * hit); 
+        let req = Math.min(50000, 1000 + (Math.pow(level, 2) * 110));
+        if(exp >= req) { exp = 0; level++; }
+    }
 
     const sword = document.getElementById('sword');
     if(isCrit) {

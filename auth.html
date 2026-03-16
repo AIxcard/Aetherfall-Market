@@ -2,34 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Market Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Access | Auth</title>
     <style>
-        body { background: #0d1117; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-card { background: #161b22; padding: 30px; border: 1px solid #30363d; border-radius: 8px; width: 300px; text-align: center; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 6px; border: 1px solid #30363d; background: #0d1117; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; }
+        body { background: #0d1117; color: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: #161b22; padding: 40px; border: 1px solid #30363d; border-radius: 8px; width: 320px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        h2 { margin-bottom: 20px; font-weight: 600; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 6px; border: 1px solid #30363d; background: #0d1117; color: white; box-sizing: border-box; outline: none; }
+        input:focus { border-color: #58a6ff; ring: 1px solid #58a6ff; }
+        button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; transition: background 0.2s; }
         .btn-sign-in { background: #238636; color: white; }
-        .btn-create { background: #21262d; color: #8b949e; border: 1px solid #30363d; }
+        .btn-sign-in:hover { background: #2ea043; }
+        .btn-create { background: #21262d; color: #8b949e; border: 1px solid #30363d; margin-top: 8px; }
+        .btn-create:hover { background: #30363d; color: #c9d1d9; }
+        #status-msg { font-size: 13px; margin-bottom: 15px; min-height: 18px; transition: 0.3s; }
+        .back-link { display: block; margin-top: 20px; color: #58a6ff; text-decoration: none; font-size: 13px; }
+        .back-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <div class="login-card">
         <h2>Market Access</h2>
-        <input type="text" id="u" placeholder="Username">
-        <input type="password" id="p" placeholder="Password">
+        <div id="status-msg"></div>
         
-        <button class="btn-sign-in" onclick="login()">Sign In</button>
-        <button class="btn-create" onclick="signUp()">Create Account</button>
+        <input type="text" id="userInput" placeholder="Username" autocomplete="off">
+        <input type="password" id="passInput" placeholder="Password">
         
-        <p style="font-size: 12px; margin-top: 15px;"><a href="index.html" style="color: #58a6ff; text-decoration: none;">← Back Home</a></p>
+        <button class="btn-sign-in" id="loginBtn">Sign In</button>
+        <button class="btn-create" id="signUpBtn">Create Account</button>
+        
+        <a href="index.html" class="back-link">← Back Home</a>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
-        // Your actual config from the screenshot
+        // Your Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyBVvsUZJlFEMsdjH7FSXxmxCMZgU_zLzBg",
             authDomain: "quickaetherfall.firebaseapp.com",
@@ -42,34 +52,67 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Helper to turn username into email format for Firebase
-        const formatUser = (u) => `${u.trim()}@market.com`;
+        const msg = document.getElementById('status-msg');
+        const uField = document.getElementById('userInput');
+        const pField = document.getElementById('passInput');
 
-        window.signUp = () => {
-            const u = document.getElementById('u').value;
-            const p = document.getElementById('p').value;
-            if(!u || !p) return alert("Enter username and password");
-
-            createUserWithEmailAndPassword(auth, formatUser(u), p)
-                .then(() => {
-                    localStorage.setItem("username", u);
-                    alert("Welcome! Account created.");
-                    window.location.href = "market.html";
-                })
-                .catch(e => alert("Error: " + e.message));
+        // Helper to show messages clearly
+        const notify = (text, color) => {
+            msg.innerText = text;
+            msg.style.color = color;
         };
 
-        window.login = () => {
-            const u = document.getElementById('u').value;
-            const p = document.getElementById('p').value;
+        // Firebase requires email, so we append a fake domain to the username
+        const toEmail = (name) => `${name.trim().toLowerCase()}@market.com`;
 
-            signInWithEmailAndPassword(auth, formatUser(u), p)
+        // SIGN UP LOGIC
+        document.getElementById('signUpBtn').addEventListener('click', () => {
+            const user = uField.value;
+            const pass = pField.value;
+
+            if (!user || !pass) {
+                notify("Please fill in both fields.", "#ff7b72");
+                return;
+            }
+            if (pass.length < 6) {
+                notify("Password must be at least 6 characters.", "#ff7b72");
+                return;
+            }
+
+            notify("Creating account...", "#58a6ff");
+
+            createUserWithEmailAndPassword(auth, toEmail(user), pass)
+                .then((userCredential) => {
+                    localStorage.setItem("market_user", user);
+                    notify("Account created! Entering market...", "#3fb950");
+                    setTimeout(() => { window.location.href = "market.html"; }, 1500);
+                })
+                .catch((error) => {
+                    notify(error.message, "#ff7b72");
+                });
+        });
+
+        // LOGIN LOGIC
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const user = uField.value;
+            const pass = pField.value;
+
+            if (!user || !pass) {
+                notify("Enter username and password.", "#ff7b72");
+                return;
+            }
+
+            notify("Verifying...", "#58a6ff");
+
+            signInWithEmailAndPassword(auth, toEmail(user), pass)
                 .then(() => {
-                    localStorage.setItem("username", u);
+                    localStorage.setItem("market_user", user);
                     window.location.href = "market.html";
                 })
-                .catch(e => alert("Login failed. Check your details."));
-        };
+                .catch((error) => {
+                    notify("Invalid username or password.", "#ff7b72");
+                });
+        });
     </script>
 </body>
 </html>

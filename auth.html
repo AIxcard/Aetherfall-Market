@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login / Sign Up</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #0d1117; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #161b22; padding: 2rem; border: 1px solid #30363d; border-radius: 6px; width: 300px; }
+        h1 { font-size: 24px; text-align: center; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 14px; }
+        input { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #30363d; background: #0d1117; color: white; border-radius: 6px; box-sizing: border-box; }
+        .btn-green { background: #238636; color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-github { background: #21262d; border: 1px solid #f0f6fc1a; color: white; margin-top: 10px; width: 100%; padding: 10px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .toggle { font-size: 12px; text-align: center; margin-top: 15px; color: #8b949e; }
+        a { color: #58a6ff; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h1 id="header">Sign in</h1>
+    
+    <form action="/login" method="POST">
+        <label>Username or email address</label>
+        <input type="text" name="username" required>
+        
+        <label>Password</label>
+        <input type="password" name="password" required>
+        
+        <button type="submit" class="btn-green" id="mainBtn">Sign in</button>
+    </form>
+
+    <button class="btn-github" onclick="window.location.href='/auth/github'">
+        Sign in with GitHub
+    </button>
+
+    <div class="toggle">
+        <span id="footerText">New here?</span> 
+        <a href="javascript:void(0)" onclick="toggleForm()" id="link">Create an account</a>
+    </div>
+</div>
+
+<script>
+    let isLogin = true;
+    function toggleForm() {
+        isLogin = !isLogin;
+        document.getElementById('header').innerText = isLogin ? 'Sign in' : 'Sign up';
+        document.getElementById('mainBtn').innerText = isLogin ? 'Sign in' : 'Create account';
+        document.getElementById('footerText').innerText = isLogin ? 'New here?' : 'Have an account?';
+        document.getElementById('link').innerText = isLogin ? 'Create an account' : 'Sign in';
+    }
+</script>
+
+</body>
+</html>

@@ -6,13 +6,13 @@
     <style>
         :root {
             --bg: #010206; --panel: rgba(2, 4, 12, 0.98); --border: #1e40af;
-            --accent: #c084fc; --gold: #fbbf24; --frag: #d8b4fe; --combo: #06b6d4;
-            --text: #f8fafc; --card-bg: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            --accent: #c084fc; --gold: #fbbf24; --text: #f8fafc;
+            --card-bg: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
             --grad-action: linear-gradient(180deg, #4f46e5 0%, #3730a3 100%);
         }
 
         * { margin:0; padding:0; box-sizing:border-box; scroll-behavior: smooth; }
-        body { background: var(--bg); color: var(--text); font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); font-family: 'Rajdhani', sans-serif; overflow-x: hidden; transition: background 0.5s ease; }
 
         .stars {
             position:fixed; width:100%; height:200%; top:-100%; left:0;
@@ -26,81 +26,56 @@
         .singularity { background: radial-gradient(circle at center,#581c87 0%,#000000 70%); }
         .abyss { background:#000000; }
 
-        .hero {
-            height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-            background: linear-gradient(to bottom, rgba(124, 58, 237, 0.1), transparent);
-        }
-        .hero h1 {
-            font-family: 'Orbitron', sans-serif; font-size: 45px; letter-spacing: 8px;
-            background: linear-gradient(to bottom, #fff 20%, var(--accent) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        .hero { height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .hero h1 { font-family: 'Orbitron', sans-serif; font-size: 45px; letter-spacing: 8px; background: linear-gradient(to bottom, #fff 20%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .category-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 12px; max-width: 950px; margin: -20px auto 40px auto; padding: 0 20px;
-        }
-        .cat-card {
-            background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 15px;
-            text-align: center; text-decoration: none; color: var(--text); font-family: 'Orbitron';
-            font-size: 10px; border-radius: 4px; transition: 0.2s; text-transform: uppercase;
-        }
+        .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; max-width: 950px; margin: -20px auto 40px auto; padding: 0 20px; }
+        .cat-card { background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 15px; text-align: center; text-decoration: none; color: var(--text); font-family: 'Orbitron'; font-size: 10px; border-radius: 4px; transition: 0.2s; text-transform: uppercase; }
         .cat-card:hover { border-color: var(--accent); background: rgba(124, 58, 237, 0.1); transform: translateY(-3px); }
 
         section { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
         h2 { font-family: 'Orbitron'; font-size: 18px; color: var(--accent); border-left: 4px solid var(--accent); padding-left: 15px; margin-bottom: 25px; text-transform: uppercase; }
 
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .shop-card {
-            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); padding: 18px;
-            border-radius: 4px; position: relative; border-left: 3px solid var(--border);
-        }
+        .shop-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 4px; border-left: 3px solid var(--border); }
         .shop-card b { font-family: 'Orbitron'; font-size: 13px; color: #fff; display: block; margin-bottom: 4px; }
         .shop-card p { font-size: 12px; opacity: 0.7; margin-bottom: 12px; }
         .price-tag { color: var(--gold); font-weight: bold; font-family: 'Orbitron'; font-size: 11px; }
-        .stock-tag { color: var(--combo); font-size: 9px; float: right; }
+        .stock-tag { color: #06b6d4; font-size: 9px; float: right; }
 
-        .btn-action {
-            background: var(--grad-action); border: none; color: white; padding: 10px;
-            font-family: 'Orbitron'; font-size: 11px; cursor: pointer; border-radius: 2px;
-            margin-top: 12px; text-align: center; text-decoration: none; display: block; width: 100%;
-        }
+        .btn-action { background: var(--grad-action); border: none; color: white; padding: 10px; font-family: 'Orbitron'; font-size: 11px; cursor: pointer; border-radius: 2px; margin-top: 12px; text-align: center; text-decoration: none; display: block; width: 100%; }
 
-        #orderModal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 10000; backdrop-filter: blur(8px);
-        }
-        .modal-content {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: var(--panel); border: 2px solid var(--accent); padding: 40px;
-            width: 90%; max-width: 500px; text-align: center; border-radius: 8px;
-        }
-        .modal-content h3 { font-family: 'Orbitron'; color: var(--accent); margin-bottom: 15px; }
+        #orderModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 10000; backdrop-filter: blur(10px); }
+        .modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--panel); border: 2px solid var(--accent); padding: 50px; width: 90%; max-width: 550px; text-align: center; border-radius: 4px; }
 
         .info-card { background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 18px; margin-bottom: 12px; border-radius: 4px; }
-        details { margin-bottom: 15px; background: rgba(255,255,255,0.02); border-radius: 4px; overflow: hidden; }
+        details { margin-bottom: 15px; background: rgba(255,255,255,0.02); border-radius: 4px; }
         summary { font-family: 'Orbitron'; font-size: 12px; color: var(--accent); cursor: pointer; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); }
 
-        .settingsBtn { position:fixed; bottom:20px; right:20px; font-size:22px; background:var(--panel); border:1px solid var(--border); border-radius:12px; width:45px; height:45px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:999; }
+        .settingsBtn { position:fixed; bottom:20px; right:20px; background:var(--panel); border:1px solid var(--border); border-radius:12px; width:45px; height:45px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:999; }
         .settingsPanel { position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:90%; max-width:350px; background:var(--panel); border:1px solid var(--accent); padding:25px; display:none; z-index:2000; border-radius:4px; }
+        .setting-row { margin-bottom: 20px; }
+        .setting-row label { font-family: 'Orbitron'; font-size: 10px; color: var(--accent); display: block; margin-bottom: 8px; }
+        .theme-selector { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; }
+        .arrow-btn { cursor: pointer; color: var(--accent); font-weight: bold; }
         footer { text-align:center; padding:50px; opacity: 0.3; font-family: 'Orbitron'; font-size: 9px; }
     </style>
 </head>
 
 <body>
-<div class="stars"></div>
+<div class="stars" id="starField"></div>
 
 <div id="orderModal">
     <div class="modal-content">
-        <h3>ORDER INITIALIZED</h3>
-        <p style="margin-bottom:20px; line-height:1.6;">Your email has been prepared. Please ensure you hit 'Send' in your mail app.<br><br><b>Status: Pending Response</b><br>Please wait for the seller to respond.</p>
-        <button class="btn-action" onclick="closeModal()">CLOSE MESSAGE</button>
+        <h3 style="font-family:Orbitron; color:var(--accent); margin-bottom:15px;">ORDER INITIALIZED</h3>
+        <p>Terminal has prepared your request. Check your email app to hit send.<br><br><b>Status: Awaiting Response</b><br>Please wait for the seller to respond.</p>
+        <button class="btn-action" style="margin-top:20px;" onclick="closeModal()">CLOSE</button>
     </div>
 </div>
 
 <div class="hero">
     <h1>AETHERFALL MARKET</h1>
-    <p style="opacity:0.5; letter-spacing: 2px; font-size: 10px; margin-top:5px;">TERMINAL v3.8</p>
+    <p style="opacity:0.5; letter-spacing: 2px; font-size: 10px; margin-top:5px;">TERMINAL v4.0</p>
 </div>
 
 <div class="category-grid">
@@ -116,9 +91,6 @@
     <h2>Snacks</h2>
     <div class="product-grid">
         <div class="shop-card"><b>BENG BENG</b><p>Chocolate caramel wafer snack.</p><div><span class="price-tag">9 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">10</span></span></div><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-        <div class="shop-card"><b>SKITTLES</b><p>Fruit flavor chewy candy.</p><div><span class="price-tag">23 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">3</span></span></div><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-        <div class="shop-card"><b>CHIPS</b><p>Salty potato chips.</p><div><span class="price-tag">16 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">10</span></span></div><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-        <div class="shop-card"><b>CHUPPA LOLLIPOP</b><p>Assorted fruit lollipops.</p><div><span class="price-tag">8 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">10</span></span></div><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
     </div>
 </section>
 
@@ -171,6 +143,14 @@
     </details>
 
     <details>
+        <summary>ANIME SPIRITS</summary>
+        <div class="product-grid" style="padding:15px">
+            <div class="shop-card"><b>LIMITED ITEMS</b><p>All in-game limiteds.</p><span class="price-tag">VARIES</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
+            <div class="shop-card"><b>SOUL SWORD FS SPEC</b><span class="price-tag">100 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
+        </div>
+    </details>
+
+    <details>
         <summary>ANIME PARADOX</summary>
         <div class="product-grid" style="padding:15px">
             <div class="shop-card"><b>STORY STAGE</b><span class="price-tag">5 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
@@ -214,23 +194,45 @@
 
 <div class="settingsBtn" onclick="openSettings()">⚙</div>
 <div class="settingsPanel" id="settings">
-    <h3 style="font-family:'Orbitron'; text-align:center; margin-bottom:15px;">TERMINAL CONTROLS</h3>
-    <input type="range" min="0" max="100" value="50" id="vol" style="width:100%">
-    <button class="btn-action" onclick="nextBG()">ROTATE THEME</button>
-    <button class="btn-action" style="background:#ef4444" onclick="closeSettings()">CLOSE</button>
+    <h3 style="font-family:'Orbitron'; text-align:center; margin-bottom:20px;">SETTINGS</h3>
+    
+    <div class="setting-row">
+        <label>MUSIC VOLUME</label>
+        <input type="range" min="0" max="100" value="50" id="vol" style="width:100%;">
+    </div>
+
+    <div class="setting-row">
+        <label>VISUAL THEME</label>
+        <div class="theme-selector">
+            <div class="arrow-btn" onclick="prevBG()">◀</div>
+            <div id="bgName" style="font-family:Orbitron; font-size:10px;">STELLAR</div>
+            <div class="arrow-btn" onclick="nextBG()">▶</div>
+        </div>
+    </div>
+
+    <button class="btn-action" style="background:#ef4444; margin-top:10px;" onclick="closeSettings()">CLOSE</button>
 </div>
 
 <script>
-    const music=document.getElementById("music");
-    document.addEventListener("click", () => { music.volume=0.5; music.play(); }, {once:true});
-    document.getElementById("vol").oninput = (e) => music.volume = e.target.value/100;
+    const music = document.getElementById("music");
+    const volInput = document.getElementById("vol");
+
+    // Persist Volume
+    let savedVol = localStorage.getItem("marketVol");
+    if(savedVol) { music.volume = savedVol; volInput.value = savedVol * 100; }
+    
+    document.addEventListener("click", () => { music.play(); }, {once:true});
+    volInput.oninput = (e) => { 
+        let v = e.target.value/100;
+        music.volume = v;
+        localStorage.setItem("marketVol", v);
+    };
 
     function handleOrder(btn) {
         const card = btn.closest('.shop-card');
         const name = card.querySelector('b').innerText;
         const stock = card.querySelector('.stock-num');
         if(stock && parseInt(stock.innerText) > 0) stock.innerText = parseInt(stock.innerText) - 1;
-        
         window.location.href = `mailto:tp.buno@gmail.com?subject=Aetherfall Market Order: ${name}`;
         document.getElementById('orderModal').style.display = 'block';
     }
@@ -240,12 +242,20 @@
     function closeSettings(){ document.getElementById("settings").style.display="none" }
 
     const backgrounds=["stellar","nebula","singularity","abyss"];
-    let currentBG=0;
+    const bgDisplayNames=["STELLAR","NEBULA STORM","SINGULARITY","ABYSS"];
+    let currentBG = parseInt(localStorage.getItem("marketBG")) || 0;
+
     function applyBG(){
         document.body.className = backgrounds[currentBG] === "stellar" ? "" : backgrounds[currentBG];
-        document.querySelector(".stars").style.display = backgrounds[currentBG] === "stellar" ? "block" : "none";
+        document.getElementById("starField").style.display = backgrounds[currentBG] === "stellar" ? "block" : "none";
+        document.getElementById("bgName").innerText = bgDisplayNames[currentBG];
+        localStorage.setItem("marketBG", currentBG);
     }
+
     function nextBG(){ currentBG = (currentBG + 1) % backgrounds.length; applyBG(); }
+    function prevBG(){ currentBG = (currentBG - 1 + backgrounds.length) % backgrounds.length; applyBG(); }
+
+    applyBG();
 </script>
 </body>
 </html>

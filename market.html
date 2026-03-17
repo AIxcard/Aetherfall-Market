@@ -6,13 +6,19 @@
     <style>
         :root {
             --bg: #010206; --panel: rgba(2, 4, 12, 0.98); --border: #1e40af;
-            --accent: #c084fc; --gold: #fbbf24; --text: #f8fafc;
-            --card-bg: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            --accent: #c084fc; --gold: #fbbf24; --frag: #d8b4fe; --combo: #06b6d4;
+            --text: #f8fafc; --card-bg: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
             --grad-action: linear-gradient(180deg, #4f46e5 0%, #3730a3 100%);
         }
 
         * { margin:0; padding:0; box-sizing:border-box; scroll-behavior: smooth; }
-        body { background: var(--bg); color: var(--text); font-family: 'Rajdhani', sans-serif; overflow-x: hidden; transition: background 0.5s ease; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
 
         .stars {
             position:fixed; width:100%; height:200%; top:-100%; left:0;
@@ -26,56 +32,121 @@
         .singularity { background: radial-gradient(circle at center,#581c87 0%,#000000 70%); }
         .abyss { background:#000000; }
 
-        .hero { height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .hero h1 { font-family: 'Orbitron', sans-serif; font-size: 45px; letter-spacing: 8px; background: linear-gradient(to bottom, #fff 20%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero {
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(124, 58, 237, 0.1), transparent);
+        }
 
-        .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; max-width: 950px; margin: -20px auto 40px auto; padding: 0 20px; }
-        .cat-card { background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); padding: 15px; text-align: center; text-decoration: none; color: var(--text); font-family: 'Orbitron'; font-size: 10px; border-radius: 4px; transition: 0.2s; text-transform: uppercase; }
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 45px;
+            letter-spacing: 8px;
+            background: linear-gradient(to bottom, #fff 20%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            max-width: 950px;
+            margin: -20px auto 40px auto;
+            padding: 0 20px;
+        }
+
+        .cat-card {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border);
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text);
+            font-family: 'Orbitron';
+            font-size: 10px;
+            border-radius: 4px;
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+
         .cat-card:hover { border-color: var(--accent); background: rgba(124, 58, 237, 0.1); transform: translateY(-3px); }
 
         section { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
-        h2 { font-family: 'Orbitron'; font-size: 18px; color: var(--accent); border-left: 4px solid var(--accent); padding-left: 15px; margin-bottom: 25px; text-transform: uppercase; }
+        
+        h2 {
+            font-family: 'Orbitron'; font-size: 18px; color: var(--accent);
+            border-left: 4px solid var(--accent); padding-left: 15px; margin-bottom: 25px;
+            text-transform: uppercase;
+        }
 
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .shop-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 4px; border-left: 3px solid var(--border); }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .shop-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 18px;
+            border-radius: 4px;
+            position: relative;
+            border-left: 3px solid var(--border);
+        }
+
         .shop-card b { font-family: 'Orbitron'; font-size: 13px; color: #fff; display: block; margin-bottom: 4px; }
         .shop-card p { font-size: 12px; opacity: 0.7; margin-bottom: 12px; }
+        
         .price-tag { color: var(--gold); font-weight: bold; font-family: 'Orbitron'; font-size: 11px; }
-        .stock-tag { color: #06b6d4; font-size: 9px; float: right; }
+        .stock-tag { color: var(--combo); font-size: 9px; float: right; }
 
-        .btn-action { background: var(--grad-action); border: none; color: white; padding: 10px; font-family: 'Orbitron'; font-size: 11px; cursor: pointer; border-radius: 2px; margin-top: 12px; text-align: center; text-decoration: none; display: block; width: 100%; }
+        .btn-action {
+            background: var(--grad-action); border: none; color: white; padding: 8px;
+            font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 2px;
+            margin-top: 12px; text-align: center; text-decoration: none; display: block;
+            letter-spacing: 1px;
+        }
 
-        #orderModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 10000; backdrop-filter: blur(10px); }
-        .modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--panel); border: 2px solid var(--accent); padding: 50px; width: 90%; max-width: 550px; text-align: center; border-radius: 4px; }
+        .info-card {
+            background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+            padding: 18px; margin-bottom: 12px; border-radius: 4px;
+        }
+        .info-card h3 { font-family: 'Orbitron'; font-size: 12px; color: var(--combo); margin-bottom: 8px; }
 
-        .info-card { background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 18px; margin-bottom: 12px; border-radius: 4px; }
-        details { margin-bottom: 15px; background: rgba(255,255,255,0.02); border-radius: 4px; }
+        /* Review UI specific style */
+        .review-panel {
+            background: linear-gradient(90deg, rgba(124, 58, 237, 0.1), transparent);
+            border: 1px solid var(--accent);
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        details { margin-bottom: 15px; background: rgba(255,255,255,0.02); border-radius: 4px; overflow: hidden; }
         summary { font-family: 'Orbitron'; font-size: 12px; color: var(--accent); cursor: pointer; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); }
 
-        .settingsBtn { position:fixed; bottom:20px; right:20px; background:var(--panel); border:1px solid var(--border); border-radius:12px; width:45px; height:45px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:999; }
+        .settingsBtn { position:fixed; bottom:20px; right:20px; font-size:22px; background:var(--panel); border:1px solid var(--border); border-radius:12px; width:45px; height:45px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:999; }
         .settingsPanel { position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:90%; max-width:350px; background:var(--panel); border:1px solid var(--accent); padding:25px; display:none; z-index:2000; border-radius:4px; }
-        .setting-row { margin-bottom: 20px; }
-        .setting-row label { font-family: 'Orbitron'; font-size: 10px; color: var(--accent); display: block; margin-bottom: 8px; }
-        .theme-selector { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; }
-        .arrow-btn { cursor: pointer; color: var(--accent); font-weight: bold; }
-        footer { text-align:center; padding:50px; opacity: 0.3; font-family: 'Orbitron'; font-size: 9px; }
+        
+        footer { text-align:center; padding:50px; opacity: 0.3; font-family: 'Orbitron'; font-size: 9px; letter-spacing: 2px; }
     </style>
 </head>
 
 <body>
-<div class="stars" id="starField"></div>
 
-<div id="orderModal">
-    <div class="modal-content">
-        <h3 style="font-family:Orbitron; color:var(--accent); margin-bottom:15px;">ORDER INITIALIZED</h3>
-        <p>Terminal has prepared your request. Check your email app to hit send.<br><br><b>Status: Awaiting Response</b><br>Please wait for the seller to respond.</p>
-        <button class="btn-action" style="margin-top:20px;" onclick="closeModal()">CLOSE</button>
-    </div>
-</div>
+<div class="stars"></div>
 
 <div class="hero">
     <h1>AETHERFALL MARKET</h1>
-    <p style="opacity:0.5; letter-spacing: 2px; font-size: 10px; margin-top:5px;">TERMINAL v4.0</p>
+    <p style="opacity:0.5; letter-spacing: 2px; font-size: 10px; margin-top:5px;">TERMINAL v3.5</p>
 </div>
 
 <div class="category-grid">
@@ -83,14 +154,31 @@
     <a href="#games" class="cat-card">Roblox Services</a>
     <a href="#purchase-info" class="cat-card">Purchase Info</a>
     <a href="#qa" class="cat-card">Q&A</a>
+    <a href="reviews.html" class="cat-card">Reviews</a>
 </div>
 
-<audio id="music" loop><source src="Petals Beneath the Ice (Anime Vanguards OST).mp3" type="audio/mpeg"></audio>
+<section id="reviews-ui">
+    <div class="review-panel">
+        <div>
+            <h3 style="font-family:'Orbitron'; font-size:14px; color:#fff;">CUSTOMER SATISFACTION</h3>
+            <p style="font-size:12px; opacity:0.7;">Check out our verified trade history and feedback.</p>
+        </div>
+        <a href="reviews.html" class="btn-action" style="margin-top:0; padding: 10px 25px;">VIEW REVIEWS</a>
+    </div>
+</section>
+
+<audio id="music" loop>
+    <source src="Petals Beneath the Ice (Anime Vanguards OST).mp3" type="audio/mpeg">
+</audio>
 
 <section id="snacks">
     <h2>Snacks</h2>
     <div class="product-grid">
-        <div class="shop-card"><b>BENG BENG</b><p>Chocolate caramel wafer snack.</p><div><span class="price-tag">9 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">10</span></span></div><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
+        <div class="shop-card">
+            <b>BENG BENG</b>
+            <p>Chocolate caramel wafer snack.</p>
+            <div><span class="price-tag">9 BAHT</span><span class="stock-tag">STOCK: 10</span></div>
+        </div>
     </div>
 </section>
 
@@ -100,75 +188,54 @@
     <details>
         <summary>ANIME VANGUARDS</summary>
         <div class="product-grid" style="padding:15px">
-            <div class="shop-card"><b>STORY STAGE</b><span class="price-tag">5 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>CHALLENGE STAGE</b><span class="price-tag">10 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>RAID STAGE</b><span class="price-tag">15 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>30 MIN CARRY</b><span class="price-tag">30 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>1 HOUR CARRY</b><span class="price-tag">50 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>5 HOUR CARRY</b><span class="price-tag">200 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>10 HOUR CARRY</b><span class="price-tag">350 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>24 HOUR CARRY</b><span class="price-tag">600 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>WOU</b><span class="price-tag">25 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">10</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>DIO</b><span class="price-tag">50 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">6</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>SHINY DIO</b><span class="price-tag">100 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">5</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-        </div>
-    </details>
-
-    <details>
-        <summary>VERSE PIECE</summary>
-        <div class="product-grid" style="padding:15px">
-            <div class="shop-card"><b>2X DROP GP</b><span class="price-tag">230 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">5</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>UNLIMITED BAG GP</b><span class="price-tag">100 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">4</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>2X DROP LUCK GP</b><span class="price-tag">50 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">2</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>AINZ SETS</b><span class="price-tag">10 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">80</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>HOMURA SETS</b><span class="price-tag">8 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">5</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>MADOKA SETS</b><span class="price-tag">8 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">2</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
+            <div class="shop-card"><b>STORY STAGE</b><span class="price-tag">5 BAHT</span></div>
+            <div class="shop-card"><b>CHALLENGE STAGE</b><span class="price-tag">10 BAHT</span></div>
+            <div class="shop-card"><b>RAID STAGE</b><span class="price-tag">15 BAHT</span></div>
+            <div class="shop-card"><b>30 MIN CARRY</b><span class="price-tag">30 BAHT</span></div>
+            <div class="shop-card"><b>1 HOUR CARRY</b><span class="price-tag">50 BAHT</span></div>
+            <div class="shop-card"><b>5 HOUR CARRY</b><span class="price-tag">200 BAHT</span></div>
+            <div class="shop-card"><b>10 HOUR CARRY</b><span class="price-tag">350 BAHT</span></div>
+            <div class="shop-card"><b>24 HOUR CARRY</b><span class="price-tag">600 BAHT</span></div>
+            <div class="shop-card"><b>WOU</b><span class="price-tag">25 BAHT</span><span class="stock-tag">STOCK: 10</span></div>
+            <div class="shop-card"><b>DIO</b><span class="price-tag">50 BAHT</span><span class="stock-tag">STOCK: 6</span></div>
+            <div class="shop-card"><b>SHINY DIO</b><span class="price-tag">100 BAHT</span><span class="stock-tag">STOCK: 5</span></div>
         </div>
     </details>
 
     <details>
         <summary>FLEE THE FACILITY</summary>
         <div class="product-grid" style="padding:15px">
-            <div class="shop-card"><b>ANCIENT TRIDENT</b><span class="price-tag">145 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">1</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>ANCIENT PORTAL</b><span class="price-tag">135 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">1</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>CHROMATIC PHOENIX</b><span class="price-tag">130 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">1</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>RED GUARDIAN</b><span class="price-tag">120 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">1</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>DARK HARVEST</b><span class="price-tag">110 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">1</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>NUCLEAR WASTE</b><span class="price-tag">60 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">1</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>S’MORES</b><span class="price-tag">60 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">1</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>GOLDEN</b><span class="price-tag">60 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">1</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>LUNAR WITCH BROOM</b><span class="price-tag">130 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">1</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>ENCHANTED CIRCUS</b><span class="price-tag">130 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">1</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
+            <div class="shop-card"><b>NUCLEAR WASTE</b><span class="price-tag">60 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>S’MORES</b><span class="price-tag">60 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>GOLDEN</b><span class="price-tag">60 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>ANCIENT TRIDENT</b><span class="price-tag">145 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>ANCIENT PORTAL</b><span class="price-tag">135 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>LUNAR WITCH BROOM</b><span class="price-tag">130 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>CURSED CIRCUS TENT</b><span class="price-tag">130 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>ENCHANTED CIRCUS TENT</b><span class="price-tag">130 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>CHROMATIC PHOENIX</b><span class="price-tag">130 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            
+            <div style="grid-column: 1 / -1; margin: 10px 0; color: var(--accent); font-family: 'Orbitron'; font-size: 11px;">GEMSTONES</div>
+            
+            <div class="shop-card"><b>RADIANT SHELL</b><span class="price-tag">110 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>ANCIENT KEY</b><span class="price-tag">110 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>LUNAR WITCH HAT</b><span class="price-tag">125 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>CURSED JESTER HAT</b><span class="price-tag">120 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>ENCHANTED JESTER HAT</b><span class="price-tag">120 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>CHROMATIC SPARK</b><span class="price-tag">120 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
+            <div class="shop-card"><b>SUNRISE</b><span class="price-tag">40 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
         </div>
     </details>
 
     <details>
-        <summary>ANIME SPIRITS</summary>
+        <summary>VERSE PIECE</summary>
         <div class="product-grid" style="padding:15px">
-            <div class="shop-card"><b>LIMITED ITEMS</b><p>All in-game limiteds.</p><span class="price-tag">VARIES</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>SOUL SWORD FS SPEC</b><span class="price-tag">100 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-        </div>
-    </details>
-
-    <details>
-        <summary>ANIME PARADOX</summary>
-        <div class="product-grid" style="padding:15px">
-            <div class="shop-card"><b>STORY STAGE</b><span class="price-tag">5 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>RAID STAGE</b><span class="price-tag">15 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>30 MIN CARRY</b><span class="price-tag">30 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>1 HOUR CARRY</b><span class="price-tag">50 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>SUKUNA PORTAL CARRY</b><span class="price-tag">120 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">5</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>GOJO PORTAL CARRY</b><span class="price-tag">100 BAHT</span><span class="stock-tag">STOCK: <span class="stock-num">3</span></span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-        </div>
-    </details>
-
-    <details>
-        <summary>99 NIGHTS IN THE FOREST</summary>
-        <div class="product-grid" style="padding:15px">
-            <div class="shop-card"><b>100 DAYS CARRY</b><span class="price-tag">32 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>250 DAYS CARRY</b><span class="price-tag">60 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>500 DAYS CARRY</b><span class="price-tag">100 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
-            <div class="shop-card"><b>1K DAYS CARRY</b><span class="price-tag">249 BAHT</span><button class="btn-action" onclick="handleOrder(this)">ORDER</button></div>
+            <div class="shop-card"><b>2X DROP GP</b><span class="price-tag">230 BAHT</span><span class="stock-tag">STOCK: 5</span></div>
+            <div class="shop-card"><b>UNLIMITED BAG GP</b><span class="price-tag">100 BAHT</span><span class="stock-tag">STOCK: 4</span></div>
+            <div class="shop-card"><b>2X DROP LUCK GP</b><span class="price-tag">50 BAHT</span><span class="stock-tag">STOCK: 2</span></div>
+            <div class="shop-card"><b>AINZ SETS</b><span class="price-tag">10 BAHT</span><span class="stock-tag">STOCK: 80</span></div>
+            <div class="shop-card"><b>HOMURA SETS</b><span class="price-tag">8 BAHT</span><span class="stock-tag">STOCK: 5</span></div>
+            <div class="shop-card"><b>MADOKA SETS</b><span class="price-tag">8 BAHT</span><span class="stock-tag">STOCK: 2</span></div>
         </div>
     </details>
 </section>
@@ -176,86 +243,60 @@
 <section id="purchase-info">
     <h2>Purchase Information</h2>
     <div class="info-card">
-        <p>Contact the seller via Google Chat. Once verified, you will be instructed to add the Roblox account <b>Tpbuno</b> to receive your items or start the service.</p>
+        <h3>How to Order</h3>
+        <p>To order any items, contact the seller via <b>Google Chat (tp.buno@gmail.com)</b>. Mention the items you want, and once payment is confirmed, we will coordinate the trade in-game via account <b>Tpbuno</b>.</p>
     </div>
 </section>
 
-<section id="qa">
-    <h2>Q&A</h2>
-    <div class="info-card">
-        <h3>Refunds?</h3>
-        <p>Issued only if a service cannot be completed. Snacks are non-refundable.</p>
-    </div>
-    <div class="info-card">
-        <h3>Delivery?</h3>
-        <p>Account details or item trade instructions are sent via Google Chat after confirmation.</p>
-    </div>
-</section>
+<footer>AETHERFALL MARKET © 2026</footer>
 
 <div class="settingsBtn" onclick="openSettings()">⚙</div>
+
 <div class="settingsPanel" id="settings">
-    <h3 style="font-family:'Orbitron'; text-align:center; margin-bottom:20px;">SETTINGS</h3>
+    <h3 style="font-family:'Orbitron'; font-size: 14px; text-align:center; margin-bottom:15px;">TERMINAL SETTINGS</h3>
+    <p style="font-size:10px; color:var(--accent);">AUDIO VOLUME</p>
+    <input type="range" min="0" max="100" value="50" id="vol">
     
-    <div class="setting-row">
-        <label>MUSIC VOLUME</label>
-        <input type="range" min="0" max="100" value="50" id="vol" style="width:100%;">
+    <p style="font-size:10px; color:var(--accent); margin-top:10px;">VISUAL THEME</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+        <button class="btn-action" style="margin:0; padding:5px 15px;" onclick="prevBG()">◀</button>
+        <div id="bgName" style="color:white; font-family:'Orbitron'; font-size:10px;">STELLAR</div>
+        <button class="btn-action" style="margin:0; padding:5px 15px;" onclick="nextBG()">▶</button>
     </div>
-
-    <div class="setting-row">
-        <label>VISUAL THEME</label>
-        <div class="theme-selector">
-            <div class="arrow-btn" onclick="prevBG()">◀</div>
-            <div id="bgName" style="font-family:Orbitron; font-size:10px;">STELLAR</div>
-            <div class="arrow-btn" onclick="nextBG()">▶</div>
-        </div>
-    </div>
-
-    <button class="btn-action" style="background:#ef4444; margin-top:10px;" onclick="closeSettings()">CLOSE</button>
+    <button class="btn-action" style="width:100%; margin-top:20px; background:#ef4444;" onclick="closeSettings()">CLOSE</button>
 </div>
 
 <script>
-    const music = document.getElementById("music");
-    const volInput = document.getElementById("vol");
+    const music=document.getElementById("music")
+    document.addEventListener("click",function(){
+        music.volume=0.5
+        music.play()
+    },{once:true})
 
-    // Persist Volume
-    let savedVol = localStorage.getItem("marketVol");
-    if(savedVol) { music.volume = savedVol; volInput.value = savedVol * 100; }
-    
-    document.addEventListener("click", () => { music.play(); }, {once:true});
-    volInput.oninput = (e) => { 
-        let v = e.target.value/100;
-        music.volume = v;
-        localStorage.setItem("marketVol", v);
-    };
+    document.getElementById("vol").addEventListener("input",function(){ music.volume=this.value/100 })
 
-    function handleOrder(btn) {
-        const card = btn.closest('.shop-card');
-        const name = card.querySelector('b').innerText;
-        const stock = card.querySelector('.stock-num');
-        if(stock && parseInt(stock.innerText) > 0) stock.innerText = parseInt(stock.innerText) - 1;
-        window.location.href = `mailto:tp.buno@gmail.com?subject=Aetherfall Market Order: ${name}`;
-        document.getElementById('orderModal').style.display = 'block';
-    }
-
-    function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
     function openSettings(){ document.getElementById("settings").style.display="block" }
     function closeSettings(){ document.getElementById("settings").style.display="none" }
 
-    const backgrounds=["stellar","nebula","singularity","abyss"];
-    const bgDisplayNames=["STELLAR","NEBULA STORM","SINGULARITY","ABYSS"];
-    let currentBG = parseInt(localStorage.getItem("marketBG")) || 0;
+    const backgrounds=["stellar","nebula","singularity","abyss"]
+    let currentBG=0
 
     function applyBG(){
-        document.body.className = backgrounds[currentBG] === "stellar" ? "" : backgrounds[currentBG];
-        document.getElementById("starField").style.display = backgrounds[currentBG] === "stellar" ? "block" : "none";
-        document.getElementById("bgName").innerText = bgDisplayNames[currentBG];
-        localStorage.setItem("marketBG", currentBG);
+        document.body.classList.remove("nebula","singularity","abyss")
+        const stars=document.querySelector(".stars")
+        let bg=backgrounds[currentBG]
+        if(bg==="stellar"){ stars.style.display="block" }
+        else{ stars.style.display="none"; document.body.classList.add(bg) }
+        const names={ stellar:"Stellar", nebula:"Nebula Storm", singularity:"Singularity", abyss:"Abyss" }
+        document.getElementById("bgName").innerText=names[bg].toUpperCase()
+        localStorage.setItem("marketBG",currentBG)
     }
 
-    function nextBG(){ currentBG = (currentBG + 1) % backgrounds.length; applyBG(); }
-    function prevBG(){ currentBG = (currentBG - 1 + backgrounds.length) % backgrounds.length; applyBG(); }
-
-    applyBG();
+    function nextBG(){ currentBG++; if(currentBG>=backgrounds.length){currentBG=0} applyBG() }
+    function prevBG(){ currentBG--; if(currentBG<0){currentBG=backgrounds.length-1} applyBG() }
+    
+    let saved=localStorage.getItem("marketBG")
+    if(saved!==null && saved < backgrounds.length){ currentBG=parseInt(saved); applyBG(); } else { applyBG(); }
 </script>
 </body>
 </html>

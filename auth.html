@@ -3,36 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up Or Log In</title>
+    <title>Aetherfall | Authentication</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        body { background: #0d1117; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-card { background: #161b22; padding: 40px; border: 1px solid #30363d; border-radius: 8px; width: 320px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
-        h2 { margin-bottom: 10px; font-weight: 600; }
-        p.subtitle { color: #8b949e; font-size: 14px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 6px; border: 1px solid #30363d; background: #0d1117; color: white; box-sizing: border-box; outline: none; }
-        button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; }
-        .btn-primary { background: #238636; color: white; } /* Green for Create */
-        .btn-secondary { background: transparent; color: #58a6ff; font-size: 13px; margin-top: 15px; cursor: pointer; border: none; }
-        #status-msg { font-size: 13px; margin-bottom: 15px; min-height: 18px; }
+        :root {
+            --bg: #020617;
+            --panel: rgba(15, 23, 42, 0.8);
+            --border: #1e40af;
+            --accent: #22c55e;
+            --text: #f8fafc;
+            --glow: rgba(34, 197, 94, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            /* Animated Grid Background */
+            background-image: 
+                linear-gradient(rgba(30, 64, 175, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 64, 175, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            from { background-position: 0 0; }
+            to { background-position: 40px 40px; }
+        }
+
+        .auth-card {
+            background: var(--panel);
+            backdrop-filter: blur(12px);
+            width: 100%;
+            max-width: 420px;
+            padding: 50px 40px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            box-shadow: 0 0 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(30, 64, 175, 0.1);
+            position: relative;
+            text-align: center;
+        }
+
+        /* Top Accent Line */
+        .auth-card::before {
+            content: "";
+            position: absolute;
+            top: -1px; left: 20%; right: 20%; height: 2px;
+            background: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        h2 {
+            font-family: 'Orbitron';
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+
+        p.subtitle {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 35px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            color: white;
+            font-family: 'Rajdhani';
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--glow);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            font-family: 'Orbitron';
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        .btn-main:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 20px var(--glow);
+        }
+
+        .toggle-area {
+            margin-top: 25px;
+            font-size: 14px;
+        }
+
+        .btn-toggle {
+            background: none;
+            border: none;
+            color: #60a5fa;
+            font-family: 'Rajdhani';
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .status-box {
+            height: 20px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 30px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 12px;
+            font-family: 'Orbitron';
+            transition: 0.2s;
+        }
+
+        .back-link:hover { color: var(--text); }
+
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <h2 id="title">Join Market</h2>
-        <p class="subtitle" id="subtitle">Create an account to start browsing.</p>
+    <div class="auth-card">
+        <h2 id="title">User Registration</h2>
+        <p class="subtitle" id="subtitle">Establish a new market connection</p>
         
-        <div id="status-msg"></div>
+        <div id="status-msg" class="status-box"></div>
         
-        <input type="text" id="userInput" placeholder="Choose Username" autocomplete="off">
-        <input type="password" id="passInput" placeholder="Create Password">
+        <div class="input-group">
+            <input type="text" id="userInput" placeholder="IDENTITY CODE" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <input type="password" id="passInput" placeholder="SECURITY ACCESS KEY">
+        </div>
         
-        <button class="btn-primary" id="mainBtn">Create Account</button>
+        <button class="btn-main" id="mainBtn">Execute Registry</button>
         
-        <button class="btn-secondary" id="toggleMode">Already have an account? Sign in</button>
+        <div class="toggle-area">
+            <span id="toggleText">Already authorized?</span> 
+            <button class="btn-toggle" id="toggleMode">Sign In</button>
+        </div>
         
-        <br>
-        <a href="market.html" style="display:block; margin-top:20px; color: #8b949e; text-decoration: none; font-size: 12px;">← Back Home</a>
+        <a href="market.html" class="back-link">← Terminal Home</a>
     </div>
 
     <script type="module">
@@ -58,26 +207,35 @@
         const toggleBtn = document.getElementById('toggleMode');
         const title = document.getElementById('title');
         const subtitle = document.getElementById('subtitle');
-        const userInput = document.getElementById('userInput');
-        const passInput = document.getElementById('passInput');
+        const toggleText = document.getElementById('toggleText');
 
         const notify = (text, color) => { msg.innerText = text; msg.style.color = color; };
         const toEmail = (name) => `${name.trim().toLowerCase()}@market.com`;
 
-        // Function to update the UI based on mode
         function updateUI() {
-            title.innerText = isLoginMode ? "Market Login" : "Join Market";
-            subtitle.innerText = isLoginMode ? "Welcome back!" : "Create an account to start browsing.";
-            mainBtn.innerText = isLoginMode ? "Sign In" : "Create Account";
-            toggleBtn.innerText = isLoginMode ? "Need an account? Register" : "Already have an account? Sign in";
-            userInput.placeholder = isLoginMode ? "Username" : "Choose Username";
-            passInput.placeholder = isLoginMode ? "Password" : "Create Password";
+            if (isLoginMode) {
+                title.innerText = "Access Terminal";
+                subtitle.innerText = "Authorized personnel only";
+                mainBtn.innerText = "Initialize Login";
+                toggleText.innerText = "New operative?";
+                toggleBtn.innerText = "Register Now";
+                document.getElementById('userInput').placeholder = "USERNAME";
+                document.getElementById('passInput').placeholder = "PASSWORD";
+            } else {
+                title.innerText = "User Registration";
+                subtitle.innerText = "Establish a new market connection";
+                mainBtn.innerText = "Execute Registry";
+                toggleText.innerText = "Already authorized?";
+                toggleBtn.innerText = "Sign In";
+                document.getElementById('userInput').placeholder = "IDENTITY CODE";
+                document.getElementById('passInput').placeholder = "SECURITY ACCESS KEY";
+            }
             notify("", "");
         }
 
-        // Check the URL hash (#login or #signup)
-        function checkHash() {
-            if (window.location.hash === '#login') {
+        // CRITICAL FIX: Hash Checker to detect button from market.html
+        function checkMode() {
+            if (window.location.hash === "#login") {
                 isLoginMode = true;
             } else {
                 isLoginMode = false;
@@ -85,23 +243,20 @@
             updateUI();
         }
 
-        // Initialize on load
-        window.addEventListener('load', checkHash);
-        window.addEventListener('hashchange', checkHash);
+        window.addEventListener('load', checkMode);
+        window.addEventListener('hashchange', checkMode);
 
-        // Manual switch via button
         toggleBtn.addEventListener('click', () => {
             isLoginMode = !isLoginMode;
-            // Update hash without reloading page
-            window.location.hash = isLoginMode ? 'login' : 'signup';
+            window.location.hash = isLoginMode ? "login" : "signup";
             updateUI();
         });
 
         mainBtn.addEventListener('click', () => {
-            const user = userInput.value;
-            const pass = passInput.value;
+            const user = document.getElementById('userInput').value;
+            const pass = document.getElementById('passInput').value;
 
-            if (!user || !pass) return notify("Fill in all fields.", "#ff7b72");
+            if (!user || !pass) return notify("DATA INPUT REQUIRED.", "#ff7b72");
 
             if (isLoginMode) {
                 signInWithEmailAndPassword(auth, toEmail(user), pass)
@@ -109,17 +264,17 @@
                         localStorage.setItem("market_user", user);
                         window.location.href = "market.html";
                     })
-                    .catch(() => notify("Invalid login credentials.", "#ff7b72"));
+                    .catch(() => notify("ACCESS DENIED: INVALID CREDENTIALS", "#ff7b72"));
             } else {
-                if (pass.length < 6) return notify("Password must be 6+ chars.", "#ff7b72");
+                if (pass.length < 6) return notify("KEY MUST BE 6+ CHARACTERS", "#ff7b72");
                 
                 createUserWithEmailAndPassword(auth, toEmail(user), pass)
                     .then(() => {
                         localStorage.setItem("market_user", user);
-                        notify("Account created! Entering...", "#3fb950");
+                        notify("REGISTRY SUCCESSFUL. REDIRECTING...", "#22c55e");
                         setTimeout(() => { window.location.href = "market.html"; }, 1500);
                     })
-                    .catch((err) => notify(err.message, "#ff7b72"));
+                    .catch((err) => notify("REGISTRY FAILED: " + err.code, "#ff7b72"));
             }
         });
     </script>

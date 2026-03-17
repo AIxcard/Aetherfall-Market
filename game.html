@@ -63,8 +63,9 @@
         .stat-line { display: flex; justify-content: space-between; font-family: 'Orbitron'; font-size: 14px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .stat-line span:last-child { color: var(--accent); font-weight: 900; }
 
+        /* NEW STYLE FOR ACHIEVEMENTS */
         .ach-easy { border: 2px solid var(--easy-green) !important; }
-        .ach-claimed { background: var(--claimed-dark) !important; opacity: 0.8; }
+        .ach-claimed { background: var(--claimed-dark) !important; border: 2px solid #065f46 !important; opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -76,7 +77,7 @@
         <div class="menuBtn" onclick="openModal('forge-m')">FORGE</div>
         <div class="menuBtn" onclick="openModal('shop-m')">FRAG SHOP</div>
         <div class="menuBtn" onclick="openModal('coupon-m')">COUPON MARKET<br><span id="coupon-timer" class="big-timer"></span></div>
-        <div class="menuBtn" onclick="openModal('achieve-m')">ACHIEVEMENTS <span id="ach-counter-side">0/27</span></div>
+        <div class="menuBtn" onclick="openModal('achieve-m')">ACHIEVEMENTS (<span id="ach-count-side">0/27</span>)</div>
         <div class="menuBtn" onclick="openModal('milestone-m')">MILESTONES</div>
         <div class="menuBtn" onclick="openModal('inv-m')">INVENTORY</div>
         <div class="menuBtn" onclick="openModal('settings-m')" style="margin-top:auto">⚙️ SETTINGS</div>
@@ -107,7 +108,7 @@
             <span class="reward-tag" id="st-reward">REWARD: 600 Gold | 1200 EXP</span>
             <button class="btn-action" id="st-btn" onclick="claimStory()">CLAIM PROGRESS</button>
         </div>
-        <div class="shop-card" id="daily-card" style="border-left: 5px solid var(--frag); margin-bottom: 12px;">
+        <div class="shop-card" style="border-left: 5px solid var(--frag); margin-bottom: 12px;">
             <b>DAILY MISSION</b>
             <span id="daily-timer" class="big-timer"></span>
             <p id="daily-prog-text" style="font-size:11px; color:var(--frag);"></p>
@@ -115,7 +116,7 @@
             <span class="reward-tag">500 Gold | 1 Frag | 1250 EXP</span>
             <button class="btn-action" id="daily-btn" onclick="claimDaily()">CLAIM DAILY</button>
         </div>
-        <div class="shop-card" id="weekly-card" style="border-left: 5px solid var(--combo);">
+        <div class="shop-card" style="border-left: 5px solid var(--combo);">
             <b>WEEKLY MISSION</b>
             <span id="weekly-timer" class="big-timer"></span>
             <p id="weekly-prog-text" style="font-size:11px; color:var(--combo);"></p>
@@ -127,22 +128,16 @@
 </div>
 
 <div id="guide-m" class="modal">
-    <span onclick="closeModal('guide-m')" style="float:right; color:red; cursor:pointer;">[X]</span>
+    <span onclick="closeModal('guide-m')" style="float:right; color:red; cursor:pointer; font-weight:900;">[X]</span>
     <h2 style="font-family:'Orbitron'; color:var(--accent);">NEXUS DATA-STREAM</h2>
     <div style="line-height: 1.6; font-size: 14px;">
-        <p><b style="color:var(--gold);">CORE MECHANICS:</b> Every click harvests Aether. There is a <span style="color:var(--gold);">1% base chance</span> for Gold and a <span style="color:var(--frag);">0.8% chance</span> for Void Fragments.</p>
-        <p><b style="color:var(--combo);">COMBO SYSTEM:</b> Every <span style="color:var(--combo);">1,500 hits</span> grants <span style="color:white;">+1 Base Power</span>. Combo expires if idle for 1.8s.</p>
-        <p><b style="color:#ef4444;">CRITICAL SURGES:</b> <span style="color:white;">10% chance</span> to trigger a Critical Strike, doubling power and EXP gain.</p>
-        <p><b style="color:var(--accent);">PROGRESSION:</b> Use the <b>Forge</b> for Gold upgrades and <b>Fragment Shop</b> for rare boosts. Coupons provide massive end-game multipliers.</p>
+        <p><b style="color:var(--gold);">CORE MECHANICS:</b> Every click harvests Aether. There is a <span style="color:var(--gold);">1% base chance</span> to find Gold and a <span style="color:var(--frag);">0.8% chance</span> for Void Fragments.</p>
+        <p><b style="color:var(--combo);">COMBO SYSTEM:</b> Maintaining a steady rhythm builds your Combo. Every <span style="color:var(--combo);">1,500 hits</span> grants <span style="color:white;">+1 Base Power</span>. Beware: the combo expires if you stop clicking for more than 1.8 seconds.</p>
+        <p><b style="color:#ef4444;">CRITICAL SURGES:</b> You have a <span style="color:white;">10% chance</span> to trigger a Critical Strike. This doubles your click power and provides a massive boost to EXP gain. Achievements can further enhance these multipliers.</p>
+        <p><b style="color:var(--accent);">PROGRESSION:</b> Use the <b>Forge</b> for Gold-based upgrades and the <b>Fragment Shop</b> for rare power boosts. <b>Coupons</b> in the market provide massive late-game multipliers but are limited in stock.</p>
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
         <p style="font-size: 12px; opacity: 0.8;"><i>"The Aether falls for no one. You must take it." - Unknown Architect</i></p>
     </div>
-</div>
-
-<div id="achieve-m" class="modal">
-    <span onclick="closeModal('achieve-m')" style="float:right; cursor:pointer; color:red;">[X]</span>
-    <h2 style="font-family:'Orbitron'">Achievements (<span id="ach-counter-top">0/27</span>)</h2>
-    <div id="achieveList" class="grid-shop"></div>
 </div>
 
 <div id="forge-m" class="modal">
@@ -151,12 +146,12 @@
     <div class="grid-shop">
         <div class="shop-card">
             <b>Auto-Core MK-I</b>
-            <p style="font-size:11px; opacity:0.8;">Ancient clockwork mechanism that strikes Aether 2x/sec. Works while idle.</p>
+            <p style="font-size:11px; opacity:0.8;">An ancient clockwork mechanism that strikes the Aether twice per second. Functions even when you aren't clicking manually.</p>
             <button class="btn-action" onclick="buyAuto()">10,000 G / 20 F</button>
         </div>
         <div class="shop-card">
             <b>Tungsten Sharpener</b>
-            <p style="font-size:11px; opacity:0.8;">Industrial-grade sharpening. Permanently increases Base Power by <span style="color:var(--accent);">+5</span>.</p>
+            <p style="font-size:11px; opacity:0.8;">Industrial-grade sharpening tools. Permanently increases your Base Click Power by <span style="color:var(--accent);">+5</span>.</p>
             <button class="btn-action" onclick="buyPower('gold', 5000, 5)">5,000 G</button>
         </div>
     </div>
@@ -168,17 +163,17 @@
     <div class="grid-shop">
         <div class="shop-card">
             <b>Lesser Shard</b>
-            <p style="font-size:11px; opacity:0.8;">A vibrating fragment of the void. Adds <span style="color:var(--frag);">+2</span> Base Power.</p>
+            <p style="font-size:11px; opacity:0.8;">A small, vibrating fragment of the void. Adds <span style="color:var(--frag);">+2</span> Base Power.</p>
             <button class="btn-action" onclick="buyPower('frag', 15, 2)">15 F</button>
         </div>
         <div class="shop-card">
             <b>Stable Shard</b>
-            <p style="font-size:11px; opacity:0.8;">Pure concentrated energy. Adds <span style="color:var(--frag);">+5</span> Base Power.</p>
+            <p style="font-size:11px; opacity:0.8;">A concentrated energy source from the Aether. Adds <span style="color:var(--frag);">+5</span> Base Power.</p>
             <button class="btn-action" onclick="buyPower('frag', 40, 5)">40 F</button>
         </div>
         <div class="shop-card">
             <b>Greater Shard</b>
-            <p style="font-size:11px; opacity:0.8;">Harness the core of a dying star. Adds <span style="color:var(--frag);">+10</span> Base Power.</p>
+            <p style="font-size:11px; opacity:0.8;">The pure core of a dying star. Adds <span style="color:var(--frag);">+10</span> Base Power.</p>
             <button class="btn-action" onclick="buyPower('frag', 80, 10)">80 F</button>
         </div>
     </div>
@@ -187,24 +182,30 @@
 <div id="coupon-m" class="modal">
     <span onclick="closeModal('coupon-m')" style="float:right; color:red; cursor:pointer;">[X]</span>
     <h2 style="font-family:'Orbitron'">Coupon Market</h2>
-    <p style="font-size:12px; opacity:0.7;">Coupons grant massive stacking multipliers to all earnings. Stock resets weekly.</p>
+    <p style="font-size:12px; opacity:0.7;">Coupons provide massive stacking multipliers to all your gold and fragment earnings. Stock resets weekly.</p>
     <div class="grid-shop">
         <div class="shop-card">
             <b>Bronze Coupon</b>
-            <p style="font-size:10px;">Small Tier Multiplier.</p>
+            <p style="font-size:11px; opacity:0.8;">A beginner's token for market influence.</p>
             Stock: <span id="stock-b">3</span><button class="btn-action" onclick="buyCoupon('Bronze', 5000, 'b')">5,000 G</button>
         </div>
         <div class="shop-card">
             <b>Silver Coupon</b>
-            <p style="font-size:10px;">Medium Tier Multiplier.</p>
+            <p style="font-size:11px; opacity:0.8;">Standard commercial bond for high-tier trading.</p>
             Stock: <span id="stock-s">2</span><button class="btn-action" onclick="buyCoupon('Silver', 15000, 's')">15,000 G</button>
         </div>
         <div class="shop-card">
             <b>Gold Coupon</b>
-            <p style="font-size:10px;">Legendary Tier Multiplier.</p>
+            <p style="font-size:11px; opacity:0.8;">The ultimate currency multiplier for legends.</p>
             Stock: <span id="stock-g">1</span><button class="btn-action" onclick="buyCoupon('Gold', 50000, 'g')">50,000 G</button>
         </div>
     </div>
+</div>
+
+<div id="achieve-m" class="modal">
+    <span onclick="closeModal('achieve-m')" style="float:right; cursor:pointer; color:red;">[X]</span>
+    <h2 style="font-family:'Orbitron'">Achievements (<span id="ach-count-top">0/27</span>)</h2>
+    <div id="achieveList" class="grid-shop"></div>
 </div>
 
 <div id="milestone-m" class="modal"><span onclick="closeModal('milestone-m')" style="float:right; color:red;">[X]</span><h2 style="font-family:'Orbitron'">Milestones</h2><div id="milestoneList" class="grid-shop"></div></div>
@@ -311,25 +312,34 @@ function updateUI() {
         document.getElementById('levelFill').style.width = (exp/req*100) + "%";
     }
 
-    // Daily/Weekly Logic
-    let dTarget = 5000;
-    let wTarget = 50000;
-    document.getElementById('daily-prog-text').innerText = `${dailyClicks.toLocaleString()} / ${dTarget.toLocaleString()} Clicks`;
-    document.getElementById('daily-fill').style.width = Math.min(100, (dailyClicks/dTarget)*100) + "%";
-    document.getElementById('daily-btn').disabled = dailyClaimed || dailyClicks < dTarget;
-    document.getElementById('daily-btn').innerText = dailyClaimed ? "CLAIMED" : "CLAIM DAILY";
+    // STORY
+    let totalParts = ((storyCh - 1) * 10) + storyPart;
+    let target = 100 + (totalParts * 250); 
+    let isComplete = (storyCh >= 6);
+    document.getElementById('st-ch').innerText = isComplete ? "COMPLETED" : `CH ${storyCh}: PART ${storyPart}`;
+    let progPercent = Math.min(100, (storyProg/target)*100);
+    document.getElementById('st-obj').innerText = isComplete ? "STORY FINISHED" : `${progPercent.toFixed(1)}% (${storyProg.toLocaleString()} / ${target.toLocaleString()})`;
+    document.getElementById('st-fill').style.width = progPercent + "%";
+    document.getElementById('st-btn').disabled = (storyProg < target || isComplete);
 
-    document.getElementById('weekly-prog-text').innerText = `${weeklyClicks.toLocaleString()} / ${wTarget.toLocaleString()} Clicks`;
-    document.getElementById('weekly-fill').style.width = Math.min(100, (weeklyClicks/wTarget)*100) + "%";
-    document.getElementById('weekly-btn').disabled = weeklyClaimed || weeklyClicks < wTarget;
-    document.getElementById('weekly-btn').innerText = weeklyClaimed ? "CLAIMED" : "CLAIM WEEKLY";
+    // MISSIONS
+    document.getElementById('daily-prog-text').innerText = `${dailyClicks.toLocaleString()} / 5000 Clicks`;
+    document.getElementById('daily-fill').style.width = Math.min(100, (dailyClicks/5000)*100) + "%";
+    document.getElementById('daily-btn').disabled = dailyClaimed || dailyClicks < 5000;
+    document.getElementById('weekly-prog-text').innerText = `${weeklyClicks.toLocaleString()} / 50000 Clicks`;
+    document.getElementById('weekly-fill').style.width = Math.min(100, (weeklyClicks/50000)*100) + "%";
+    document.getElementById('weekly-btn').disabled = weeklyClaimed || weeklyClicks < 50000;
 
-    // Counter
-    document.getElementById('ach-counter-top').innerText = `${achievementsClaimed.length}/27`;
-    document.getElementById('ach-counter-side').innerText = `${achievementsClaimed.length}/27`;
+    // COUNTERS
+    document.getElementById('ach-count-side').innerText = `${achievementsClaimed.length}/27`;
+    document.getElementById('ach-count-top').innerText = `${achievementsClaimed.length}/27`;
 
-    renderAchievements();
+    document.getElementById('stock-b').innerText = stock.b;
+    document.getElementById('stock-s').innerText = stock.s;
+    document.getElementById('stock-g').innerText = stock.g;
+
     renderMilestones();
+    renderAchievements();
     renderInv();
     save();
 }
@@ -364,8 +374,7 @@ function handleHit(e) {
         if (achievementsClaimed.includes('a13')) multi += 0.10;
         if (achievementsClaimed.includes('a19')) multi += 0.10;
         if (achievementsClaimed.includes('a25')) multi += 0.20;
-        gain *= multi;
-        gold += gain; totalGoldEarned += gain;
+        gain *= multi; gold += gain; totalGoldEarned += gain;
         if(!e) autoGoldEarned += gain;
     } 
 
@@ -394,8 +403,7 @@ function handleHit(e) {
     clearTimeout(window.ctimer);
     window.ctimer = setTimeout(() => { 
         if (combo > 0) comboLosses++;
-        combo = 0; noCritCombo = 0;
-        updateUI(); 
+        combo = 0; noCritCombo = 0; updateUI(); 
     }, (achievementsClaimed.includes('a7') ? 2300 : 1800));
     updateUI();
 }
@@ -410,7 +418,6 @@ function renderAchievements() {
         if (done) classList += " ach-claimed";
 
         let color = a.tier === 'IMPOSSIBLE' ? 'var(--accent)' : (a.tier === 'HARD' ? '#ef4444' : (a.tier === 'NORMAL' ? '#fbbf24' : 'var(--easy-green)'));
-        
         h += `<div class="${classList}" style="border-top: 2px solid ${color}">
                 <div><b style="color:${color}">[${a.tier}] ${a.name}</b><br><small>${a.obj}</small><br><span class="reward-tag">${a.rew}</span></div>
                 <button class="btn-action" ${done || !canClaim ? 'disabled' : ''} onclick="claimA('${a.id}')">${done ? 'UNLOCKED' : (canClaim ? 'CLAIM' : 'LOCKED')}</button>
@@ -442,8 +449,7 @@ function buyPower(type, cost, p) {
 function buyAuto() {
     if(gold >= 10000 && frags >= 20 && !autoActive) { 
         gold -= 10000; totalGoldSpent += 10000; frags -= 20; autoActive = true; 
-        startAutoCore();
-        updateUI(); 
+        startAutoCore(); updateUI(); 
     }
 }
 
@@ -464,9 +470,47 @@ function claimStory() {
 function claimDaily() { gold += 500; totalGoldEarned += 500; frags += 1; exp += 1250; dailyClaimed = true; updateUI(); }
 function claimWeekly() { gold+=10000; totalGoldEarned += 10000; frags+=10; exp+=5000; weeklyClaimed=true; updateUI(); }
 function buyCoupon(n, c, t) { if(gold >= c && stock[t] > 0) { gold -= c; totalGoldSpent += c; stock[t]--; inv.push(n); couponsPurchased++; updateUI(); } }
-
+function renderMilestones() {
+    let h = "";
+    for(let i=5; i<=100; i+=5) {
+        let done = milestonesClaimed.includes(i);
+        let g = i * 500; let f = i;
+        h += `<div class="shop-card"><div><b>LEVEL ${i}</b><br><small style="color:var(--gold)">Reward: ${g} G / ${f} f</small></div><button class="btn-action" ${level < i || done ? 'disabled' : ''} onclick="claimM(${i},${g},${f})">${done ? 'CLAIMED' : 'CLAIM'}</button></div>`;
+    }
+    document.getElementById('milestoneList').innerHTML = h;
+}
+function claimM(l, g, f) { gold += g; totalGoldEarned += g; frags += f; milestonesClaimed.push(l); updateUI(); }
+function renderInv() { document.getElementById('invList').innerHTML = inv.length ? inv.map(i => `<div class="shop-card"><b>${i}</b></div>`).join('') : "<p style='text-align:center; width:100%; opacity:0.5;'>Empty</p>"; }
 function openModal(id) { document.getElementById(id).style.display='block'; }
 function closeModal(id) { document.getElementById(id).style.display='none'; }
+function hardReset() { if(confirm("ERASE ALL PROGRESS?")) { localStorage.clear(); location.reload(); } }
+
+function redeemCode() {
+    const input = document.getElementById('code-input'); const val = input.value.trim();
+    if(redeemedCodes.includes(val)) return;
+    if(val === "Ohnepixel") { document.getElementById('admin-panel').style.display = "block"; }
+    else if(val === "RELEASE") { gold += 1000; totalGoldEarned += 1000; frags += 5; redeemedCodes.push(val); }
+    input.value = ""; updateUI();
+}
+
+function adminMod(type) {
+    if(type === 'gold') { gold += 1000000; totalGoldEarned += 1000000; }
+    if(type === 'level') level = 100;
+    if(type === 'op') { basePower += 9999; inv.push("OP Artifact"); }
+    updateUI();
+}
+
+// TIMERS
+function getNextMidnight() { let d = new Date(); d.setUTCHours(24,0,0,0); return d.getTime(); }
+function getNextWeeklyReset() { let d = new Date(); let day = d.getUTCDay(); let diff = (day === 0 ? 1 : 8 - day); d.setUTCDate(d.getUTCDate() + diff); d.setUTCHours(0,0,0,0); return d.getTime(); }
+let nextDailyReset = getNextMidnight();
+let nextWeeklyReset = getNextWeeklyReset();
+setInterval(() => {
+    let now = Date.now();
+    document.getElementById('daily-timer').innerText = formatTime(nextDailyReset - now);
+    document.getElementById('weekly-timer').innerText = formatTime(nextWeeklyReset - now);
+    document.getElementById('coupon-timer').innerText = formatTime(nextWeeklyReset - now);
+}, 1000);
 function formatTime(ms) {
     if(ms < 0) return "00:00:00";
     let h = Math.floor(ms / 3600000); let m = Math.floor((ms % 3600000) / 60000); let s = Math.floor((ms % 60000) / 1000);
@@ -474,17 +518,20 @@ function formatTime(ms) {
 }
 
 function save() {
-    const data = { clicks, gold, frags, basePower, level, exp, storyCh, storyPart, inv, dailyClicks, weeklyClicks, dailyClaimed, weeklyClaimed, totalCrits, totalGoldEarned, totalGoldSpent, totalFragsEarned, autoGoldEarned, maxComboReached, achievementsClaimed, autoActive, stock };
-    localStorage.setItem('AETHERFALL_SAVE', JSON.stringify(data));
+    const data = { clicks, gold, frags, basePower, level, exp, storyCh, storyPart, inv, dailyClicks, weeklyClicks, dailyClaimed, weeklyClaimed, totalCrits, totalGoldEarned, totalGoldSpent, totalFragsEarned, autoGoldEarned, maxComboReached, achievementsClaimed, milestonesClaimed, redeemedCodes, autoActive, stock, storyProg };
+    localStorage.setItem('AETHERFALL_PERMANENT_SAVE', JSON.stringify(data));
 }
 
 function load() {
-    const raw = localStorage.getItem('AETHERFALL_SAVE');
+    const raw = localStorage.getItem('AETHERFALL_PERMANENT_SAVE');
     if(!raw) return;
     const d = JSON.parse(raw);
-    clicks = d.clicks || 0; gold = d.gold || 0; frags = d.frags || 0; basePower = d.basePower || 1; level = d.level || 1; exp = d.exp || 0; inv = d.inv || [];
-    achievementsClaimed = d.achievementsClaimed || []; totalCrits = d.totalCrits || 0; totalGoldEarned = d.totalGoldEarned || 0;
-    maxComboReached = d.maxComboReached || 0; autoActive = d.autoActive || false;
+    clicks = d.clicks||0; gold = d.gold||0; frags = d.frags||0; basePower = d.basePower||1; level = d.level||1; exp = d.exp||0;
+    storyCh = d.storyCh||1; storyPart = d.storyPart||1; storyProg = d.storyProg||0; inv = d.inv||[];
+    dailyClicks = d.dailyClicks||0; weeklyClicks = d.weeklyClicks||0; dailyClaimed = d.dailyClaimed||false; weeklyClaimed = d.weeklyClaimed||false;
+    totalCrits = d.totalCrits||0; totalGoldEarned = d.totalGoldEarned||0; totalGoldSpent = d.totalGoldSpent||0; totalFragsEarned = d.totalFragsEarned||0;
+    autoGoldEarned = d.autoGoldEarned||0; maxComboReached = d.maxComboReached||0; achievementsClaimed = d.achievementsClaimed||[];
+    milestonesClaimed = d.milestonesClaimed||[]; redeemedCodes = d.redeemedCodes||[]; autoActive = d.autoActive||false; stock = d.stock||{b:3,s:2,g:1};
     if(autoActive) startAutoCore();
     updateUI();
 }

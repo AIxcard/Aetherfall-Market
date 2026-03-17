@@ -20,6 +20,36 @@
             overflow-x: hidden;
         }
 
+        /* --- AUTH BUTTONS TOP RIGHT --- */
+        .auth-nav {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .auth-card {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text);
+            font-family: 'Orbitron';
+            font-size: 10px;
+            border-radius: 4px;
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+
+        .auth-card:hover { 
+            border-color: var(--accent); 
+            background: rgba(124, 58, 237, 0.1); 
+            transform: translateY(-2px); 
+        }
+
         .stars {
             position:fixed; width:100%; height:200%; top:-100%; left:0;
             background: radial-gradient(white 1px, transparent 1px), radial-gradient(#60a5fa 1px, transparent 1px);
@@ -155,6 +185,11 @@
 
 <div class="stars"></div>
 
+<div class="auth-nav">
+    <a href="auth.html#login" class="auth-card">Log In</a>
+    <a href="auth.html#signup" class="auth-card">Sign Up</a>
+</div>
+
 <div class="hero">
     <h1>AETHERFALL MARKET</h1>
     <p style="opacity:0.5; letter-spacing: 2px; font-size: 10px; margin-top:5px;">TERMINAL v3.5</p>
@@ -195,7 +230,6 @@
 
 <section id="games">
     <h2>Roblox Services</h2>
-    
     <details>
         <summary>ANIME VANGUARDS</summary>
         <div class="product-grid" style="padding:15px">
@@ -212,78 +246,13 @@
             <div class="shop-card"><b>SHINY DIO</b><span class="price-tag">100 BAHT</span><span class="stock-tag">STOCK: 5</span></div>
         </div>
     </details>
-
-    <details>
-        <summary>ANIME SPIRITS</summary>
-        <div class="product-grid" style="padding:15px">
-            <div class="shop-card"><b>LIMITED ITEMS</b><p>All in-game limiteds.</p><span class="price-tag">VARIES</span></div>
-            <div class="shop-card"><b>SOUL SWORD FS SPEC</b><span class="price-tag">100 BAHT</span></div>
-        </div>
-    </details>
-
-    <details>
-        <summary>VERSE PIECE</summary>
-        <div class="product-grid" style="padding:15px">
-            <div class="shop-card"><b>2X DROP GP</b><span class="price-tag">230 BAHT</span><span class="stock-tag">STOCK: 5</span></div>
-            <div class="shop-card"><b>UNLIMITED BAG GP</b><span class="price-tag">100 BAHT</span><span class="stock-tag">STOCK: 4</span></div>
-            <div class="shop-card"><b>2X DROP LUCK GP</b><span class="price-tag">50 BAHT</span><span class="stock-tag">STOCK: 2</span></div>
-            <div class="shop-card"><b>AINZ SETS</b><span class="price-tag">10 BAHT</span><span class="stock-tag">STOCK: 80</span></div>
-            <div class="shop-card"><b>HOMURA SETS</b><span class="price-tag">8 BAHT</span><span class="stock-tag">STOCK: 5</span></div>
-            <div class="shop-card"><b>MADOKA SETS</b><span class="price-tag">8 BAHT</span><span class="stock-tag">STOCK: 2</span></div>
-        </div>
-    </details>
-
-    <details>
-        <summary>ANIME PARADOX</summary>
-        <div class="product-grid" style="padding:15px">
-            <div class="shop-card"><b>STORY STAGE</b><span class="price-tag">5 BAHT</span></div>
-            <div class="shop-card"><b>RAID STAGE</b><span class="price-tag">15 BAHT</span></div>
-            <div class="shop-card"><b>30 MIN CARRY</b><span class="price-tag">30 BAHT</span></div>
-            <div class="shop-card"><b>1 HOUR CARRY</b><span class="price-tag">50 BAHT</span></div>
-            <div class="shop-card"><b>SUKUNA PORTAL CARRY</b><span class="price-tag">120 BAHT</span><span class="stock-tag">STOCK: 5</span></div>
-            <div class="shop-card"><b>GOJO PORTAL CARRY</b><span class="price-tag">100 BAHT</span><span class="stock-tag">STOCK: 3</span></div>
-        </div>
-    </details>
-
-    <details>
-        <summary>99 NIGHTS IN THE FOREST</summary>
-        <div class="product-grid" style="padding:15px">
-            <div class="shop-card"><b>100 DAYS CARRY</b><span class="price-tag">32 BAHT</span></div>
-            <div class="shop-card"><b>250 DAYS CARRY</b><span class="price-tag">60 BAHT</span></div>
-            <div class="shop-card"><b>500 DAYS CARRY</b><span class="price-tag">100 BAHT</span></div>
-            <div class="shop-card"><b>1K DAYS CARRY</b><span class="price-tag">249 BAHT</span></div>
-        </div>
-    </details>
-
-    <details>
-        <summary>FLEE THE FACILITY</summary>
-        <div class="product-grid" style="padding:15px">
-            <div class="shop-card"><b>NUCLEAR WASTE</b><span class="price-tag">60 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card"><b>S’MORES</b><span class="price-tag">60 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card"><b>GOLDEN</b><span class="price-tag">60 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card"><b>ANCIENT TRIDENT</b><span class="price-tag">145 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card"><b>ANCIENT PORTAL</b><span class="price-tag">135 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card"><b>LUNAR WITCH BROOM</b><span class="price-tag">130 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card"><b>CURSED CIRCUS TENT</b><span class="price-tag">130 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card"><b>ENCHANTED CIRCUS TENT</b><span class="price-tag">130 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card"><b>CHROMATIC PHOENIX</b><span class="price-tag">130 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div style="grid-column: 1 / -1; margin: 10px 0; color: var(--accent); font-family: 'Orbitron'; font-size: 11px;">GEMSTONES</div>
-            <div class="shop-card" style="border-left-color: var(--accent);"><b>RADIANT SHELL</b><span class="price-tag">110 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card" style="border-left-color: var(--accent);"><b>ANCIENT KEY</b><span class="price-tag">110 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card" style="border-left-color: var(--accent);"><b>LUNAR WITCH HAT</b><span class="price-tag">125 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card" style="border-left-color: var(--accent);"><b>CURSED JESTER HAT</b><span class="price-tag">120 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card" style="border-left-color: var(--accent);"><b>ENCHANTED JESTER HAT</b><span class="price-tag">120 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card" style="border-left-color: var(--accent);"><b>CHROMATIC SPARK</b><span class="price-tag">120 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-            <div class="shop-card" style="border-left-color: var(--accent);"><b>SUNRISE</b><span class="price-tag">40 BAHT</span><span class="stock-tag">STOCK: 1</span></div>
-        </div>
-    </details>
-</section>
+    </section>
 
 <section id="purchase-info">
     <h2>Purchase Information</h2>
     <div class="info-card">
         <h3>How to Order</h3>
-        Contact the seller via Google Chat. Once verified, you will be instructed to add the Roblox account <b>Tpbuno</b> to receive your items or start the service.</p>
+        <p>Contact the seller via Google Chat. Once verified, you will be instructed to add the Roblox account <b>Tpbuno</b> to receive your items or start the service.</p>
     </div>
 </section>
 
@@ -323,7 +292,6 @@
     const names={ stellar:"Stellar", nebula:"Nebula Storm", singularity:"Singularity", abyss:"Abyss" };
     let currentBG=0;
 
-    // Fixed persistence logic
     window.addEventListener('DOMContentLoaded', () => {
         let saved = localStorage.getItem("marketBG");
         if(saved !== null) currentBG = parseInt(saved);

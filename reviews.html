@@ -1,108 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Aetherfall Market Reviews</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #010206; --panel: rgba(15, 23, 42, 0.9); --border: #1e40af;
-            --accent: #c084fc; --gold: #fbbf24; --text: #f8fafc;
-        }
-
-        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Rajdhani', sans-serif; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; min-height: 100vh; }
-
-        /* THEMES */
-        .nebula { background: radial-gradient(circle at 20% 30%,#312e81 0%,transparent 50%), radial-gradient(circle at 80% 70%,#1e1b4b 0%,transparent 50%), #010206; }
-        .singularity { background: radial-gradient(circle at center,#581c87 0%,#000000 70%); }
-        .abyss { background:#000000; }
-
-        .stars-bg {
-            position:fixed; width:100%; height:200%; top:-100%; left:0;
-            background: radial-gradient(white 1px, transparent 1px), radial-gradient(#60a5fa 1px, transparent 1px);
-            background-size:120px 120px, 200px 200px;
-            animation:starsMove 120s linear infinite; z-index:-2;
-        }
-        @keyframes starsMove { from{transform:translateY(0)} to{transform:translateY(2000px)} }
-
-        .header { text-align: center; padding: 40px 20px; }
-        .header h1 { font-family: 'Orbitron'; font-size: 28px; letter-spacing: 4px; color: #fff; }
-
-        .container { max-width: 800px; margin: auto; padding: 20px; }
-
-        .formBox {
-            background: var(--panel); border: 1px solid var(--border);
-            border-radius: 4px; padding: 25px; margin-bottom: 40px;
-        }
-
-        .formBox h2 { font-family: 'Orbitron'; font-size: 16px; margin-bottom: 15px; color: var(--accent); }
-
-        input, textarea, select {
-            width: 100%; padding: 12px; margin-bottom: 10px;
-            background: rgba(0,0,0,0.5); border: 1px solid var(--border);
-            border-radius: 4px; color: white; outline: none;
-        }
-
-        .post-btn {
-            width: 100%; padding: 12px; background: var(--accent); border: none;
-            cursor: pointer; color: white; font-family: 'Orbitron'; font-weight: bold;
-        }
-
-        .review {
-            background: var(--panel); border: 1px solid rgba(255,255,255,0.1);
-            padding: 20px; margin-bottom: 15px; border-radius: 4px; position: relative;
-        }
-
-        .reviewName { font-family: 'Orbitron'; color: var(--accent); font-size: 14px; }
-        .reviewStars { color: var(--gold); margin: 5px 0; }
-
-        .delete-btn {
-            position: absolute; top: 15px; right: 15px;
-            color: #ef4444; cursor: pointer; font-size: 9px;
-            font-family: 'Orbitron'; border: 1px solid #ef4444; padding: 3px 6px;
-        }
-
-        .back { display: inline-block; margin-top: 20px; color: var(--accent); text-decoration: none; font-family: 'Orbitron'; font-size: 11px; }
-    </style>
-</head>
-<body>
-
-<div class="stars-bg"></div>
-
-<div class="header">
-    <h1>MARKET REVIEWS</h1>
-</div>
-
-<div class="container">
-    <div class="formBox">
-        <h2>Leave a Review</h2>
-        <input id="name" readonly placeholder="Your Name">
-        <select id="stars">
-            <option value="★★★★★">★★★★★</option>
-            <option value="★★★★">★★★★</option>
-            <option value="★★★">★★★</option>
-            <option value="★★">★★</option>
-            <option value="★">★</option>
-        </select>
-        <textarea id="review" placeholder="Write your review here..." rows="3"></textarea>
-        <button class="post-btn" id="submitBtn">POST REVIEW</button>
-    </div>
-
-    <div id="reviews-list"></div>
-
-    <a class="back" href="market.html">← BACK TO MARKET</a>
-</div>
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
-    // CHECK: Ensure your "databaseURL" is exactly what is shown in your Firebase Realtime Database tab
+    // Matches your screenshot URL exactly
     const firebaseConfig = {
         apiKey: "AIzaSyBVvsUZJlFEMsdjH7FSXxmxCMZgU_zLzBg",
         authDomain: "quickaetherfall.firebaseapp.com",
         projectId: "quickaetherfall",
-        databaseURL: "https://quickaetherfall-default-rtdb.firebaseio.com/", 
+        databaseURL: "https://quickaetherfall-default-rtdb.firebaseio.com/",
         storageBucket: "quickaetherfall.firebasestorage.app",
         messagingSenderId: "1061970586865",
         appId: "1:1061970586865:web:ad87fa9b304b0909d04d50"
@@ -110,63 +15,43 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const reviewsRef = ref(db, 'reviews');
 
-    // SYNC THEME
-    const savedBG = localStorage.getItem("marketBG");
-    const backgrounds = ["stellar", "nebula", "singularity", "abyss"];
-    if (savedBG !== null) {
-        document.body.className = backgrounds[parseInt(savedBG)];
-        if(backgrounds[parseInt(savedBG)] !== "stellar") document.querySelector(".stars-bg").style.display = "none";
+    // --- REGISTRATION LOGIC ---
+    window.executeRegistry = function() {
+        const user = document.getElementById("reg-user").value.trim();
+        const pass = document.getElementById("reg-pass").value.trim();
+
+        if (!user || !pass) return alert("All fields required.");
+
+        const userRef = ref(db, 'users/' + user);
+        
+        // Check if user exists first
+        get(userRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                alert("Identity Code already taken.");
+            } else {
+                set(userRef, { password: pass }).then(() => {
+                    localStorage.setItem("market_user", user);
+                    alert("Registry Established!");
+                    window.location.href = "market.html";
+                });
+            }
+        });
     }
 
-    const currentUser = localStorage.getItem("market_user") || "Guest";
-    document.getElementById("name").value = currentUser;
+    // --- SIGN IN LOGIC ---
+    window.executeAuth = function() {
+        const user = document.getElementById("auth-user").value.trim();
+        const pass = document.getElementById("auth-pass").value.trim();
 
-    // POST LOGIC
-    document.getElementById("submitBtn").addEventListener("click", () => {
-        const text = document.getElementById("review").value;
-        const stars = document.getElementById("stars").value;
-
-        if (!text.trim()) return alert("Please enter a review.");
-
-        push(reviewsRef, {
-            name: currentUser,
-            stars: stars,
-            text: text
-        }).then(() => {
-            document.getElementById("review").value = "";
-        }).catch(e => alert("Error: Make sure Realtime Database is enabled in Firebase!"));
-    });
-
-    // GLOBAL DELETE LOGIC
-    window.removeReview = (id) => {
-        if(confirm("Delete your review?")) {
-            remove(ref(db, 'reviews/' + id));
-        }
-    };
-
-    // LOAD REVIEWS
-    onValue(reviewsRef, (snap) => {
-        const list = document.getElementById("reviews-list");
-        list.innerHTML = "";
-        const data = snap.val();
-        if (data) {
-            Object.keys(data).reverse().forEach(id => {
-                const r = data[id];
-                const isMine = r.name === currentUser;
-                list.innerHTML += `
-                    <div class="review">
-                        <div class="reviewName">${r.name} ${isMine ? '<span style="color:#238636;font-size:8px;">(YOU)</span>' : ''}</div>
-                        <div class="reviewStars">${r.stars}</div>
-                        <div style="font-size:14px;opacity:0.8;">${r.text}</div>
-                        ${isMine ? `<div class="delete-btn" onclick="removeReview('${id}')">DELETE</div>` : ''}
-                    </div>
-                `;
-            });
-        }
-    });
+        get(child(ref(db), `users/${user}`)).then((snapshot) => {
+            if (snapshot.exists() && snapshot.val().password === pass) {
+                localStorage.setItem("market_user", user);
+                alert("Authorization Successful.");
+                window.location.href = "market.html";
+            } else {
+                alert("Invalid Identity or Access Key.");
+            }
+        }).catch((error) => alert("Connection Error."));
+    }
 </script>
-
-</body>
-</html>

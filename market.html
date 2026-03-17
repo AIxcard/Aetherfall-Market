@@ -183,6 +183,11 @@
 
 <body>
 
+<div id="user-display" style="position: absolute; top: 25px; left: 20px; font-family: 'Orbitron'; font-size: 11px; color: var(--accent); display: none; align-items: center; gap: 15px; z-index: 100;">
+    <span>OPERATIVE: <b id="username-slot" style="color: #238636;"></b></span>
+    <span onclick="localStorage.removeItem('market_user'); location.reload();" style="color: #ef4444; cursor: pointer; border: 1px solid #ef4444; padding: 2px 8px; border-radius: 4px; font-size: 9px; text-transform: uppercase;">Logout</span>
+</div>
+
 <div class="stars"></div>
 
 <div class="auth-nav">
@@ -362,6 +367,8 @@
         let saved = localStorage.getItem("marketBG");
         if(saved !== null) currentBG = parseInt(saved);
         applyBG();
+        // CALL AUTH CHECK ON LOAD
+        checkUser();
     });
 
     document.addEventListener("click",function(){
@@ -386,6 +393,19 @@
 
     function nextBG(){ currentBG++; if(currentBG>=backgrounds.length){currentBG=0} applyBG() }
     function prevBG(){ currentBG--; if(currentBG<0){currentBG=backgrounds.length-1} applyBG() }
+
+    // --- AUTH LOGIC ADDED HERE ---
+    function checkUser() {
+        const user = localStorage.getItem("market_user");
+        const authButtons = document.querySelector('.auth-nav');
+        const userDisplay = document.getElementById('user-display');
+        const slot = document.getElementById('username-slot');
+        if (user) {
+            if (authButtons) authButtons.style.display = 'none';
+            userDisplay.style.display = 'flex';
+            slot.innerText = user;
+        }
+    }
 </script>
 </body>
 </html>

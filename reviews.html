@@ -1,8 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aetherfall Terminal - Auth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #010206;
+            --panel: rgba(2, 4, 12, 0.98);
+            --border: #1e40af;
+            --accent: #22c55e; /* Green accent from your screenshot */
+            --text: #f8fafc;
+            --glow: #1e40af;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* GRID BACKGROUND */
+        .grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(var(--glow) 1px, transparent 1px), linear-gradient(90deg, var(--glow) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.1; z-index: -1;
+        }
+
+        .auth-container {
+            width: 400px;
+            background: rgba(10, 15, 30, 0.95);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(30, 64, 175, 0.3);
+            position: relative;
+        }
+
+        /* Top glow line from your screenshot */
+        .auth-container::before {
+            content: ''; position: absolute; top: -1px; left: 20%; width: 60%; height: 2px; background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        h1 { font-family: 'Orbitron'; font-size: 24px; text-align: center; letter-spacing: 4px; margin-bottom: 5px; }
+        p.sub { text-align: center; font-size: 11px; opacity: 0.6; letter-spacing: 2px; margin-bottom: 30px; text-transform: uppercase; }
+
+        .input-group { margin-bottom: 20px; }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            color: white;
+            font-family: 'Orbitron';
+            font-size: 11px;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(34, 197, 94, 0.2); }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-family: 'Orbitron';
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+        .btn:hover { background: var(--accent); color: black; box-shadow: 0 0 15px var(--accent); }
+
+        .toggle { text-align: center; margin-top: 25px; font-size: 12px; }
+        .toggle a { color: #3b82f6; text-decoration: none; cursor: pointer; }
+        .toggle a:hover { text-decoration: underline; }
+
+        .home-link { display: block; text-align: center; margin-top: 20px; color: #475569; text-decoration: none; font-size: 11px; }
+
+        /* Hidden by default */
+        #login-form { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="grid"></div>
+
+<div class="auth-container">
+    <div id="register-form">
+        <h1>USER REGISTRATION</h1>
+        <p class="sub">Establish a new market connection</p>
+        
+        <div class="input-group">
+            <input type="text" id="reg-user" placeholder="IDENTITY CODE" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <input type="password" id="reg-pass" placeholder="SECURITY ACCESS KEY">
+        </div>
+        
+        <button class="btn" onclick="executeRegistry()">EXECUTE REGISTRY</button>
+        
+        <div class="toggle">
+            Already authorized? <a onclick="toggleForm('login')">Sign In</a>
+        </div>
+    </div>
+
+    <div id="login-form">
+        <h1>USER AUTHORIZATION</h1>
+        <p class="sub">Verify existing credentials</p>
+        
+        <div class="input-group">
+            <input type="text" id="auth-user" placeholder="IDENTITY CODE" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <input type="password" id="auth-pass" placeholder="SECURITY ACCESS KEY">
+        </div>
+        
+        <button class="btn" onclick="executeAuth()">ACCESS TERMINAL</button>
+        
+        <div class="toggle">
+            New operative? <a onclick="toggleForm('register')">Sign Up</a>
+        </div>
+    </div>
+
+    <a href="market.html" class="home-link">← Terminal Home</a>
+</div>
+
 <script type="module">
+    // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
     import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
-    // Matches your screenshot URL exactly
     const firebaseConfig = {
         apiKey: "AIzaSyBVvsUZJlFEMsdjH7FSXxmxCMZgU_zLzBg",
         authDomain: "quickaetherfall.firebaseapp.com",
@@ -16,16 +155,26 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // --- REGISTRATION LOGIC ---
+    // Toggle between Login and Register
+    window.toggleForm = function(type) {
+        if(type === 'login') {
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+        } else {
+            document.getElementById('register-form').style.display = 'block';
+            document.getElementById('login-form').style.display = 'none';
+        }
+    }
+
+    // REGISTRATION
     window.executeRegistry = function() {
-        const user = document.getElementById("reg-user").value.trim();
+        const user = document.getElementById("reg-user").value.trim().toLowerCase();
         const pass = document.getElementById("reg-pass").value.trim();
 
-        if (!user || !pass) return alert("All fields required.");
+        if (!user || !pass) return alert("Field Required.");
 
         const userRef = ref(db, 'users/' + user);
         
-        // Check if user exists first
         get(userRef).then((snapshot) => {
             if (snapshot.exists()) {
                 alert("Identity Code already taken.");
@@ -36,22 +185,32 @@
                     window.location.href = "market.html";
                 });
             }
-        });
+        }).catch(e => alert("System Error: Check Database Rules"));
     }
 
-    // --- SIGN IN LOGIC ---
+    // LOGIN
     window.executeAuth = function() {
-        const user = document.getElementById("auth-user").value.trim();
+        const user = document.getElementById("auth-user").value.trim().toLowerCase();
         const pass = document.getElementById("auth-pass").value.trim();
+
+        if (!user || !pass) return alert("Credentials required.");
 
         get(child(ref(db), `users/${user}`)).then((snapshot) => {
             if (snapshot.exists() && snapshot.val().password === pass) {
                 localStorage.setItem("market_user", user);
-                alert("Authorization Successful.");
+                alert("Access Granted.");
                 window.location.href = "market.html";
             } else {
-                alert("Invalid Identity or Access Key.");
+                alert("Invalid Identity or Key.");
             }
-        }).catch((error) => alert("Connection Error."));
+        }).catch(() => alert("Terminal connection lost."));
+    }
+
+    // Handle URL hash (for reviews page linking)
+    window.onload = () => {
+        if(window.location.hash === '#login') toggleForm('login');
     }
 </script>
+
+</body>
+</html>

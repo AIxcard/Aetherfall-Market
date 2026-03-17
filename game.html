@@ -49,7 +49,9 @@
         .shop-card { background: var(--card-bg); padding: 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); min-height: 130px; display: flex; flex-direction: column; justify-content: space-between; }
         
         .btn-action { background: var(--grad-action); border: none; color: white; height: 40px; width: 100%; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; border-radius: 2px; display: flex; align-items: center; justify-content: center; margin-top: 10px; }
-        .btn-action:disabled { background: #1a1a1a !important; color: #444; }
+        .btn-action:disabled { background: #1a1a1a !important; color: #444; cursor: default; }
+
+        input[type="text"] { background: #000; border: 1px solid var(--border); color: #fff; padding: 12px; font-family: 'Orbitron'; font-size: 12px; width: 100%; outline: none; box-sizing: border-box; text-align: center; margin-top: 10px; }
 
         .reward-tag { display: block; font-size: 10px; color: var(--gold); margin-top: 5px; font-weight: bold; }
         .click-text { position: absolute; pointer-events: none; font-family: 'Orbitron'; font-weight: 900; animation: floatUp 0.6s ease-out forwards; z-index: 100; text-shadow: 0 0 5px #000; }
@@ -163,7 +165,7 @@
         <button class="btn-action" onclick="redeemCode()">USE CODE</button>
     </div>
     <button class="btn-action" style="background:#b91c1c" onclick="hardReset()">FACTORY RESET</button>
-    <div id="admin-panel" class="admin-panel" style="display:none; border: 2px dashed red; padding: 10px; margin-top: 10px;">
+    <div id="admin-panel" class="admin-panel" style="display:none; border: 2px dashed red; padding: 15px; margin-top: 15px;">
         <h3 style="color:#ef4444; font-family:'Orbitron'; margin-top:0;">ADMIN OVERRIDE</h3>
         <div class="grid-shop">
             <button class="btn-action" onclick="adminMod('gold')">INF GOLD</button>
@@ -175,45 +177,23 @@
 
 <script>
 let clicks=0, gold=0, frags=0, basePower=1, level=1, exp=0, combo=0, storyCh=1, storyPart=1, inv=[];
-let dailyClaimed=false, weeklyClaimed=false, dailyClicks=0, weeklyClicks=0;
+let dailyClaimed=false, weeklyClaimed=false, dailyClicks=0, weeklyClicks=0, storyProg=0;
 let stock = { b: 3, s: 2, g: 1 };
 let milestonesClaimed = [], redeemedCodes = [];
 let autoActive = false;
 
 const SAVE_KEY = 'AETHERFALL_PERMANENT_SAVE';
 
-// --- TIME RESET LOGIC ---
-function getNextMidnight() {
-    let d = new Date();
-    d.setUTCHours(24,0,0,0);
-    return d.getTime();
-}
-
-function getNextWeeklyReset() {
-    let d = new Date();
-    let day = d.getUTCDay();
-    let diff = (day === 0 ? 1 : 8 - day); // Target next Monday
-    d.setUTCDate(d.getUTCDate() + diff);
-    d.setUTCHours(0,0,0,0);
-    return d.getTime();
-}
+function getNextMidnight() { let d = new Date(); d.setUTCHours(24,0,0,0); return d.getTime(); }
+function getNextWeeklyReset() { let d = new Date(); let day = d.getUTCDay(); let diff = (day === 0 ? 1 : 8 - day); d.setUTCDate(d.getUTCDate() + diff); d.setUTCHours(0,0,0,0); return d.getTime(); }
 
 let nextDailyReset = getNextMidnight();
 let nextWeeklyReset = getNextWeeklyReset();
 
 function checkResets() {
     let now = Date.now();
-    if (now >= nextDailyReset) {
-        dailyClicks = 0;
-        dailyClaimed = false;
-        nextDailyReset = getNextMidnight();
-    }
-    if (now >= nextWeeklyReset) {
-        weeklyClicks = 0;
-        weeklyClaimed = false;
-        stock = { b: 3, s: 2, g: 1 }; // Restock coupons weekly
-        nextWeeklyReset = getNextWeeklyReset();
-    }
+    if (now >= nextDailyReset) { dailyClicks = 0; dailyClaimed = false; nextDailyReset = getNextMidnight(); }
+    if (now >= nextWeeklyReset) { weeklyClicks = 0; weeklyClaimed = false; stock = { b: 3, s: 2, g: 1 }; nextWeeklyReset = getNextWeeklyReset(); }
 }
 
 function updateUI() {
@@ -224,8 +204,14 @@ function updateUI() {
     document.getElementById('hud-combo').innerText = combo.toLocaleString();
     document.getElementById('hud-power').innerText = (basePower + Math.floor(combo / 1500)).toLocaleString();
 
-    // Level Logic
+    // FIXED LEVEL LOGIC: Automatic carry-over
     let req = Math.min(50000, 1000 + (Math.pow(level, 2) * 110)); 
+    while (exp >= req && level < 100) {
+        exp -= req;
+        level++;
+        req = Math.min(50000, 1000 + (Math.pow(level, 2) * 110));
+    }
+
     if(level >= 100) {
         document.getElementById('lvDisplay').innerText = `LV 100`;
         document.getElementById('expDisplay').innerText = `MAX LEVEL REACHED`;
@@ -236,18 +222,17 @@ function updateUI() {
         document.getElementById('levelFill').style.width = (exp/req*100) + "%";
     }
 
-    // Story Logic with Balanced Rewards
+    // FIXED STORY LOGIC: Resets to 0 upon claim
     let totalParts = ((storyCh - 1) * 10) + storyPart;
     let target = 100 + (totalParts * 250); 
     let isComplete = (storyCh >= 6);
     
-    document.getElementById('st-ch').innerText = isComplete ? "RANK: AEON" : `CH ${storyCh}: PART ${storyPart}`;
-    let prog = Math.min(100, (clicks/target)*100);
-    document.getElementById('st-obj').innerText = isComplete ? "END OF STORY" : `${prog.toFixed(1)}% (${clicks.toLocaleString()} / ${target.toLocaleString()})`;
-    document.getElementById('st-fill').style.width = prog + "%";
-    document.getElementById('st-btn').disabled = (clicks < target || isComplete);
+    document.getElementById('st-ch').innerText = isComplete ? "COMPLETED" : `CH ${storyCh}: PART ${storyPart}`;
+    let progPercent = Math.min(100, (storyProg/target)*100);
+    document.getElementById('st-obj').innerText = isComplete ? "STORY FINISHED" : `${progPercent.toFixed(1)}% (${storyProg.toLocaleString()} / ${target.toLocaleString()})`;
+    document.getElementById('st-fill').style.width = progPercent + "%";
+    document.getElementById('st-btn').disabled = (storyProg < target || isComplete);
     
-    // Balanced Scaling Rewards
     let rewardG = 600 + (totalParts * 150);
     let rewardE = 1200 + (totalParts * 200);
     document.getElementById('st-reward').innerText = `REWARD: ${rewardG.toLocaleString()} Gold | ${rewardE.toLocaleString()} EXP`;
@@ -273,15 +258,11 @@ function handleHit(e) {
     let powerBonus = Math.floor(combo / 1500);
     let hit = (basePower + powerBonus) * (isCrit ? 2 : 1);
     
-    clicks++; dailyClicks++; weeklyClicks++; combo++;
+    clicks++; dailyClicks++; weeklyClicks++; combo++; storyProg++;
     if(Math.random() < 0.01) gold += 5; 
     if(Math.random() < 0.008) frags += 1;
     
-    if(level < 100) {
-        exp += (0.4 * hit); 
-        let req = Math.min(50000, 1000 + (Math.pow(level, 2) * 110));
-        if(exp >= req) { exp = 0; level++; }
-    }
+    if(level < 100) { exp += (0.4 * hit); }
 
     const sword = document.getElementById('sword');
     if(isCrit) {
@@ -311,7 +292,7 @@ setInterval(() => {
 }, 1000);
 
 function formatTime(ms) {
-    if(ms < 0) return "RESETTING...";
+    if(ms < 0) return "00:00:00";
     let h = Math.floor(ms / 3600000);
     let m = Math.floor((ms % 3600000) / 60000);
     let s = Math.floor((ms % 60000) / 1000);
@@ -352,6 +333,7 @@ function claimStory() {
     let totalParts = ((storyCh - 1) * 10) + storyPart;
     gold += (600 + (totalParts * 150)); 
     exp += (1200 + (totalParts * 200)); 
+    storyProg = 0; // RESET PROGRESS FOR NEXT QUEST
     storyPart++; 
     if(storyPart > 10) { storyPart = 1; storyCh++; } 
     updateUI(); 
@@ -378,14 +360,14 @@ function closeModal(id) { document.getElementById(id).style.display='none'; }
 function hardReset() { if(confirm("ERASE ALL PROGRESS?")) { localStorage.clear(); location.reload(); } }
 
 function save() {
-    const data = { clicks, gold, frags, basePower, level, exp, storyCh, storyPart, inv, dailyClaimed, weeklyClaimed, dailyClicks, weeklyClicks, milestonesClaimed, autoActive, stock, redeemedCodes, nextDailyReset, nextWeeklyReset };
+    const data = { clicks, gold, frags, basePower, level, exp, storyCh, storyPart, inv, dailyClaimed, weeklyClaimed, dailyClicks, weeklyClicks, milestonesClaimed, autoActive, stock, redeemedCodes, nextDailyReset, nextWeeklyReset, storyProg };
     localStorage.setItem(SAVE_KEY, JSON.stringify(data));
 }
 function load() {
     const saved = localStorage.getItem(SAVE_KEY);
     if(saved) {
         const d = JSON.parse(saved);
-        clicks=d.clicks||0; gold=d.gold||0; frags=d.frags||0; basePower=d.basePower||1; level=d.level||1; exp=d.exp||0; storyCh=d.storyCh||1; storyPart=d.storyPart||1; inv=d.inv||[]; dailyClicks=d.dailyClicks||0; weeklyClicks=d.weeklyClicks||0; dailyClaimed=d.dailyClaimed||false; weeklyClaimed=d.weeklyClaimed||false; milestonesClaimed=d.milestonesClaimed||[]; autoActive=d.autoActive||false; redeemedCodes=d.redeemedCodes||[]; stock=d.stock||{b:3,s:2,g:1}; 
+        clicks=d.clicks||0; gold=d.gold||0; frags=d.frags||0; basePower=d.basePower||1; level=d.level||1; exp=d.exp||0; storyCh=d.storyCh||1; storyPart=d.storyPart||1; inv=d.inv||[]; dailyClicks=d.dailyClicks||0; weeklyClicks=d.weeklyClicks||0; dailyClaimed=d.dailyClaimed||false; weeklyClaimed=d.weeklyClaimed||false; milestonesClaimed=d.milestonesClaimed||[]; autoActive=d.autoActive||false; redeemedCodes=d.redeemedCodes||[]; stock=d.stock||{b:3,s:2,g:1}; storyProg=d.storyProg||0;
         nextDailyReset=d.nextDailyReset||nextDailyReset; 
         nextWeeklyReset=d.nextWeeklyReset||nextWeeklyReset;
         if(autoActive) setInterval(() => handleHit(null), 500);

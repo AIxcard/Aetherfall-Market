@@ -293,12 +293,8 @@
 <section id="qa">
     <h2>Q&A</h2>
     <div class="info-card">
-        <h3>How can I trust this shop?</h3>
-        <p>You can check our verified reviews page for previous successful trades.</p>
-    </div>
-    <div class="info-card">
-        <h3>What if an item is out of stock?</h3>
-        <p>You can ask the seller via Google Chat when the item will be back in stock.</p>
+        <h3>Refunds?</h3>
+        <p>Issued only if a service cannot be completed. Snacks are non-refundable.</p>
     </div>
 </section>
 
@@ -326,6 +322,7 @@
     const names={ stellar:"Stellar", nebula:"Nebula Storm", singularity:"Singularity", abyss:"Abyss" };
     let currentBG=0;
 
+    // Fixed persistence logic
     window.addEventListener('DOMContentLoaded', () => {
         let saved = localStorage.getItem("marketBG");
         if(saved !== null) currentBG = parseInt(saved);

@@ -5,13 +5,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #010206; --panel: rgba(15, 23, 42, 0.9); --border: #1e40af;
+            --bg: #010206; --panel: rgba(15, 23, 42, 0.95); --border: #1e40af;
             --accent: #c084fc; --gold: #fbbf24; --text: #f8fafc;
         }
 
         * { margin:0; padding:0; box-sizing:border-box; font-family: 'Rajdhani', sans-serif; }
         body { background: var(--bg); color: var(--text); overflow-x: hidden; min-height: 100vh; }
 
+        /* THEMES */
         .nebula { background: radial-gradient(circle at 20% 30%,#312e81 0%,transparent 50%), radial-gradient(circle at 80% 70%,#1e1b4b 0%,transparent 50%), #010206; }
         .singularity { background: radial-gradient(circle at center,#581c87 0%,#000000 70%); }
         .abyss { background:#000000; }
@@ -63,7 +64,7 @@
             font-family: 'Orbitron'; border: 1px solid #ef4444; padding: 3px 6px; border-radius: 3px;
         }
 
-        .back { display: inline-block; margin-top: 20px; color: var(--accent); text-decoration: none; font-family: 'Orbitron'; font-size: 11px; letter-spacing: 1px; }
+        .back { display: inline-block; margin-top: 20px; color: var(--accent); text-decoration: none; font-family: 'Orbitron'; font-size: 11px; }
     </style>
 </head>
 <body>
@@ -98,7 +99,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+    import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBVvsUZJlFEMsdjH7FSXxmxCMZgU_zLzBg",
@@ -114,24 +115,33 @@
     const db = getDatabase(app);
     const reviewsRef = ref(db, 'reviews');
 
-    // SYNC USER (From Market Login)
+    // SYNC USER
     const currentUser = localStorage.getItem("market_user") || "GUEST";
     document.getElementById("name").value = currentUser.toUpperCase();
 
-    // POST LOGIC
+    // POST REVIEW
     document.getElementById("submitBtn").addEventListener("click", () => {
         const text = document.getElementById("review").value;
         const stars = document.getElementById("stars").value;
 
         if (!text.trim()) return alert("Transmission empty.");
 
-        push(reviewsRef, {
+        // Create unique secret key for this specific post
+        const secret = Math.random().toString(36).substring(2);
+        
+        const newRef = push(reviewsRef);
+        const postId = newRef.key;
+
+        set(newRef, {
             name: currentUser.toUpperCase(),
             stars: stars,
-            text: text
+            text: text,
+            token: secret
         }).then(() => {
+            // Save the secret to the browser so the user can delete it later
+            localStorage.setItem("key_" + postId, secret);
             document.getElementById("review").value = "";
-        });
+        }).catch(e => alert("System Error: Check Database Rules"));
     });
 
     // GLOBAL DELETE
@@ -146,20 +156,29 @@
         const list = document.getElementById("reviews-list");
         list.innerHTML = "";
         const data = snap.val();
+        
         if (data) {
             Object.keys(data).reverse().forEach(id => {
                 const r = data[id];
-                const isMine = (currentUser !== "GUEST" && r.name === currentUser.toUpperCase());
+                
+                // Check if user is logged in as an Operative owner
+                const isOpOwner = (currentUser !== "GUEST" && r.name === currentUser.toUpperCase());
+                
+                // Check if user is a Guest on the same browser that made the post
+                const myToken = localStorage.getItem("key_" + id);
+                const isGuestOwner = (myToken && r.token === myToken);
+
+                const canDelete = isOpOwner || isGuestOwner;
                 
                 list.innerHTML += `
                     <div class="review">
                         <div class="reviewName">
                             ${r.name} 
-                            ${isMine ? '<span style="color:#22c55e;font-size:8px;margin-left:5px;">(AUTHORIZED)</span>' : ''}
+                            ${canDelete ? '<span style="color:#22c55e;font-size:8px;margin-left:5px;">(YOU)</span>' : ''}
                         </div>
                         <div class="reviewStars">${r.stars}</div>
                         <div style="font-size:14px;opacity:0.8;line-height:1.5;">${r.text}</div>
-                        ${isMine ? `<div class="delete-btn" onclick="removeReview('${id}')">DELETE</div>` : ''}
+                        ${canDelete ? `<div class="delete-btn" onclick="removeReview('${id}')">DELETE</div>` : ''}
                     </div>
                 `;
             });

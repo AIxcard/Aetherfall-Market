@@ -6,340 +6,230 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --accent: #c084fc; --bg: #020205; --panel: rgba(13, 13, 25, 0.95);
+            --accent: #c084fc; --bg: #020205; --panel: rgba(10, 10, 20, 0.98);
             --q-col: #ff00ff; --w-col: #00ffff; --e-col: #ffff00; --r-col: #00ff00; --t-col: #ff4400;
         }
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; overflow: hidden; }
 
-        /* --- MAIN HUB LAYOUT --- */
-        #event-hub { display: flex; width: 100%; height: 100%; padding: 30px; box-sizing: border-box; transition: filter 0.3s; }
+        /* --- MAIN HUB --- */
+        #event-hub { display: flex; width: 100%; height: 100%; }
+        .sidebar { width: 450px; background: rgba(5, 5, 10, 0.9); border-right: 2px solid #222; display: flex; flex-direction: column; padding: 40px; box-sizing: border-box; }
+        .event-card { background: rgba(255, 255, 255, 0.03); border: 2px solid #333; padding: 30px; border-radius: 12px; display: flex; align-items: center; gap: 20px; cursor: pointer; }
+        .event-card.active { border-color: var(--accent); background: rgba(192, 132, 252, 0.1); box-shadow: 0 0 20px rgba(192, 132, 252, 0.2); }
         
-        /* Left Side: Event List */
-        .sidebar { width: 320px; display: flex; flex-direction: column; gap: 15px; }
-        .event-card {
-            background: rgba(88, 28, 135, 0.2); border: 2px solid #5b21b6; padding: 15px; 
-            display: flex; align-items: center; gap: 15px; cursor: pointer;
-            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
-        }
-        .event-card.active { border-color: var(--accent); background: rgba(147, 51, 234, 0.4); box-shadow: 0 0 20px rgba(192, 132, 252, 0.3); }
+        .main-content { flex: 1; padding: 100px; display: flex; flex-direction: column; justify-content: center; }
+        .event-title { font-family: 'Orbitron'; font-size: 80px; margin: 0; letter-spacing: -3px; }
+        .event-desc { font-size: 26px; color: #888; max-width: 900px; margin: 20px 0 50px 0; line-height: 1.4; }
 
-        /* Right Side: Details */
-        .main-panel { flex: 1; padding-left: 50px; }
-        .details-box { background: var(--panel); border: 1px solid #333; padding: 40px; max-width: 650px; border-radius: 12px; position: relative; }
-        
-        /* Progress System */
-        .progress-section { margin: 25px 0; }
-        .bar-bg { width: 100%; height: 12px; background: #111; border-radius: 6px; margin-top: 8px; overflow: hidden; border: 1px solid #333; }
-        #prog-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #c084fc, #6366f1); transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        /* Progress Bar */
+        .prog-container { max-width: 1000px; margin-bottom: 60px; }
+        .bar-bg { width: 100%; height: 24px; background: #111; border-radius: 12px; border: 1px solid #333; overflow: hidden; margin-top: 10px; }
+        #prog-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #c084fc, #6366f1); transition: 1s ease-out; }
 
         /* Buttons */
-        .btn-row { display: flex; gap: 12px; margin-top: 30px; }
-        .av-btn { 
-            flex: 1; border: none; padding: 15px; font-family: 'Orbitron'; font-weight: 900; 
-            cursor: pointer; border-radius: 4px; font-size: 16px; transition: 0.2s;
-        }
-        .av-btn:hover { transform: translateY(-2px); filter: brightness(1.2); }
-        .back-btn { position: absolute; bottom: 30px; left: 30px; padding: 6px 20px; font-size: 12px; background: #222; border: 1px solid #444; width: auto; color: #888; }
-
-        /* --- MODALS (Shop, Missions, Song Select) --- */
-        .modal-overlay { 
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); 
-            z-index: 2000; align-items: center; justify-content: center; 
-        }
-        .modal-content { background: #0a0a0f; border: 2px solid #333; padding: 30px; width: 850px; height: 550px; display: flex; gap: 20px; }
+        .btn-row { display: flex; gap: 20px; max-width: 1000px; }
+        .av-btn { flex: 1; height: 110px; border: none; font-family: 'Orbitron'; font-weight: 900; font-size: 28px; cursor: pointer; border-radius: 15px; transition: 0.2s; }
+        .av-btn:hover { transform: scale(1.03); filter: brightness(1.2); }
         
-        /* Song Selection List */
-        .song-list { flex: 1; border-right: 1px solid #222; padding-right: 20px; overflow-y: auto; }
-        .song-item { 
-            background: rgba(255,255,255,0.03); padding: 18px; margin-bottom: 8px; 
-            display: flex; justify-content: space-between; cursor: pointer; border-left: 4px solid transparent;
-        }
-        .song-item.active { background: rgba(192, 132, 252, 0.1); border-left-color: var(--accent); }
+        .settings-btn { position: absolute; bottom: 40px; left: 40px; background: #111; border: 1px solid #444; color: white; padding: 15px; border-radius: 10px; cursor: pointer; font-family: 'Orbitron'; }
 
-        /* --- RHYTHM ENGINE UI --- */
-        #game-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 3000; }
-        .exit-x { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); color: #ff4444; border: 1px solid #ff4444; background: none; padding: 8px 20px; cursor: pointer; font-family: 'Orbitron'; z-index: 3100; }
+        /* --- STAGE MODAL --- */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-content { background: #0a0a0f; border: 2px solid #333; width: 1100px; height: 650px; display: flex; padding: 40px; gap: 40px; position: relative; }
+        .song-list { flex: 1; border-right: 1px solid #222; padding-right: 20px; }
+        .song-item { padding: 30px; background: rgba(255,255,255,0.03); margin-bottom: 10px; cursor: pointer; border-radius: 8px; font-size: 24px; font-weight: bold; }
+        .song-item.selected { border: 2px solid var(--accent); background: rgba(192, 132, 252, 0.1); }
 
-        .highway { 
-            position: absolute; left: 50%; transform: translateX(-50%); width: 450px; height: 100%; 
-            background: #08080c; border-inline: 8px solid #2a2a35; 
-        }
-        .bone-divider { position: absolute; width: 6px; height: 100%; background: url('https://i.imgur.com/your-bone-texture.png'); background-color: #333; transform: translateX(-50%); opacity: 0.6; }
+        /* --- GAMEPLAY --- */
+        #game-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 2000; }
+        .highway { position: absolute; left: 50%; transform: translateX(-50%); width: 550px; height: 100%; background: #08080c; border-inline: 6px solid #2a2a30; }
+        .bone { position: absolute; width: 2px; height: 100%; background: rgba(255,255,255,0.05); }
         
-        /* Notes & Flames */
-        .note { 
-            position: absolute; width: 60px; height: 60px; border-radius: 50%; 
-            transform: translateX(-50%); border: 3px solid #fff; box-shadow: 0 0 20px currentColor; 
-        }
-        .note-hold { height: 180px; border-radius: 30px; opacity: 0.8; }
-        .flame { 
-            position: absolute; bottom: 0; width: 100%; height: 100%; 
-            background: radial-gradient(circle at bottom, currentColor, transparent); 
-            filter: blur(8px); animation: flame-move 0.1s infinite alternate; display: none;
-        }
-        @keyframes flame-move { from { opacity: 0.5; transform: scale(1); } to { opacity: 1; transform: scale(1.2); } }
+        #game-timer { position: absolute; top: 50px; left: 50px; font-family: 'Orbitron'; font-size: 60px; color: white; }
+        #game-score { position: absolute; top: 130px; left: 50px; font-family: 'Orbitron'; font-size: 30px; color: var(--accent); }
+        .exit-x { position: absolute; top: 50px; right: 50px; background: #f44336; border: none; color: white; padding: 20px 40px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; font-size: 20px; }
 
-        /* AV Scoring Frame */
-        .score-frame { 
-            position: absolute; bottom: 40px; right: 40px; width: 220px; 
-            background: rgba(0,0,0,0.6); border: 2px solid #555; padding: 20px; border-radius: 10px; text-align: center;
-        }
-        #combo-txt { font-size: 70px; font-weight: 900; line-height: 0.8; color: var(--accent); font-family: 'Orbitron'; }
+        /* Notes */
+        .note { position: absolute; width: 90px; height: 35px; border-radius: 6px; transform: translateX(-50%); box-shadow: 0 0 20px currentColor; z-index: 10; }
+        .note-hold { height: 250px; border-radius: 40px; opacity: 0.8; }
+        .flame { position: absolute; bottom: 0; width: 100%; height: 60px; background: radial-gradient(circle, currentColor, transparent); filter: blur(10px); display: none; }
+
+        .key-labels { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: space-around; font-family: 'Orbitron'; font-size: 30px; color: rgba(255,255,255,0.2); pointer-events: none; }
     </style>
 </head>
 <body>
 
 <div id="event-hub">
     <div class="sidebar">
-        <h3 style="font-family:'Orbitron'; color: var(--accent); letter-spacing: 2px;">CURRENT EVENTS</h3>
+        <h2 style="font-family:'Orbitron'; margin-bottom: 40px; opacity: 0.6;">CURRENT EVENTS</h2>
         <div class="event-card active">
-            <span style="font-family:'Orbitron'; font-size: 24px; font-weight: 900;">1</span>
-            <div>
-                <b style="font-family:'Orbitron'; font-size: 14px;">Skele King's Jam Session</b><br>
-                <small style="color: #22c55e; font-weight: bold;">PERMANENT</small>
-            </div>
+            <span style="font-family:'Orbitron'; font-size: 30px; font-weight: 900;">01</span>
+            <div><b style="font-size: 22px;">Skele King's Jam Session</b><br><small style="color:#22c55e;">PERMANENT</small></div>
         </div>
-        <button class="av-btn back-btn" onclick="window.location.href='game.html'">BACK</button>
+        <button class="settings-btn" onclick="alert('Settings UI Open')">⚙ SETTINGS</button>
     </div>
 
-    <div class="main-panel">
-        <div class="details-box">
-            <h1 style="font-family:'Orbitron'; margin:0; font-size: 40px;">Skele King's Jam Session</h1>
-            <p style="font-size: 20px; opacity: 0.8;">Jam out with the Skele King! Earn high scores to get great rewards!</p>
-            
-            <div class="progress-section">
-                <div style="display:flex; justify-content:space-between;">
-                    <span style="font-family:'Orbitron'; font-size: 14px;">Progress</span>
-                    <span id="prog-val" style="font-family:'Orbitron'; font-size: 14px;">0/4</span>
-                </div>
-                <div class="bar-bg"><div id="prog-fill"></div></div>
+    <div class="main-content">
+        <h1 class="event-title">Skele King's Jam Session</h1>
+        <p class="event-desc">The fracture is widening. Coordinate with the Skele King to stabilize the Aetherfall. Complete all difficulties to claim the ultimate reward.</p>
+        
+        <div class="prog-container">
+            <div style="display:flex; justify-content:space-between; font-family:'Orbitron'; font-size: 20px;">
+                <span>EVENT PROGRESS</span><span id="prog-txt">0/4</span>
             </div>
+            <div class="bar-bg"><div id="prog-fill"></div></div>
+        </div>
 
-            <p style="font-size: 18px;">Owned Event Currency: <span id="coin-txt" style="color: gold; font-weight: bold;">0x</span></p>
-            
-            <div style="margin: 20px 0;">
-                <small style="color: gold; font-family:'Orbitron';">Rewards:</small><br>
-                <div style="display:inline-flex; align-items:center; gap:10px; padding:10px; background:rgba(255,255,255,0.05); border:1px solid #444;">
-                    <div style="width:30px; height:30px; background:gold; border-radius:50%; box-shadow:0 0 10px gold;"></div>
-                    <span style="font-family:'Orbitron'; font-weight:bold;">Corrupted Coin</span>
-                </div>
-            </div>
+        <p style="font-size: 24px; margin-bottom: 40px;">Corrupted Coins: <span id="coins" style="color:gold;">0</span></p>
 
-            <div class="btn-row">
-                <button class="av-btn" style="background: #a855f7;" onclick="openModal('shop')">Shop</button>
-                <button class="av-btn" style="background: #22c55e;" onclick="openModal('play')">Play</button>
-                <button class="av-btn" style="background: #eab308;" onclick="openModal('missions')">Missions</button>
-            </div>
+        <div class="btn-row">
+            <button class="av-btn" style="background: #a855f7;" onclick="alert('Shop Open')">SHOP</button>
+            <button class="av-btn" style="background: #22c55e;" onclick="openPlayModal()">PLAY SESSION</button>
+            <button class="av-btn" style="background: #eab308;" onclick="openMissionModal()">MISSIONS</button>
         </div>
     </div>
 </div>
 
-<div id="play-modal" class="modal-overlay">
+<div id="play-modal" class="modal">
     <div class="modal-content">
         <div class="song-list">
-            <h2 style="font-family:'Orbitron'; margin-bottom: 20px;">STAGES</h2>
-            <div class="song-item active"><span>Skele King's Theme</span><span>→</span></div>
-            <div class="song-item" style="opacity: 0.3;"><span>Locked Stage</span></div>
-            <button class="av-btn" style="margin-top:auto; background:#333; color:white;" onclick="closeModals()">CANCEL</button>
+            <h2 style="font-family:'Orbitron';">SELECT STAGE</h2>
+            <div class="song-item selected">Stage 1: Skele King Theme</div>
+            <div class="song-item" style="opacity: 0.3;">Locked</div>
+            <button class="av-btn" style="background:#222; height: 60px; margin-top: auto; width: 100%;" onclick="closeModals()">CANCEL</button>
         </div>
-        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
-            <h1 style="font-family:'Orbitron';">Skele King's Theme</h1>
-            <div style="width:100%; padding:20px; background:rgba(255,255,255,0.03); margin: 20px 0;">
-                <p>BEST SCORE: <span id="best-score" style="color:var(--accent); font-weight:bold;">0</span></p>
-                <p>LAST SCORE: <span id="last-score">0</span></p>
+        <div style="flex: 1.5; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+            <h1 style="font-family:'Orbitron'; font-size: 50px;">Skele King Theme</h1>
+            <div style="background:rgba(255,255,255,0.05); padding: 40px; margin: 30px 0;">
+                <p style="font-size: 24px;">HIGH SCORE: <span id="hi-val" style="color:var(--accent);">0</span></p>
             </div>
-            <button class="av-btn" id="diff-toggle" style="background:#444; width:100%; margin-bottom:10px;" onclick="cycleDifficulty()">Difficulty: EASY</button>
-            <button class="av-btn" style="background:#22c55e; width:100%; height:70px; font-size:24px;" onclick="initMatch()">PLAY</button>
+            <button class="av-btn" id="diff-sel" style="background:#333; margin-bottom: 20px;" onclick="cycleDiff()">DIFFICULTY: EASY</button>
+            <button class="av-btn" style="background:#22c55e; height: 100px;" onclick="startGame()">START GAME</button>
         </div>
     </div>
 </div>
 
-<div id="missions-modal" class="modal-overlay">
-    <div class="modal-content" style="flex-direction:column; width:500px; height:auto;">
-        <h2 style="font-family:'Orbitron';">EVENT MISSIONS</h2>
-        <div id="mission-list" style="width:100%;"></div>
-        <button class="av-btn" style="background:#333; margin-top:20px;" onclick="closeModals()">CLOSE</button>
+<div id="mission-modal" class="modal">
+    <div class="modal-content" style="flex-direction: column; width: 600px; height: auto;">
+        <h2 style="font-family:'Orbitron'; border-bottom: 1px solid #333; padding-bottom: 20px;">MISSIONS</h2>
+        <div id="mission-rows" style="font-size: 24px;"></div>
+        <button class="av-btn" style="background:#333; height: 60px; margin-top: 30px;" onclick="closeModals()">CLOSE</button>
     </div>
 </div>
 
 <div id="game-screen">
-    <button class="exit-x" onclick="forceExit()">X EXIT (Back to Hub)</button>
-    <div id="game-timer" style="position:absolute; top:30px; right:40px; font-family:'Orbitron'; font-size:32px; color:white;">01:00</div>
-    
+    <div id="game-timer">01:00</div>
+    <div id="game-score">SCORE: 000000</div>
+    <button class="exit-x" onclick="forceExit()">X EXIT SESSION</button>
     <div class="highway">
-        <div class="bone-divider" style="left:20%"></div>
-        <div class="bone-divider" style="left:40%"></div>
-        <div class="bone-divider" style="left:60%"></div>
-        <div class="bone-divider" style="left:80%"></div>
-        
-        <div style="position:absolute; bottom:110px; width:100%; height:4px; background:var(--accent); box-shadow:0 0 15px var(--accent);"></div>
-        
-        <div id="anchors" style="position:absolute; bottom:40px; width:100%; display:flex; justify-content:space-around;">
-            <div class="target" style="border:2px solid var(--q-col); color:var(--q-col); width:50px; height:50px; border-radius:50%; text-align:center; line-height:50px; font-family:'Orbitron';">Q</div>
-            <div class="target" style="border:2px solid var(--w-col); color:var(--w-col); width:50px; height:50px; border-radius:50%; text-align:center; line-height:50px; font-family:'Orbitron';">W</div>
-            <div class="target" style="border:2px solid var(--e-col); color:var(--e-col); width:50px; height:50px; border-radius:50%; text-align:center; line-height:50px; font-family:'Orbitron';">E</div>
-            <div class="target" style="border:2px solid var(--r-col); color:var(--r-col); width:50px; height:50px; border-radius:50%; text-align:center; line-height:50px; font-family:'Orbitron';">R</div>
-            <div class="target" style="border:2px solid var(--t-col); color:var(--t-col); width:50px; height:50px; border-radius:50%; text-align:center; line-height:50px; font-family:'Orbitron';">T</div>
-        </div>
-    </div>
-
-    <div class="score-frame">
-        <div style="font-size:10px; opacity:0.5; font-family:'Orbitron';">SCORE</div>
-        <div id="live-score" style="font-size:24px; font-family:'Orbitron';">000000</div>
-        <div id="combo-txt">0</div>
-        <div style="font-size:10px; opacity:0.5; font-family:'Orbitron';">COMBO</div>
+        <div class="bone" style="left:20%;"></div><div class="bone" style="left:40%;"></div><div class="bone" style="left:60%;"></div><div class="bone" style="left:80%;"></div>
+        <div style="position:absolute; bottom:140px; width:100%; height:4px; background:var(--accent); box-shadow:0 0 20px var(--accent);"></div>
+        <div class="key-labels"><span>Q</span><span>W</span><span>E</span><span>R</span><span>T</span></div>
     </div>
 </div>
 
 <script>
-    // --- DATA & STATE ---
-    let data = JSON.parse(localStorage.getItem('av_event_v2')) || {
-        coins: 0,
-        cleared: [],
-        best: { easy: 0, med: 0, hard: 0, expert: 0 },
-        last: { easy: 0, med: 0, hard: 0, expert: 0 }
+    let stats = JSON.parse(localStorage.getItem('av_v4')) || { coins: 0, cleared: [], hi: {easy:0, medium:0, hard:0, expert:0} };
+    let curDiff = 'easy';
+    let isPlaying = false, score = 0, activeNotes = [];
+    let gameLoop, spawnInt, clockInt;
+
+    const DIFF_DATA = {
+        easy: { label: 'EASY', time: 60, speed: 8, rate: 800, goal: 5000 },
+        medium: { label: 'MEDIUM', time: 180, speed: 11, rate: 600, goal: 15000 },
+        hard: { label: 'HARD', time: 300, speed: 14, rate: 450, goal: 40000 },
+        expert: { label: 'EXPERT', time: 360, speed: 19, rate: 300, goal: 85000 }
     };
 
-    let currentDiff = 'easy';
-    let isPlaying = false, score = 0, combo = 0, activeNotes = [], timeLeft = 60;
-    const diffs = {
-        easy: { label: 'EASY', time: 60, speed: 7, rate: 800, goal: 5000 },
-        med: { label: 'MEDIUM', time: 180, speed: 10, rate: 600, goal: 15000 },
-        hard: { label: 'HARD', time: 300, speed: 13, rate: 450, goal: 35000 },
-        expert: { label: 'EXPERT', time: 360, speed: 18, rate: 300, goal: 75000 }
-    };
-
-    function save() {
-        localStorage.setItem('av_event_v2', JSON.stringify(data));
-        document.getElementById('coin-txt').innerText = data.coins + "x";
-        document.getElementById('prog-val').innerText = data.cleared.length + "/4";
-        document.getElementById('prog-fill').style.width = (data.cleared.length / 4 * 100) + "%";
+    function updateHub() {
+        document.getElementById('coins').innerText = stats.coins;
+        document.getElementById('prog-txt').innerText = stats.cleared.length + "/4";
+        document.getElementById('prog-fill').style.width = (stats.cleared.length / 4 * 100) + "%";
+        localStorage.setItem('av_v4', JSON.stringify(stats));
     }
 
-    // --- MODAL CONTROLS ---
-    function openModal(type) {
-        if(type === 'play') {
-            document.getElementById('play-modal').style.display = 'flex';
-            document.getElementById('best-score').innerText = data.best[currentDiff];
-            document.getElementById('last-score').innerText = data.last[currentDiff];
-        } else if (type === 'missions') {
-            const list = document.getElementById('mission-list');
-            list.innerHTML = Object.keys(diffs).map(k => `
-                <div style="padding:15px; border-bottom:1px solid #222; display:flex; justify-content:space-between; align-items:center;">
-                    <span>Clear ${diffs[k].label} (Goal: ${diffs[k].goal})</span>
-                    <b style="color:${data.cleared.includes(k) ? '#22c55e' : '#555'}">${data.cleared.includes(k) ? 'COMPLETE' : 'INCOMPLETE'}</b>
-                </div>
-            `).join('');
-            document.getElementById('missions-modal').style.display = 'flex';
-        }
+    function openPlayModal() { document.getElementById('play-modal').style.display = 'flex'; document.getElementById('hi-val').innerText = stats.hi[curDiff]; }
+    function openMissionModal() {
+        document.getElementById('mission-modal').style.display = 'flex';
+        document.getElementById('mission-rows').innerHTML = Object.keys(DIFF_DATA).map(k => `
+            <div style="display:flex; justify-content:space-between; padding: 20px 0; border-bottom:1px solid #222;">
+                <span>Clear Stage (${DIFF_DATA[k].label})</span>
+                <b style="color:${stats.cleared.includes(k) ? '#22c55e' : '#444'}">${stats.cleared.includes(k) ? 'COMPLETE' : 'TO-DO'}</b>
+            </div>
+        `).join('');
     }
-    function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
-    function cycleDifficulty() {
-        const keys = Object.keys(diffs);
-        currentDiff = keys[(keys.indexOf(currentDiff) + 1) % 4];
-        document.getElementById('diff-toggle').innerText = "Difficulty: " + diffs[currentDiff].label;
-        document.getElementById('best-score').innerText = data.best[currentDiff];
-        document.getElementById('last-score').innerText = data.last[currentDiff];
+    function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+    
+    function cycleDiff() {
+        const d = Object.keys(DIFF_DATA);
+        curDiff = d[(d.indexOf(curDiff) + 1) % 4];
+        document.getElementById('diff-sel').innerText = "DIFFICULTY: " + DIFF_DATA[curDiff].label;
+        document.getElementById('hi-val').innerText = stats.hi[curDiff];
     }
 
-    // --- RHYTHM ENGINE ---
-    function initMatch() {
+    function startGame() {
         closeModals();
         document.getElementById('game-screen').style.display = 'block';
-        document.getElementById('event-hub').style.filter = 'blur(10px)';
-        isPlaying = true; score = 0; combo = 0; activeNotes = [];
-        timeLeft = diffs[currentDiff].time;
-        updateHUD();
-
-        window.gameLoop = requestAnimationFrame(runUpdate);
-        window.spawnTimer = setInterval(spawnNote, diffs[currentDiff].rate);
-        window.clockTimer = setInterval(() => {
-            timeLeft--;
-            let m = Math.floor(timeLeft/60), s = timeLeft%60;
-            document.getElementById('game-timer').innerText = `${m}:${s<10?'0':''}${s}`;
-            if(timeLeft <= 0) finishMatch();
-        }, 1000);
-    }
-
-    function forceExit() {
-        isPlaying = false;
-        clearInterval(window.spawnTimer);
-        clearInterval(window.clockTimer);
-        cancelAnimationFrame(window.gameLoop);
-        document.getElementById('game-screen').style.display = 'none';
-        document.getElementById('event-hub').style.filter = 'none';
-        activeNotes.forEach(n => n.el.remove());
-    }
-
-    function spawnNote() {
-        if(!isPlaying) return;
-        const lane = Math.floor(Math.random() * 5);
-        const isHold = Math.random() > 0.85;
-        const el = document.createElement('div');
-        el.className = 'note' + (isHold ? ' note-hold' : '');
-        el.style.left = (lane * 20 + 10) + "%";
-        el.style.color = [var('--q-col'), var('--w-col'), var('--e-col'), var('--r-col'), var('--t-col')][lane];
+        isPlaying = true; score = 0; activeNotes = [];
+        let timer = DIFF_DATA[curDiff].time;
         
-        const flame = document.createElement('div');
-        flame.className = 'flame';
-        el.appendChild(flame);
+        spawnInt = setInterval(() => {
+            const lane = Math.floor(Math.random() * 5);
+            const isHold = Math.random() > 0.85;
+            const el = document.createElement('div');
+            el.className = 'note' + (isHold ? ' note-hold' : '');
+            el.style.left = (lane * 20 + 10) + "%";
+            el.style.color = [var('--q-col'), var('--w-col'), var('--e-col'), var('--r-col'), var('--t-col')][lane];
+            el.innerHTML = '<div class="flame"></div>';
+            document.querySelector('.highway').appendChild(el);
+            activeNotes.push({ el, y: -300, lane, isHold, hit: false, holding: false });
+        }, DIFF_DATA[curDiff].rate);
 
-        document.querySelector('.highway').appendChild(el);
-        activeNotes.push({ el, flame, y: -200, lane, isHold, hit: false, holding: false });
+        clockInt = setInterval(() => {
+            timer--;
+            let m = Math.floor(timer/60), s = timer%60;
+            document.getElementById('game-timer').innerText = `${m}:${s<10?'0':''}${s}`;
+            if(timer <= 0) finishGame(true);
+        }, 1000);
+
+        gameLoop = requestAnimationFrame(update);
     }
 
-    function runUpdate() {
+    function update() {
         if(!isPlaying) return;
         activeNotes.forEach((n, i) => {
-            n.y += diffs[currentDiff].speed;
+            n.y += DIFF_DATA[curDiff].speed;
             n.el.style.top = n.y + 'px';
-
-            if(n.y > window.innerHeight) {
-                if(!n.hit) { combo = 0; updateHUD(); }
-                n.el.remove();
-                activeNotes.splice(i, 1);
-            }
+            if(n.y > window.innerHeight) { n.el.remove(); activeNotes.splice(i, 1); }
         });
-        window.gameLoop = requestAnimationFrame(runUpdate);
+        gameLoop = requestAnimationFrame(update);
     }
 
-    function updateHUD() {
-        document.getElementById('live-score').innerText = score.toString().padStart(6, '0');
-        document.getElementById('combo-txt').innerText = combo;
-    }
-
-    function finishMatch() {
-        isPlaying = false;
-        data.last[currentDiff] = score;
-        if(score > data.best[currentDiff]) data.best[currentDiff] = score;
-        
-        if(score >= diffs[currentDiff].goal && !data.cleared.includes(currentDiff)) {
-            data.cleared.push(currentDiff);
-            data.coins += 15;
-            alert("NEW CLEAR! Earned 15 Corrupted Coins!");
-        } else {
-            alert("Match Finished! Final Score: " + score);
-        }
-        forceExit();
-        save();
-    }
-
-    // Input
     window.onkeydown = (e) => {
         const k = ['q','w','e','r','t'].indexOf(e.key.toLowerCase());
         if(k === -1 || !isPlaying) return;
-        const n = activeNotes.find(note => note.lane === k && !note.hit && note.y > window.innerHeight - 250);
-        if(n) {
-            n.hit = true;
-            combo++;
-            score += 100 + (combo * 5);
-            if(n.isHold) { n.flame.style.display = 'block'; n.holding = true; }
-            else { n.el.style.display = 'none'; }
-            updateHUD();
+        const note = activeNotes.find(n => n.lane === k && !n.hit && n.y > window.innerHeight - 250);
+        if(note) {
+            note.hit = true; score += 100;
+            document.getElementById('game-score').innerText = `SCORE: ${score.toString().padStart(6, '0')}`;
+            if(note.isHold) { note.el.querySelector('.flame').style.display = 'block'; note.holding = true; }
+            else { note.el.style.display = 'none'; }
         }
     };
 
-    save();
+    function forceExit() { isPlaying = false; clearInterval(spawnInt); clearInterval(clockInt); document.getElementById('game-screen').style.display = 'none'; activeNotes.forEach(n => n.el.remove()); }
+    
+    function finishGame(win) {
+        if(score > stats.hi[curDiff]) stats.hi[curDiff] = score;
+        if(score >= DIFF_DATA[curDiff].goal && !stats.cleared.includes(curDiff)) {
+            stats.cleared.push(curDiff);
+            stats.coins += 15;
+            alert("NEW CLEAR! +15 Coins");
+        }
+        forceExit(); updateHub();
+    }
+
+    updateHub();
 </script>
 </body>
 </html>

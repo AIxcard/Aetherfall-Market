@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aetherfall | Events</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #010206;
+            --panel: rgba(2, 4, 12, 0.98);
+            --accent: #c084fc;
+            --corrupted: #8b5cf6;
+            --gold: #fbbf24;
+            --border: #1e40af;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; height: 100%; 
+            background: var(--bg); font-family: 'Rajdhani', sans-serif; 
+            color: white; overflow: hidden;
+        }
+
+        /* UI OVERLAY */
+        #ui-layer { position: absolute; width: 100%; height: 100%; z-index: 10; display: flex; }
+
+        .sidebar { 
+            width: 350px; background: var(--panel); border-right: 1px solid var(--border); 
+            padding: 25px; display: flex; flex-direction: column;
+        }
+
+        .main-view { flex: 1; padding: 40px; position: relative; }
+
+        /* BUTTONS */
+        .btn {
+            background: linear-gradient(180deg, #4f46e5 0%, #3730a3 100%);
+            border: none; color: white; padding: 12px; margin: 5px;
+            font-family: 'Orbitron'; font-size: 12px; cursor: pointer; border-radius: 4px;
+        }
+        .btn:hover { filter: brightness(1.2); }
+        .btn-green { background: #22c55e; }
+        .btn-yellow { background: #eab308; color: black; }
+
+        /* STAGE CARDS */
+        .stage-card {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            padding: 15px; margin-bottom: 10px; cursor: pointer; position: relative;
+        }
+        .stage-card.active { border-color: var(--accent); background: rgba(192, 132, 252, 0.1); }
+
+        /* RHYTHM GAME AREA */
+        #game-area { 
+            display: none; position: absolute; top: 0; left: 0; 
+            width: 100%; height: 100%; background: #000; z-index: 20; 
+        }
+
+        .lane-container {
+            display: flex; gap: 8px; width: 450px; height: 100%;
+            margin: 0 auto; background: rgba(255,255,255,0.02);
+            position: relative; border-left: 2px solid #222; border-right: 2px solid #222;
+        }
+
+        .lane { flex: 1; position: relative; border-right: 1px solid rgba(255,255,255,0.05); }
+        .hit-line { 
+            position: absolute; bottom: 80px; width: 100%; height: 4px; 
+            background: var(--accent); box-shadow: 0 0 15px var(--accent);
+        }
+
+        .note { 
+            position: absolute; width: 100%; height: 50px; 
+            background: var(--accent); border-radius: 10px; 
+            box-shadow: 0 0 10px var(--accent);
+        }
+        
+        /* Hold Note Bar */
+        .note-body {
+            position: absolute; width: 80%; left: 10%;
+            background: linear-gradient(to top, var(--accent), transparent);
+            opacity: 0.6;
+        }
+
+        #combo-hud {
+            position: absolute; right: 50px; top: 50%;
+            font-family: 'Orbitron'; font-size: 40px; text-align: center;
+        }
+
+        /* SHOP & MISSIONS */
+        .modal-content {
+            background: var(--panel); border: 1px solid var(--accent);
+            padding: 20px; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); width: 400px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="ui-layer">
+    <div class="sidebar">
+        <h2 style="font-family:'Orbitron'; color:var(--accent);">AETHER EVENTS</h2>
+        <p>Corrupted Coins: <span id="coin-display" style="color:var(--gold)">0</span></p>
+        <hr style="width:100%; border:0; border-top:1px solid #333;">
+        
+        <div class="stage-card active">
+            <b>JAM SESSION: STAGE 1</b><br>
+            <small>Reward: 10 Corrupted Coins</small>
+        </div>
+        <div class="stage-card">
+            <b>JAM SESSION: STAGE 2</b><br>
+            <small>Requires Lv. 10</small>
+        </div>
+
+        <button class="btn" onclick="showSection('main')">MAIN PAGE</button>
+        <button class="btn btn-yellow" onclick="showSection('shop')">EVENT SHOP</button>
+        <button class="btn btn-green" onclick="showSection('play')">PLAY STAGE</button>
+        <button class="btn" style="margin-top:auto" onclick="window.location.href='game.html'">RETURN TO AETHERFALL</button>
+    </div>
+
+    <div class="main-view" id="main-view">
+        <h1 style="font-family:'Orbitron'; font-size: 50px;">SKELE KING'S<br><span style="color:var(--accent)">JAM SESSION</span></h1>
+        <p style="max-width: 500px; opacity: 0.8;">Jam out with the Skele King! Match the Aetheric pulses to earn high scores and Corrupted Coins.</p>
+    </div>
+</div>
+
+<div id="shop-modal" class="modal-content" style="display:none; z-index:100;">
+    <h3 style="font-family:'Orbitron'">CORRUPTED SHOP</h3>
+    <div style="background:#000; padding:10px; margin-bottom:10px;">
+        <b>Void Infusion</b><br>
+        <small>+5 Click Power in Main Game</small><br>
+        <button class="btn" onclick="buyItem(50, 5)">50 COINS</button>
+    </div>
+    <button class="btn" onclick="document.getElementById('shop-modal').style.display='none'">CLOSE</button>
+</div>
+
+<div id="game-area">
+    <div class="lane-container">
+        <div class="lane" id="lane-q"></div>
+        <div class="lane" id="lane-w"></div>
+        <div class="lane" id="lane-e"></div>
+        <div class="lane" id="lane-r"></div>
+        <div class="lane" id="lane-t"></div>
+        <div class="hit-line"></div>
+    </div>
+    <div id="combo-hud">
+        <div style="font-size:12px; opacity:0.6;">COMBO</div>
+        <div id="combo-val">0</div>
+    </div>
+</div>
+
+<script>
+    // DATA SYNC
+    let gameStats = JSON.parse(localStorage.getItem('aetherSave')) || { gold: 0, corruptedCoins: 0, basePower: 1 };
+    
+    function save() {
+        localStorage.setItem('aetherSave', JSON.stringify(gameStats));
+        document.getElementById('coin-display').innerText = gameStats.corruptedCoins;
+    }
+
+    // GAME VARIABLES
+    let isPlaying = false;
+    let combo = 0;
+    let activeNotes = [];
+    const lanes = ['q', 'w', 'e', 'r', 't'];
+    const keyState = {};
+
+    function showSection(s) {
+        if(s === 'shop') document.getElementById('shop-modal').style.display = 'block';
+        if(s === 'play') startRhythmGame();
+    }
+
+    function buyItem(cost, pwr) {
+        if(gameStats.corruptedCoins >= cost) {
+            gameStats.corruptedCoins -= cost;
+            gameStats.basePower += pwr;
+            alert("Power Upgraded! This will reflect in your main game.");
+            save();
+        }
+    }
+
+    function startRhythmGame() {
+        document.getElementById('game-area').style.display = 'block';
+        isPlaying = true;
+        gameLoop();
+        // Spawn a note every 800ms
+        window.noteSpawner = setInterval(spawnNote, 800);
+    }
+
+    function spawnNote() {
+        if(!isPlaying) return;
+        const lane = lanes[Math.floor(Math.random() * lanes.length)];
+        const isLong = Math.random() > 0.8;
+        
+        const noteEl = document.createElement('div');
+        noteEl.className = 'note' + (isLong ? ' note-long' : '');
+        noteEl.style.top = "-50px";
+        document.getElementById('lane-' + lane).appendChild(noteEl);
+
+        let noteObj = {
+            el: noteEl,
+            lane: lane,
+            y: -50,
+            isLong: isLong,
+            length: isLong ? 150 : 0,
+            hit: false
+        };
+
+        if(isLong) {
+            const body = document.createElement('div');
+            body.className = 'note-body';
+            body.style.height = noteObj.length + 'px';
+            body.style.bottom = '25px';
+            noteEl.appendChild(body);
+        }
+
+        activeNotes.push(noteObj);
+    }
+
+    function gameLoop() {
+        if(!isPlaying) return;
+
+        for(let i = activeNotes.length - 1; i >= 0; i--) {
+            let n = activeNotes[i];
+            n.y += 5; // Speed
+            n.el.style.top = n.y + 'px';
+
+            // HOLD NOTE LOGIC
+            if(n.isLong && keyState[n.lane] && n.y > 400 && n.y < 550) {
+                combo++;
+                document.getElementById('combo-val').innerText = combo;
+            }
+
+            // Despawn
+            if(n.y > 700) {
+                if(!n.hit) { combo = 0; document.getElementById('combo-val').innerText = 0; }
+                n.el.remove();
+                activeNotes.splice(i, 1);
+            }
+        }
+
+        if(isPlaying) requestAnimationFrame(gameLoop);
+    }
+
+    window.addEventListener('keydown', (e) => {
+        const k = e.key.toLowerCase();
+        keyState[k] = true;
+        
+        // Tap Check
+        activeNotes.forEach(n => {
+            if(n.lane === k && n.y > 450 && n.y < 550 && !n.hit) {
+                n.hit = true;
+                n.el.style.background = '#22c55e';
+                combo++;
+                document.getElementById('combo-val').innerText = combo;
+                
+                // Reward on successful run (simplified)
+                if(combo % 50 === 0) {
+                    gameStats.corruptedCoins += 1;
+                    save();
+                }
+            }
+        });
+
+        if(e.key === "Escape") {
+            isPlaying = false;
+            clearInterval(window.noteSpawner);
+            document.getElementById('game-area').style.display = 'none';
+        }
+    });
+
+    window.addEventListener('keyup', (e) => {
+        keyState[e.key.toLowerCase()] = false;
+    });
+
+    save(); // Initial Load
+</script>
+</body>
+</html>

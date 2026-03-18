@@ -7,10 +7,9 @@
     <style>
         :root { 
             --accent: #c084fc; --bg: #020205; --panel: rgba(13, 13, 25, 0.98);
-            --q-col: #ff00ff; --w-col: #00ffff; --e-col: #ffff00; --r-col: #00ff00; --t-col: #ff4400;
         }
-        * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; overflow: hidden; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; overflow: hidden; touch-action: manipulation; }
 
         /* --- HUB LAYOUT --- */
         #event-hub { display: flex; width: 100%; height: 100%; padding: 40px; position: relative; }
@@ -20,12 +19,10 @@
             cursor: pointer; border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
             clip-path: polygon(5% 0, 100% 0, 100% 75%, 95% 100%, 0 100%, 0 25%);
         }
-
         .main-panel { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding-top: 20px; }
         .details-box { background: var(--panel); border: 1px solid #333; padding: 40px; width: 100%; max-width: 700px; border-radius: 12px; }
         .bar-bg { width: 100%; height: 12px; background: #111; border-radius: 6px; margin: 15px 0; border: 1px solid #333; }
         #prog-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #c084fc, #6366f1); transition: 1s ease; }
-        
         .btn-row { display: flex; gap: 15px; margin-top: 30px; }
         .av-btn { flex: 1; border: none; padding: 18px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 4px; font-size: 16px; transition: 0.2s; color: white; }
         .av-btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
@@ -47,13 +44,14 @@
             transform: translateX(-50%); border: 3px solid #fff; 
             box-shadow: 0 0 20px currentColor;
             background: radial-gradient(circle, #fff 0%, currentColor 70%);
+            pointer-events: none;
         }
-        .judgement-line { position: absolute; bottom: 0; width: 100%; height: 100px; border-top: 5px solid var(--accent); background: rgba(192, 132, 252, 0.15); display: flex; justify-content: space-around; align-items: center; }
+        .judgement-line { position: absolute; bottom: 0; width: 100%; height: 110px; border-top: 5px solid var(--accent); background: rgba(192, 132, 252, 0.15); display: flex; justify-content: space-around; align-items: stretch; }
+        .hit-zone { flex: 1; display: flex; align-items: center; justify-content: center; border-right: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
         
-        /* UI PLACEMENT */
-        .score-ui { position: absolute; bottom: 120px; right: -200px; text-align: right; font-family: 'Orbitron'; width: 180px;}
-        #combo-txt { font-size: 70px; color: var(--accent); font-weight: 900; line-height: 0.8; }
-        #game-timer { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-family: 'Orbitron'; font-size: 30px; color: var(--accent); text-shadow: 0 0 10px var(--accent); }
+        .score-ui { position: absolute; bottom: 130px; right: -210px; text-align: right; font-family: 'Orbitron'; width: 200px;}
+        #combo-txt { font-size: 75px; color: var(--accent); font-weight: 900; line-height: 0.8; }
+        #game-timer-display { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); font-family: 'Orbitron'; font-size: 35px; color: var(--accent); z-index: 4005; }
 
         .judgment-msg { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-family: 'Orbitron'; font-weight: 900; font-size: 50px; pointer-events: none; animation: popFeedback 0.4s ease-out forwards; }
         @keyframes popFeedback { 0% { opacity:0; transform: translateY(20px); } 100% { opacity:0; transform: translateY(-60px); } }
@@ -69,7 +67,6 @@
             <div><b>Skele King's Jam Session</b><br><small style="color: #22c55e;">PERMANENT</small></div>
         </div>
     </div>
-
     <div class="main-panel">
         <div class="details-box">
             <h1 style="font-family:'Orbitron'; font-size: 42px; margin:0;">Skele King's Jam Session</h1>
@@ -97,6 +94,16 @@
     </div>
 </div>
 
+<div id="settings-modal" class="modal-overlay"><div class="modal-content" style="width:450px;">
+    <h2 style="font-family:'Orbitron';">SETTINGS</h2>
+    <div style="margin-bottom: 20px; padding: 15px; background: #111; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <span>Input Mode:</span>
+        <button id="mode-toggle" class="av-btn" style="background:var(--accent); padding: 5px 15px; flex: none;" onclick="toggleInputMode()">PC MODE</button>
+    </div>
+    <div id="bind-editor"></div>
+    <button class="av-btn" style="background:#22c55e; margin-top:20px; width:100%" onclick="closeModals()">SAVE</button>
+</div></div>
+
 <div id="shop-modal" class="modal-overlay"><div class="modal-content">
     <h2 style="font-family:'Orbitron'; color:var(--accent);">SKELE SHOP</h2>
     <div class="shop-grid">
@@ -116,20 +123,13 @@
     <button class="av-btn" style="background:#222; margin-top:20px; width:100%" onclick="closeModals()">CLOSE</button>
 </div></div>
 
-<div id="settings-modal" class="modal-overlay"><div class="modal-content" style="width:400px;">
-    <h2 style="font-family:'Orbitron';">KEY BINDS</h2>
-    <div id="bind-editor"></div>
-    <button class="av-btn" style="background:#22c55e; margin-top:20px; width:100%" onclick="closeModals()">SAVE</button>
-</div></div>
-
 <div id="game-screen">
-    <div id="game-timer">01:00</div>
-    <button style="position:fixed; top:30px; left:30px; z-index:4000; background:none; border:1px solid red; color:red; padding:10px; cursor:pointer;" onclick="forceExit()">EXIT (FORFEIT)</button>
+    <div id="game-timer-display">01:00</div>
+    <button style="position:fixed; top:30px; left:30px; z-index:4010; background:rgba(255,0,0,0.2); border:1px solid red; color:red; padding:10px; cursor:pointer;" onclick="forceExit()">EXIT (FORFEIT)</button>
     <div class="highway">
         <div id="note-layer"></div>
         <div class="score-ui">
-            <div style="font-size:12px; opacity:0.5">SCORE</div>
-            <div id="live-score">000000</div>
+            <div id="live-score" style="font-size: 28px;">000000</div>
             <div id="combo-txt">0</div>
             <div style="font-size:12px; opacity:0.5">COMBO</div>
         </div>
@@ -141,6 +141,7 @@
     let state = {
         coins: 50,
         keys: ['q', 'w', 'e', 'r', 't'],
+        inputMode: 'pc',
         bestScores: { easy: 0, medium: 0, hard: 0, expert: 0 },
         cleared: { easy: false, medium: false, hard: false, expert: false },
         requirements: { easy: 2000, medium: 10000, hard: 20000, expert: 30000 },
@@ -156,13 +157,17 @@
 
     function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
 
+    function toggleInputMode() {
+        state.inputMode = state.inputMode === 'pc' ? 'mobile' : 'pc';
+        document.getElementById('mode-toggle').innerText = state.inputMode.toUpperCase() + " MODE";
+    }
+
     function renderDiffs() {
         const diffs = ['easy', 'medium', 'hard', 'expert'];
         document.getElementById('diff-list').innerHTML = diffs.map(d => `
             <div class="diff-card">
                 <h3 style="text-transform:uppercase">${d}</h3>
                 <p>Best: ${state.bestScores[d]}</p>
-                <p style="font-size:12px; color:#888">Goal: ${state.requirements[d]}</p>
                 <button class="av-btn" style="background:var(--accent); padding:10px;" onclick="startRhythm('${d}')">SELECT</button>
             </div>
         `).join('');
@@ -172,11 +177,10 @@
         const diffs = ['easy', 'medium', 'hard', 'expert'];
         document.getElementById('mission-list').innerHTML = diffs.map(d => `
             <div style="background:#111; padding:15px; margin-bottom:10px; border-left:4px solid ${state.cleared[d] ? '#22c55e' : '#444'}">
-                <span>Clear ${d} Stage (Score ${state.requirements[d]}+)</span>
-                <b style="float:right; color:gold">${state.cleared[d] ? 'CLAIMED' : '+'+state.missionRewards[d]+' Coins'}</b>
+                <span>Clear ${d} (Goal: ${state.requirements[d]})</span>
+                <b style="float:right; color:gold">${state.cleared[d] ? 'COMPLETED' : '+'+state.missionRewards[d]+'c'}</b>
             </div>
         `).join('');
-        // Update main progress bar
         let clearCount = Object.values(state.cleared).filter(v => v).length;
         document.getElementById('prog-fill').style.width = (clearCount / 4 * 100) + '%';
     }
@@ -190,7 +194,10 @@
         `).join('');
     }
 
-    // --- ENGINE ---
+    function buy(item, price) {
+        if(state.coins >= price) { state.coins -= price; document.getElementById('coin-txt').innerText = state.coins + "x"; }
+    }
+
     let activeNotes = [], score = 0, combo = 0, isPlaying = false, spawnInt, timerInt, timeLeft = 60;
     const laneColors = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00', '#ff4400'];
 
@@ -199,7 +206,13 @@
         closeModals();
         isPlaying = true; score = 0; combo = 0; activeNotes = []; timeLeft = 60;
         document.getElementById('game-screen').style.display = 'block';
-        document.getElementById('key-hints').innerHTML = state.keys.map(k => `<span style="font-family:'Orbitron'; opacity:0.5">${k.toUpperCase()}</span>`).join('');
+        
+        // Setup Zones for Mobile/PC
+        document.getElementById('key-hints').innerHTML = state.keys.map((k, i) => `
+            <div class="hit-zone" ontouchstart="handleHit(${i})" onmousedown="${state.inputMode === 'pc' ? '' : 'handleHit(' + i + ')'}">
+                <span style="font-family:'Orbitron'; opacity:0.5">${state.inputMode === 'pc' ? k.toUpperCase() : ''}</span>
+            </div>
+        `).join('');
         
         let rate = {easy: 800, medium: 600, hard: 450, expert: 350}[d];
         spawnInt = setInterval(spawnNote, rate);
@@ -211,7 +224,7 @@
         timeLeft--;
         let m = Math.floor(timeLeft / 60);
         let s = timeLeft % 60;
-        document.getElementById('game-timer').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        document.getElementById('game-timer-display').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
         if(timeLeft <= 0) finalizeGame();
     }
 
@@ -234,8 +247,7 @@
             n.el.style.top = n.y + 'px';
             if(n.y > window.innerHeight) {
                 if(!n.hit) { 
-                    combo = 0; 
-                    score = Math.max(0, score - 150); // Loss 150
+                    combo = 0; score = Math.max(0, score - 150); 
                     renderJudg('MISS -150', '#f44'); 
                 }
                 n.el.remove(); activeNotes.splice(i, 1); refreshHUD();
@@ -244,24 +256,36 @@
         requestAnimationFrame(gameUpdate);
     }
 
+    function handleHit(lane) {
+        if(!isPlaying) return;
+        const zone = window.innerHeight - 100;
+        const note = activeNotes.find(n => n.lane === lane && !n.hit && Math.abs(n.y - zone) < 110);
+        if(note) {
+            note.hit = true; note.el.style.display = 'none';
+            let off = Math.abs(note.y - zone);
+            if(off < 45) { score += 200; combo++; renderJudg('PERFECT', '#0ff'); }
+            else { score += 150; combo++; renderJudg('GOOD', '#c084fc'); }
+            refreshHUD();
+        }
+    }
+
+    window.onkeydown = (e) => {
+        if(!isPlaying || state.inputMode !== 'pc') return;
+        const lane = state.keys.indexOf(e.key.toLowerCase());
+        if(lane !== -1) handleHit(lane);
+    };
+
     function finalizeGame() {
-        isPlaying = false;
-        clearInterval(spawnInt); clearInterval(timerInt);
-        let diff = state.currentDiff;
-        let goal = state.requirements[diff];
-        
-        if(score >= goal) {
-            alert(`STAGE CLEARED! Score: ${score}`);
-            if(!state.cleared[diff]) {
-                state.cleared[diff] = true;
-                state.coins += state.missionRewards[diff];
+        isPlaying = false; clearInterval(spawnInt); clearInterval(timerInt);
+        if(score >= state.requirements[state.currentDiff]) {
+            alert("STAGE CLEARED!");
+            if(!state.cleared[state.currentDiff]) {
+                state.cleared[state.currentDiff] = true;
+                state.coins += state.missionRewards[state.currentDiff];
                 document.getElementById('coin-txt').innerText = state.coins + "x";
             }
-        } else {
-            alert(`FAILED! Needed ${goal}, got ${score}`);
-        }
-
-        if(score > state.bestScores[diff]) state.bestScores[diff] = score;
+        } else { alert("FAILED! Goal not met."); }
+        if(score > state.bestScores[state.currentDiff]) state.bestScores[state.currentDiff] = score;
         forceExit();
     }
 
@@ -277,27 +301,11 @@
         document.getElementById('combo-txt').innerText = combo;
     }
 
-    window.onkeydown = (e) => {
-        if(!isPlaying) return;
-        const lane = state.keys.indexOf(e.key.toLowerCase());
-        if(lane === -1) return;
-        const zone = window.innerHeight - 100;
-        // Wider hit window for Hard/Expert playability
-        const note = activeNotes.find(n => n.lane === lane && !n.hit && Math.abs(n.y - zone) < 110);
-        if(note) {
-            note.hit = true; note.el.style.display = 'none';
-            let off = Math.abs(note.y - zone);
-            if(off < 45) { score += 200; combo++; renderJudg('PERFECT', '#0ff'); } // Perfect 200
-            else { score += 150; combo++; renderJudg('GOOD', '#c084fc'); } // Good 150
-            refreshHUD();
-        }
-    };
-
     function forceExit() {
         isPlaying = false; clearInterval(spawnInt); clearInterval(timerInt);
         document.getElementById('game-screen').style.display = 'none';
         document.getElementById('note-layer').innerHTML = '';
-        document.getElementById('game-timer').innerText = "01:00";
+        document.getElementById('game-timer-display').innerText = "01:00";
     }
 </script>
 </body>

@@ -6,108 +6,111 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --accent: #c084fc; --bg: #020205; --panel: rgba(13, 13, 25, 0.95);
+            --accent: #c084fc; --bg: #020205; --panel: rgba(13, 13, 25, 0.98);
             --q-col: #ff00ff; --w-col: #00ffff; --e-col: #ffff00; --r-col: #00ff00; --t-col: #ff4400;
         }
+        * { box-sizing: border-box; }
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; overflow: hidden; }
 
-        /* --- MAIN HUB LAYOUT --- */
-        #event-hub { display: flex; width: 100%; height: 100%; padding: 30px; box-sizing: border-box; transition: filter 0.3s; }
-        .sidebar { width: 320px; display: flex; flex-direction: column; gap: 15px; }
+        /* --- HUB LAYOUT --- */
+        #event-hub { display: flex; width: 100%; height: 100%; padding: 40px; position: relative; }
+        
+        /* Sidebar with Outline on Active Card */
+        .sidebar { width: 320px; display: flex; flex-direction: column; gap: 20px; z-index: 10; }
         .event-card {
-            background: rgba(88, 28, 135, 0.2); border: 2px solid #5b21b6; padding: 15px; 
-            display: flex; align-items: center; gap: 15px; cursor: pointer;
-            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+            background: rgba(88, 28, 135, 0.2); 
+            padding: 20px; display: flex; align-items: center; gap: 15px; 
+            cursor: pointer; position: relative;
+            clip-path: polygon(5% 0, 100% 0, 100% 75%, 95% 100%, 0 100%, 0 25%);
+            border: 2px solid var(--accent); /* THE OUTLINE */
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
         }
-        .event-card.active { border-color: var(--accent); background: rgba(147, 51, 234, 0.4); box-shadow: 0 0 20px rgba(192, 132, 252, 0.3); }
 
-        .main-panel { flex: 1; padding-left: 50px; }
-        .details-box { background: var(--panel); border: 1px solid #333; padding: 40px; max-width: 650px; border-radius: 12px; position: relative; }
+        .main-panel { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding-top: 20px; }
+        .details-box { 
+            background: var(--panel); border: 1px solid #333; padding: 40px; 
+            width: 100%; max-width: 700px; border-radius: 12px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        /* Progress Bar */
+        .bar-bg { width: 100%; height: 12px; background: #111; border-radius: 6px; margin: 15px 0; overflow: hidden; border: 1px solid #333; }
+        #prog-fill { width: 25%; height: 100%; background: linear-gradient(90deg, #c084fc, #6366f1); transition: 1s ease; }
         
-        .progress-section { margin: 25px 0; }
-        .bar-bg { width: 100%; height: 12px; background: #111; border-radius: 6px; margin-top: 8px; overflow: hidden; border: 1px solid #333; }
-        #prog-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #c084fc, #6366f1); transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
-
-        .btn-row { display: flex; gap: 12px; margin-top: 30px; }
+        /* Buttons - FIXED FUNCTIONALITY */
+        .btn-row { display: flex; gap: 15px; margin-top: 30px; }
         .av-btn { 
-            flex: 1; border: none; padding: 15px; font-family: 'Orbitron'; font-weight: 900; 
-            cursor: pointer; border-radius: 4px; font-size: 16px; transition: 0.2s;
+            flex: 1; border: none; padding: 18px; font-family: 'Orbitron'; font-weight: 900; 
+            cursor: pointer; border-radius: 4px; font-size: 16px; transition: 0.2s; color: white;
         }
-        .av-btn:hover { transform: translateY(-2px); filter: brightness(1.2); }
-        .back-btn { position: absolute; bottom: 30px; left: 30px; padding: 6px 20px; font-size: 12px; background: #222; border: 1px solid #444; width: auto; color: #888; }
-        
-        /* Settings Button (Bottom Left) */
-        .settings-btn { position: fixed; bottom: 20px; left: 20px; background: rgba(255,255,255,0.05); border: 1px solid #444; color: white; padding: 8px 15px; cursor: pointer; font-family: 'Orbitron'; font-size: 10px; z-index: 100; border-radius: 4px; }
+        .av-btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
+
+        /* Bottom Left - NO OVERLAP */
+        .bottom-controls { position: fixed; bottom: 30px; left: 30px; display: flex; flex-direction: column; gap: 12px; z-index: 100; }
+        .ctrl-btn { 
+            background: #1a1a2e; border: 1px solid #444; color: #888; 
+            padding: 10px 20px; cursor: pointer; font-family: 'Orbitron'; 
+            font-size: 11px; border-radius: 4px; text-align: left; width: 140px;
+        }
+        .ctrl-btn:hover { border-color: var(--accent); color: white; background: #252545; }
 
         /* --- MODALS --- */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: #0a0a0f; border: 2px solid #333; padding: 30px; width: 850px; height: 550px; display: flex; gap: 20px; position: relative; }
-        
-        .song-list { flex: 1; border-right: 1px solid #222; padding-right: 20px; overflow-y: auto; }
-        .song-item { background: rgba(255,255,255,0.03); padding: 18px; margin-bottom: 8px; display: flex; justify-content: space-between; cursor: pointer; border-left: 4px solid transparent; }
-        .song-item.active { background: rgba(192, 132, 252, 0.1); border-left-color: var(--accent); }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-content { background: #0a0a0f; border: 2px solid #333; padding: 40px; width: 600px; border-radius: 8px; position: relative; }
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .shop-item { background: #151520; border: 1px solid #333; padding: 15px; border-radius: 8px; }
 
-        /* Shop Grid */
-        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
-        .shop-card { background: #111; border: 1px solid #333; padding: 20px; border-radius: 8px; text-align: center; transition: 0.3s; }
-        .shop-card:hover { border-color: var(--accent); }
-
-        /* --- RHYTHM ENGINE UI --- */
+        /* --- RHYTHM ENGINE (The "Redo") --- */
         #game-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 3000; }
-        .exit-x { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); color: #ff4444; border: 1px solid #ff4444; background: none; padding: 8px 20px; cursor: pointer; font-family: 'Orbitron'; z-index: 3100; }
-
-        .highway { position: absolute; left: 50%; transform: translateX(-50%); width: 450px; height: 100%; background: #08080c; border-inline: 8px solid #2a2a35; overflow: hidden; }
-        .bone-divider { position: absolute; width: 2px; height: 100%; background: rgba(255,255,255,0.05); transform: translateX(-50%); }
+        .highway { position: absolute; left: 50%; transform: translateX(-50%); width: 450px; height: 100%; background: #050508; border-inline: 4px solid #222; }
         
-        /* Judgment Line at THE BOTTOM */
-        .judgement-line { position: absolute; bottom: 0; width: 100%; height: 80px; background: rgba(192, 132, 252, 0.05); border-top: 4px solid var(--accent); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -10px 30px rgba(192, 132, 252, 0.2); }
-        
-        .note { position: absolute; width: 70px; height: 30px; border-radius: 4px; transform: translateX(-50%); border: 2px solid #fff; box-shadow: 0 0 20px currentColor; }
-
-        /* Feedback Popups */
-        .judgment-msg { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-family: 'Orbitron'; font-weight: 900; font-size: 42px; pointer-events: none; animation: popStrike 0.4s ease-out forwards; z-index: 3500; }
-        @keyframes popStrike {
-            0% { transform: translate(-50%, -20%) scale(0.5); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translate(-50%, -100%) scale(1.1); opacity: 0; }
+        /* Judgement line at the VERY BOTTOM */
+        .judgement-line { 
+            position: absolute; bottom: 0; width: 100%; height: 80px; 
+            border-top: 4px solid var(--accent); background: rgba(192, 132, 252, 0.15);
+            display: flex; justify-content: space-around; align-items: center;
         }
+        .note { position: absolute; width: 70px; height: 20px; border-radius: 3px; transform: translateX(-50%); box-shadow: 0 0 20px currentColor; background: white; }
 
-        /* Score & Combo inside Highway (Right Side) */
-        .score-frame { position: absolute; bottom: 100px; right: 20px; text-align: right; pointer-events: none; }
-        #live-score { font-size: 32px; font-weight: bold; font-family: 'Orbitron'; color: white; letter-spacing: 2px; }
-        #combo-wrap { margin-top: -5px; }
-        #combo-txt { font-size: 60px; font-weight: 900; color: var(--accent); font-family: 'Orbitron'; text-shadow: 0 0 20px var(--accent); line-height: 0.8; }
+        .score-ui { position: absolute; bottom: 100px; right: -180px; text-align: right; pointer-events: none; font-family: 'Orbitron'; width: 160px;}
+        #combo-txt { font-size: 60px; color: var(--accent); font-weight: 900; line-height: 0.8; }
+
+        /* Neon Feedback Popups */
+        .judgment-msg { 
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); 
+            font-family: 'Orbitron'; font-weight: 900; font-size: 45px; 
+            pointer-events: none; animation: popFeedback 0.4s ease-out forwards; 
+        }
+        @keyframes popFeedback { 
+            0% { opacity:0; transform: translate(-50%, 20px) scale(0.6); } 
+            20% { opacity:1; }
+            100% { opacity:0; transform: translate(-50%, -80px) scale(1.1); } 
+        }
     </style>
 </head>
 <body>
 
 <div id="event-hub">
     <div class="sidebar">
-        <h3 style="font-family:'Orbitron'; color: var(--accent); letter-spacing: 2px;">CURRENT EVENTS</h3>
-        <div class="event-card active">
-            <span style="font-family:'Orbitron'; font-size: 24px; font-weight: 900;">1</span>
+        <h3 style="font-family:'Orbitron'; color: var(--accent); letter-spacing: 1px;">CURRENT EVENTS</h3>
+        <div class="event-card">
+            <span style="font-family:'Orbitron'; font-size: 24px; font-weight: 900; color:var(--accent);">1</span>
             <div>
                 <b style="font-family:'Orbitron'; font-size: 14px;">Skele King's Jam Session</b><br>
                 <small style="color: #22c55e; font-weight: bold;">PERMANENT</small>
             </div>
         </div>
-        <button class="av-btn back-btn" onclick="window.location.href='game.html'">BACK</button>
     </div>
 
     <div class="main-panel">
         <div class="details-box">
-            <h1 style="font-family:'Orbitron'; margin:0; font-size: 40px;">Skele King's Jam Session</h1>
-            <p style="font-size: 20px; opacity: 0.8;">Jam out with the Skele King! Earn high scores to get great rewards!</p>
+            <h1 style="font-family:'Orbitron'; font-size: 42px; margin:0; letter-spacing: -1px;">Skele King's Jam Session</h1>
+            <p style="opacity: 0.7; font-size: 20px;">Jam out with the Skele King! Earn high scores to unlock exclusive rewards.</p>
             
-            <div class="progress-section">
-                <div style="display:flex; justify-content:space-between;">
-                    <span style="font-family:'Orbitron'; font-size: 14px;">Progress</span>
-                    <span id="prog-val" style="font-family:'Orbitron'; font-size: 14px;">0/4</span>
-                </div>
-                <div class="bar-bg"><div id="prog-fill"></div></div>
-            </div>
+            <p style="margin-bottom: 5px; font-family:'Orbitron'; font-size: 14px; color: #888;">Progress <span style="float:right; color:white;">1/4</span></p>
+            <div class="bar-bg"><div id="prog-fill" style="width: 25%;"></div></div>
 
-            <p style="font-size: 18px;">Owned Event Currency: <span id="coin-txt" style="color: gold; font-weight: bold;">0x</span></p>
+            <p style="font-size: 20px; margin-top: 25px;">Owned Event Currency: <span id="coin-txt" style="color: gold; font-weight: bold; text-shadow: 0 0 10px rgba(255,215,0,0.3);">0x</span></p>
             
             <div class="btn-row">
                 <button class="av-btn" style="background: #a855f7;" onclick="openModal('shop')">Shop</button>
@@ -116,210 +119,204 @@
             </div>
         </div>
     </div>
-</div>
 
-<button class="settings-btn" onclick="openModal('settings')">⚙️ SETTINGS</button>
-
-<div id="play-modal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="song-list">
-            <h2 style="font-family:'Orbitron';">STAGES</h2>
-            <div class="song-item active"><span>Skele King's Theme</span><span>→</span></div>
-            <button class="av-btn" style="margin-top:auto; background:#333;" onclick="closeModals()">CANCEL</button>
-        </div>
-        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-            <h1 style="font-family:'Orbitron';">Skele King's Theme</h1>
-            <button class="av-btn" id="diff-toggle" style="background:#444; width:100%; margin-bottom:10px;" onclick="cycleDifficulty()">Difficulty: EASY</button>
-            <button class="av-btn" style="background:#22c55e; width:100%; height:70px; font-size:24px;" onclick="initMatch()">PLAY</button>
-        </div>
+    <div class="bottom-controls">
+        <button class="ctrl-btn" onclick="window.location.href='index.html'">← BACK TO GAME</button>
+        <button class="ctrl-btn" onclick="openModal('settings')">⚙ SETTINGS</button>
     </div>
 </div>
 
-<div id="shop-modal" class="modal-overlay">
-    <div class="modal-content" style="flex-direction:column;">
-        <h2 style="font-family:'Orbitron'; text-align:center;">EVENT SHOP</h2>
+<div id="shop-modal" class="modal-overlay" onclick="closeModals()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2 style="font-family:'Orbitron'; color:var(--accent);">SKELE SHOP</h2>
         <div class="shop-grid">
-            <div class="shop-card">
-                <h3 style="color:var(--w-col)">Neon Blade Skin</h3>
-                <p>Change note appearance</p>
-                <button class="av-btn" style="background:#333" onclick="buyItem('skin_neon', 50)">50 Coins</button>
+            <div class="shop-item">
+                <p>Neon Sword Skin</p>
+                <button class="av-btn" style="background:#444; font-size:12px;" onclick="buyItem(50)">50 COINS</button>
             </div>
-            <div class="shop-card">
-                <h3 style="color:gold">Double Score</h3>
-                <p>One match use</p>
-                <button class="av-btn" style="background:#333" onclick="buyItem('boost_score', 25)">25 Coins</button>
+            <div class="shop-item">
+                <p>Score Booster (2x)</p>
+                <button class="av-btn" style="background:#444; font-size:12px;" onclick="buyItem(20)">20 COINS</button>
             </div>
         </div>
-        <button class="av-btn" style="background:#444; margin-top:auto;" onclick="closeModals()">CLOSE</button>
+        <button class="av-btn" style="background:#222; margin-top:30px;" onclick="closeModals()">CLOSE</button>
     </div>
 </div>
 
-<div id="settings-modal" class="modal-overlay">
-    <div class="modal-content" style="width:300px; height:auto; flex-direction:column;">
+<div id="missions-modal" class="modal-overlay" onclick="closeModals()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2 style="font-family:'Orbitron';">MISSIONS</h2>
+        <div style="text-align:left; background:#111; padding:15px; border-radius:5px; margin-top:10px;">
+            <p>• Get 5000 points on Easy <span style="float:right; color:gold;">+10 Coins</span></p>
+            <p>• Hit 50 Perfects in one song <span style="float:right; color:gold;">+25 Coins</span></p>
+        </div>
+        <button class="av-btn" style="background:#222; margin-top:20px;" onclick="closeModals()">CLOSE</button>
+    </div>
+</div>
+
+<div id="settings-modal" class="modal-overlay" onclick="closeModals()">
+    <div class="modal-content" style="width:350px;" onclick="event.stopPropagation()">
         <h2 style="font-family:'Orbitron';">KEY BINDS</h2>
-        <div id="key-settings"></div>
-        <button class="av-btn" style="background:#22c55e; margin-top:20px;" onclick="closeModals()">SAVE</button>
+        <div id="bind-editor"></div>
+        <button class="av-btn" style="background:#22c55e; margin-top:20px;" onclick="closeModals()">SAVE CHANGES</button>
     </div>
 </div>
 
 <div id="game-screen">
-    <button class="exit-x" onclick="forceExit()">X EXIT</button>
+    <button style="position:fixed; top:30px; left:30px; z-index:4000; background:none; border:1px solid red; color:red; padding:10px; cursor:pointer;" onclick="forceExit()">EXIT GAME</button>
     <div class="highway">
-        <div class="bone-divider" style="left:20%"></div>
-        <div class="bone-divider" style="left:40%"></div>
-        <div class="bone-divider" style="left:60%"></div>
-        <div class="bone-divider" style="left:80%"></div>
         <div id="note-layer"></div>
-        
-        <div class="score-frame">
+        <div class="score-ui">
+            <div style="font-size:10px; opacity:0.5">SCORE</div>
             <div id="live-score">000000</div>
-            <div id="combo-wrap"><span id="combo-txt">0</span></div>
-            <div style="font-size:10px; opacity:0.5; font-family:'Orbitron';">COMBO</div>
+            <div id="combo-txt">0</div>
+            <div style="font-size:10px; opacity:0.5">COMBO</div>
         </div>
-
-        <div class="judgement-line" id="key-anchors"></div>
+        <div class="judgement-line" id="key-hints"></div>
     </div>
 </div>
 
 <script>
-    let data = JSON.parse(localStorage.getItem('av_event_v3')) || {
-        coins: 100,
-        cleared: [],
-        best: { easy: 0, med: 0, hard: 0, expert: 0 },
+    let gameData = {
+        coins: 0,
         keys: ['q', 'w', 'e', 'r', 't'],
-        owned: []
+        score: 0,
+        combo: 0,
+        activeNotes: [],
+        isPlaying: false
     };
 
-    let currentDiff = 'easy';
-    let isPlaying = false, score = 0, combo = 0, activeNotes = [];
-    const diffs = {
-        easy: { label: 'EASY', time: 60, speed: 7, rate: 800, goal: 5000 },
-        med: { label: 'MEDIUM', time: 180, speed: 10, rate: 600, goal: 15000 }
-    };
+    const laneColors = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00', '#ff4400'];
 
-    function save() {
-        localStorage.setItem('av_event_v3', JSON.stringify(data));
-        document.getElementById('coin-txt').innerText = data.coins + "x";
-        document.getElementById('prog-val').innerText = data.cleared.length + "/4";
-        document.getElementById('prog-fill').style.width = (data.cleared.length / 4 * 100) + "%";
+    // --- Modal Controls ---
+    function openModal(id) {
+        if(id === 'settings') renderBinds();
+        if(id === 'play') { startRhythmGame(); return; }
+        document.getElementById(id + '-modal').style.display = 'flex';
     }
 
-    function openModal(type) {
-        if(type === 'settings') renderSettings();
-        document.getElementById(type + '-modal').style.display = 'flex';
+    function closeModals() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
     }
 
-    function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
-
-    function renderSettings() {
-        const div = document.getElementById('key-settings');
-        div.innerHTML = data.keys.map((k, i) => `
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+    function renderBinds() {
+        const container = document.getElementById('bind-editor');
+        container.innerHTML = gameData.keys.map((k, i) => `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <span>Lane ${i+1}</span>
-                <input style="width:40px; text-align:center; background:#222; color:var(--accent); border:1px solid #444;" 
-                       value="${k.toUpperCase()}" onchange="data.keys[${i}]=this.value.toLowerCase(); save();">
+                <input style="width:50px; text-align:center; background:#000; color:var(--accent); border:1px solid #444; padding:5px;" 
+                       value="${k.toUpperCase()}" onchange="gameData.keys[${i}]=this.value.toLowerCase()">
             </div>
         `).join('');
     }
 
-    function buyItem(id, price) {
-        if(data.coins >= price) { data.coins -= price; data.owned.push(id); save(); alert("Purchased!"); }
-        else alert("Insufficient Coins!");
+    function buyItem(price) {
+        if(gameData.coins >= price) {
+            gameData.coins -= price;
+            updateCurrencyDisplay();
+            alert("Purchased successfully!");
+        } else {
+            alert("Not enough coins!");
+        }
     }
 
-    function cycleDifficulty() {
-        const keys = Object.keys(diffs);
-        currentDiff = keys[(keys.indexOf(currentDiff) + 1) % keys.length];
-        document.getElementById('diff-toggle').innerText = "Difficulty: " + diffs[currentDiff].label;
+    function updateCurrencyDisplay() {
+        document.getElementById('coin-txt').innerText = gameData.coins + "x";
     }
 
-    // --- RHYTHM ENGINE ---
-    function initMatch() {
-        closeModals();
+    // --- Rhythm Engine Logic ---
+    let spawnLoop;
+    function startRhythmGame() {
+        gameData.isPlaying = true;
+        gameData.score = 0;
+        gameData.combo = 0;
+        gameData.activeNotes = [];
         document.getElementById('game-screen').style.display = 'block';
-        isPlaying = true; score = 0; combo = 0; activeNotes = [];
+        document.getElementById('key-hints').innerHTML = gameData.keys.map(k => `<span style="font-family:'Orbitron'; opacity:0.5">${k.toUpperCase()}</span>`).join('');
         
-        // Render Key Labels in Judgment Line
-        document.getElementById('key-anchors').innerHTML = data.keys.map(k => `<span style="font-family:'Orbitron'; opacity:0.6;">${k.toUpperCase()}</span>`).join('');
-        
-        window.gameLoop = requestAnimationFrame(runUpdate);
-        window.spawnTimer = setInterval(spawnNote, diffs[currentDiff].rate);
+        requestAnimationFrame(gameUpdate);
+        spawnLoop = setInterval(spawnNote, 650);
     }
 
     function spawnNote() {
-        if(!isPlaying) return;
+        if(!gameData.isPlaying) return;
         const lane = Math.floor(Math.random() * 5);
         const el = document.createElement('div');
         el.className = 'note';
         el.style.left = (lane * 20 + 10) + "%";
-        el.style.color = [var('--q-col'), var('--w-col'), var('--e-col'), var('--r-col'), var('--t-col')][lane];
+        el.style.color = laneColors[lane];
         document.getElementById('note-layer').appendChild(el);
-        activeNotes.push({ el, y: -50, lane, hit: false });
+        gameData.activeNotes.push({ el, y: -50, lane, hit: false });
     }
 
-    function showJudgment(text) {
-        const colors = { 'PERFECT': '#00ffff', 'GOOD': '#c084fc', 'MISSED': '#ff4444' };
-        const msg = document.createElement('div');
-        msg.className = 'judgment-msg';
-        msg.innerText = text;
-        msg.style.color = colors[text];
-        msg.style.textShadow = `0 0 20px ${colors[text]}`;
-        document.querySelector('.highway').appendChild(msg);
-        setTimeout(() => msg.remove(), 400);
-    }
+    function gameUpdate() {
+        if(!gameData.isPlaying) return;
+        const targetLineY = window.innerHeight - 80;
 
-    function runUpdate() {
-        if(!isPlaying) return;
-        const targetY = window.innerHeight - 80;
-        
-        activeNotes.forEach((n, i) => {
-            n.y += diffs[currentDiff].speed;
+        gameData.activeNotes.forEach((n, i) => {
+            n.y += 8; // Speed
             n.el.style.top = n.y + 'px';
 
             if(n.y > window.innerHeight) {
-                if(!n.hit) { combo = 0; showJudgment('MISSED'); updateHUD(); }
+                if(!n.hit) {
+                    gameData.combo = 0;
+                    renderJudgment('MISSED', '#ff4444');
+                }
                 n.el.remove();
-                activeNotes.splice(i, 1);
+                gameData.activeNotes.splice(i, 1);
+                refreshHUD();
             }
         });
-        window.gameLoop = requestAnimationFrame(runUpdate);
+        requestAnimationFrame(gameUpdate);
     }
 
-    function updateHUD() {
-        document.getElementById('live-score').innerText = score.toString().padStart(6, '0');
-        document.getElementById('combo-txt').innerText = combo;
+    function renderJudgment(txt, col) {
+        const div = document.createElement('div');
+        div.className = 'judgment-msg';
+        div.innerText = txt;
+        div.style.color = col;
+        div.style.textShadow = `0 0 15px ${col}`;
+        document.querySelector('.highway').appendChild(div);
+        setTimeout(() => div.remove(), 400);
     }
 
-    function forceExit() {
-        isPlaying = false;
-        clearInterval(window.spawnTimer);
-        cancelAnimationFrame(window.gameLoop);
-        document.getElementById('game-screen').style.display = 'none';
-        document.getElementById('note-layer').innerHTML = '';
+    function refreshHUD() {
+        document.getElementById('live-score').innerText = gameData.score.toString().padStart(6, '0');
+        document.getElementById('combo-txt').innerText = gameData.combo;
     }
 
     window.onkeydown = (e) => {
-        if(!isPlaying) return;
-        const lane = data.keys.indexOf(e.key.toLowerCase());
-        if(lane === -1) return;
+        if(!gameData.isPlaying) return;
+        const laneIndex = gameData.keys.indexOf(e.key.toLowerCase());
+        if(laneIndex === -1) return;
 
-        const targetY = window.innerHeight - 80;
-        const note = activeNotes.find(n => n.lane === lane && !n.hit && Math.abs(n.y - targetY) < 100);
+        const hitZone = window.innerHeight - 80;
+        const note = gameData.activeNotes.find(n => n.lane === laneIndex && !n.hit && Math.abs(n.y - hitZone) < 100);
 
         if(note) {
-            const dist = Math.abs(note.y - targetY);
             note.hit = true;
             note.el.style.display = 'none';
+            const offset = Math.abs(note.y - hitZone);
             
-            if(dist < 35) { score += 150; combo++; showJudgment('PERFECT'); }
-            else { score += 100; combo++; showJudgment('GOOD'); }
-            updateHUD();
+            if(offset < 35) {
+                gameData.score += 150;
+                gameData.combo++;
+                renderJudgment('PERFECT', '#00ffff');
+            } else {
+                gameData.score += 100;
+                gameData.combo++;
+                renderJudgment('GOOD', '#c084fc');
+            }
+            refreshHUD();
         }
     };
 
-    function var(name) { return getComputedStyle(document.documentElement).getPropertyValue(name); }
-
-    save();
+    function forceExit() {
+        gameData.isPlaying = false;
+        clearInterval(spawnLoop);
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('note-layer').innerHTML = '';
+    }
 </script>
 </body>
 </html>

@@ -3,257 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aetherfall | Requiem</title>
+    <title>Aetherfall | Event Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #c084fc; --bg: #020205; --panel: rgba(13, 13, 25, 0.98); }
+        :root { 
+            --accent: #c084fc; --bg: #020205; --panel: rgba(13, 13, 25, 0.98);
+        }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; overflow: hidden; touch-action: none; }
 
-        /* --- HUB --- */
+        /* --- HUB LAYOUT --- */
         #event-hub { display: flex; width: 100%; height: 100%; padding: 40px; position: relative; }
         .sidebar { width: 320px; display: flex; flex-direction: column; gap: 20px; z-index: 10; }
         .event-card {
-            background: rgba(88, 28, 135, 0.2); padding: 20px; border: 2px solid var(--accent);
+            background: rgba(88, 28, 135, 0.2); padding: 20px; display: flex; align-items: center; gap: 15px; 
+            cursor: pointer; border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
             clip-path: polygon(5% 0, 100% 0, 100% 75%, 95% 100%, 0 100%, 0 25%);
         }
+
         .main-panel { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding-top: 20px; }
         .details-box { background: var(--panel); border: 1px solid #333; padding: 40px; width: 100%; max-width: 700px; border-radius: 12px; }
+
         .bar-bg { width: 100%; height: 12px; background: #111; border-radius: 6px; margin: 15px 0; border: 1px solid #333; }
         #prog-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #c084fc, #6366f1); transition: 1s ease; }
+        
         .btn-row { display: flex; gap: 15px; margin-top: 30px; }
-        .av-btn { flex: 1; border: none; padding: 18px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 4px; font-size: 16px; transition: 0.2s; color: white; text-transform: uppercase; }
-        .av-btn:hover:not(:disabled) { transform: translateY(-3px); filter: brightness(1.2); }
+        .av-btn { flex: 1; border: none; padding: 18px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 4px; font-size: 16px; transition: 0.2s; color: white; }
+        .av-btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
+
         .bottom-controls { position: fixed; bottom: 30px; left: 30px; display: flex; flex-direction: column; gap: 12px; z-index: 100; }
         .ctrl-btn { background: #1a1a2e; border: 1px solid #444; color: #888; padding: 10px 20px; cursor: pointer; font-family: 'Orbitron'; font-size: 11px; border-radius: 4px; width: 160px; text-transform: uppercase;}
 
         /* --- MODALS --- */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: #0a0a0f; border: 2px solid #333; padding: 50px; width: 850px; border-radius: 12px; position: relative; }
+        .modal-content { background: #0a0a0f; border: 2px solid #333; padding: 50px; width: 850px; min-height: 500px; border-radius: 12px; position: relative; }
         .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 30px; }
         .shop-item { background: #151520; border: 1px solid #444; padding: 30px; border-radius: 10px; text-align: center; }
         .mission-row { background: #111; padding: 20px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--accent); }
+        .diff-card { background: #111; padding: 20px; border-radius: 8px; border: 1px solid #333; text-align: center; }
 
-        /* --- GAME --- */
+        /* --- RHYTHM ENGINE (AV SCALING ADDED) --- */
         #game-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 3000; }
-        .highway { position: absolute; left: 50%; transform: translateX(-50%); width: 70vh; max-width: 95vw; height: 100%; background: #050508; border-inline: 4px solid #222; }
-        .note { position: absolute; width: 12%; aspect-ratio: 1/1; border-radius: 50%; transform: translateX(-50%); border: 3px solid #fff; box-shadow: 0 0 20px currentColor; background: radial-gradient(circle, #fff 0%, currentColor 70%); pointer-events: none; }
-        #mobile-touch-container { display: flex; position: fixed; inset: 0; z-index: 3020; }
-        .touch-lane { flex: 1; height: 100%; border-right: 1px solid rgba(255,255,255,0.05); }
-        .judgement-line { position: absolute; bottom: 10%; width: 100%; height: 100px; border-top: 5px solid var(--accent); }
-        #game-timer-display { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-family: 'Orbitron'; font-size: 35px; color: var(--accent); }
-        .judgment-msg { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-family: 'Orbitron'; font-weight: 900; font-size: 70px; pointer-events: none; z-index: 5000; text-shadow: 0 0 20px #000; animation: popFeedback 0.5s ease-out forwards; }
-        @keyframes popFeedback { 0% { opacity:1; transform: translate(-50%, 0) scale(0.6); } 100% { opacity:0; transform: translate(-50%, -100px) scale(1.1); } }
+        .highway { 
+            position: absolute; left: 50%; transform: translateX(-50%); 
+            width: 70vh; max-width: 95vw; height: 100%; 
+            background: #050508; border-inline: 4px solid #222; 
+        }
+        
+        .note { 
+            position: absolute; width: 12%; aspect-ratio: 1/1; border-radius: 50%; 
+            transform: translateX(-50%); border: 3px solid #fff; 
+            box-shadow: 0 0 20px currentColor;
+            background: radial-gradient(circle, #fff 0%, currentColor 70%);
+            pointer-events: none;
+        }
+
+        #mobile-touch-container { display: none; position: fixed; inset: 0; z-index: 3020; }
+        .touch-lane { flex: 1; height: 100%; opacity: 0.1; transition: opacity 0.1s; border-right: 1px solid rgba(255,255,255,0.1); }
+        .touch-lane:active { opacity: 0.4; }
+
+        .judgement-line { position: absolute; bottom: 10%; width: 100%; height: 100px; border-top: 5px solid var(--accent); background: rgba(192, 132, 252, 0.15); display: flex; justify-content: space-around; align-items: center; }
+        
+        .score-ui { position: absolute; bottom: 120px; right: 20px; text-align: right; font-family: 'Orbitron'; width: 200px;}
+        #combo-txt { font-size: 75px; color: var(--accent); font-weight: 900; line-height: 0.8; }
+        #game-timer-display { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-family: 'Orbitron'; font-size: 35px; color: var(--accent); z-index: 4005; }
+
+        .judgment-msg { 
+            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); 
+            font-family: 'Orbitron'; font-weight: 900; font-size: 60px; 
+            pointer-events: none; z-index: 5000; 
+            text-shadow: 0 0 20px rgba(0,0,0,1);
+            animation: popFeedback 0.5s ease-out forwards; 
+        }
+        @keyframes popFeedback { 0% { opacity:1; transform: translate(-50%, 0) scale(0.8); } 100% { opacity:0; transform: translate(-50%, -100px) scale(1.2); } }
     </style>
 </head>
 <body>
 
 <div id="event-hub">
     <div class="sidebar">
-        <h3 style="font-family:'Orbitron'; color: var(--accent); margin:0;">EVENTS</h3>
-        <div id="reset-timer" style="font-size:14px; color:#666; font-family:'Orbitron';">RESETS IN: --:--:--</div>
+        <h3 style="font-family:'Orbitron'; color: var(--accent);">CURRENT EVENTS</h3>
+        <div id="reset-timer" style="font-size:12px; color:#666; font-family:'Orbitron';">RESETS IN: --:--:--</div>
         <div class="event-card">
-            <span style="font-family:'Orbitron'; font-size: 20px; font-weight: 900;">REQUIEM</span><br>
-            <small style="color: #22c55e;">ACTIVE TRIAL</small>
+            <span style="font-family:'Orbitron'; font-size: 24px; font-weight: 900;">1</span>
+            <div><b>Skele King's Jam Session</b><br><small style="color: #22c55e;">PERMANENT</small></div>
         </div>
     </div>
 
     <div class="main-panel">
         <div class="details-box">
-            <h1 style="font-family:'Orbitron'; font-size: 42px; margin:0;">REQUIEM</h1>
-            <p style="opacity: 0.7; font-size: 18px;">The final movement has begun. Silence the Hollow King's final movement or be erased by the crescendo.</p>
+            <h1 style="font-family:'Orbitron'; font-size: 42px; margin:0;">Skele King's Jam Session</h1>
+            <p style="opacity: 0.7; font-size: 20px;">Master the rhythm to defeat the Skele King.</p>
             <div class="bar-bg"><div id="prog-fill"></div></div>
-            <p style="font-size: 20px;">Soul Shards: <span id="coin-txt" style="color: gold; font-weight: bold;">0</span></p>
+            <p style="font-size: 20px;">Owned Event Currency: <span id="coin-txt" style="color: gold; font-weight: bold;">50x</span></p>
             <div class="btn-row">
-                <button class="av-btn" style="background: #a855f7;" onclick="openModal('shop')">SHOP</button>
-                <button class="av-btn" style="background: #22c55e;" onclick="openModal('stage')">PLAY</button>
-                <button class="av-btn" style="background: #eab308;" onclick="openModal('missions')">MISSION</button>
+                <button class="av-btn" style="background: #a855f7;" onclick="openModal('shop')">Shop</button>
+                <button class="av-btn" style="background: #22c55e;" onclick="openModal('stage')">Play</button>
+                <button class="av-btn" style="background: #eab308;" onclick="openModal('missions')">Missions</button>
             </div>
         </div>
     </div>
 
     <div class="bottom-controls">
-        <button class="ctrl-btn" onclick="location.reload()">RETURN</button>
-        <button class="ctrl-btn" onclick="openModal('settings')">SETTINGS</button>
+        <button class="ctrl-btn" onclick="window.location.href='game.html'">EVENTS</button>
+        <button class="ctrl-btn" onclick="openModal('settings')">⚙ SETTINGS</button>
     </div>
 </div>
 
-<div id="stage-modal" class="modal-overlay"><div class="modal-content"><h1 style="font-family:'Orbitron'; text-align:center;">SELECT DIFFICULTY</h1><div class="shop-grid" id="diff-list"></div><button class="av-btn" style="background:#222; margin-top:40px; width:100%" onclick="closeModals()">CLOSE</button></div></div>
-<div id="shop-modal" class="modal-overlay"><div class="modal-content"><h2 style="font-family:'Orbitron';">SHOP</h2><div class="shop-grid">
-    <div class="shop-item"><h3>Sovereign’s Shroud [SKIN]</h3><button class="av-btn" id="buy-skin" style="background:#444" onclick="buy('skin', 100)">100x</button></div>
-    <div class="shop-item"><h3>Void-Stained Echo [VFX]</h3><button class="av-btn" id="buy-vfx" style="background:#444" onclick="buy('vfx', 150)">150x</button></div>
+<div id="stage-modal" class="modal-overlay"><div class="modal-content"><h1 style="font-family:'Orbitron'; text-align:center;">STAGE 1: SKELE JAM</h1><div class="shop-grid" id="diff-list"></div><button class="av-btn" style="background:#222; margin-top:40px; width:100%" onclick="closeModals()">CLOSE</button></div></div>
+<div id="shop-modal" class="modal-overlay"><div class="modal-content"><h2 style="font-family:'Orbitron'; font-size: 32px; color:var(--accent);">EVENT SHOP</h2><div class="shop-grid">
+    <div class="shop-item"><h3>Corrupted Skin [SKIN]</h3><button class="av-btn" id="buy-skin" style="background:#444" onclick="buy('skin', 100)">100 COINS</button></div>
+    <div class="shop-item"><h3>Corrupted VFX [VFX]</h3><button class="av-btn" id="buy-vfx" style="background:#444" onclick="buy('vfx', 150)">150 COINS</button></div>
 </div><button class="av-btn" style="background:#222; margin-top:30px; width:100%" onclick="closeModals()">CLOSE</button></div></div>
-<div id="missions-modal" class="modal-overlay"><div class="modal-content"><h2 style="font-family:'Orbitron';">MISSION</h2><div id="mission-list"></div><button class="av-btn" style="background:#222; margin-top:20px; width:100%" onclick="closeModals()">CLOSE</button></div></div>
-<div id="settings-modal" class="modal-overlay"><div class="modal-content" style="width:450px;"><h2 style="font-family:'Orbitron';">SETTINGS</h2><button id="mode-toggle" class="av-btn" style="background:var(--accent); width:100%" onclick="toggleInputMode()">PC MODE</button><div id="bind-editor" style="margin-top:20px;"></div><button class="av-btn" style="background:#22c55e; margin-top:20px; width:100%" onclick="closeModals()">SAVE</button></div></div>
+<div id="missions-modal" class="modal-overlay"><div class="modal-content"><h2 style="font-family:'Orbitron'; font-size: 32px;">MISSIONS</h2><div id="mission-list" style="margin-top:20px;"></div><button class="av-btn" style="background:#222; margin-top:20px; width:100%" onclick="closeModals()">CLOSE</button></div></div>
+<div id="settings-modal" class="modal-overlay"><div class="modal-content" style="width:450px;"><h2 style="font-family:'Orbitron';">SETTINGS</h2><button id="mode-toggle" class="av-btn" style="background:var(--accent); margin-bottom:20px; width:100%" onclick="toggleInputMode()">PC MODE</button><div id="bind-editor"></div><button class="av-btn" style="background:#22c55e; margin-top:20px; width:100%" onclick="closeModals()">SAVE</button></div></div>
 
 <div id="game-screen">
     <div id="game-timer-display">00:00</div>
     <div id="mobile-touch-container">
-        <div class="touch-lane" onpointerdown="handleHit(0)"></div><div class="touch-lane" onpointerdown="handleHit(1)"></div>
-        <div class="touch-lane" onpointerdown="handleHit(2)"></div><div class="touch-lane" onpointerdown="handleHit(3)"></div>
+        <div class="touch-lane" onpointerdown="handleHit(0)"></div>
+        <div class="touch-lane" onpointerdown="handleHit(1)"></div>
+        <div class="touch-lane" onpointerdown="handleHit(2)"></div>
+        <div class="touch-lane" onpointerdown="handleHit(3)"></div>
         <div class="touch-lane" onpointerdown="handleHit(4)"></div>
     </div>
-    <div class="highway"><div id="note-layer"></div><div class="judgement-line"></div></div>
-    <div style="position:fixed; bottom:20px; right:20px; text-align:right;">
-        <div id="live-score" style="font-size:24px; font-family:'Orbitron';">000000</div>
-        <div id="combo-txt" style="font-size:60px; font-family:'Orbitron'; color:var(--accent); font-weight:900;">0</div>
+    <button style="position:fixed; top:30px; left:30px; z-index:6000; background:none; border:1px solid red; color:red; padding:10px; cursor:pointer;" onclick="forceExit()">EXIT</button>
+    <div class="highway">
+        <div id="note-layer"></div>
+        <div class="score-ui">
+            <div id="live-score" style="font-size:24px">000000</div>
+            <div id="combo-txt">0</div>
+            <div style="font-size:12px; opacity:0.5">COMBO</div>
+        </div>
+        <div class="judgement-line" id="key-hints"></div>
     </div>
 </div>
 
 <script>
     let state = {
-        shards: 50, keys: ['q', 'w', 'e', 'r', 't'], inputMode: 'pc', bought: [], lastReset: 0,
+        coins: 50,
+        keys: ['q', 'w', 'e', 'r', 't'],
+        inputMode: 'pc',
+        bought: [],
+        bestScores: { easy: 0, medium: 0, hard: 0, expert: 0 },
+        lastReset: 0,
         missions: [
-            { id: 0, label: "Clear Easy (2000+)", req: 2000, diff: 'EASY', reward: 25, status: 'none' },
-            { id: 1, label: "Clear Medium (10000+)", req: 10000, diff: 'MEDIUM', reward: 50, status: 'none' },
-            { id: 2, label: "Clear Hard (20000+)", req: 20000, diff: 'HARD', reward: 100, status: 'none' },
-            { id: 3, label: "Clear Expert (30000+)", req: 30000, diff: 'EXPERT', reward: 200, status: 'none' }
+            { id: 0, label: "Clear Easy", req: 2000, diff: 'easy', reward: 10, status: 'none' },
+            { id: 1, label: "Clear Medium", req: 10000, diff: 'medium', reward: 25, status: 'none' },
+            { id: 2, label: "Clear Hard", req: 20000, diff: 'hard', reward: 50, status: 'none' },
+            { id: 3, label: "Clear Expert", req: 30000, diff: 'expert', reward: 100, status: 'none' }
         ]
     };
 
     const diffSettings = {
-        EASY: { rate: 800, time: 60, speed: 0.8 },
-        MEDIUM: { rate: 600, time: 90, speed: 1.1 },
-        HARD: { rate: 450, time: 120, speed: 1.4 },
-        EXPERT: { rate: 300, time: 150, speed: 1.8 }
+        easy: { rate: 800, time: 60, speed: 8 },
+        medium: { rate: 600, time: 90, speed: 11 },
+        hard: { rate: 450, time: 120, speed: 14 },
+        expert: { rate: 350, time: 150, speed: 17 }
     };
 
-    function save() { localStorage.setItem('Aether_Req_Final', JSON.stringify(state)); }
+    function save() { localStorage.setItem('Aetherfall_SkeleJam', JSON.stringify(state)); }
     function load() {
-        let data = localStorage.getItem('Aether_Req_Final');
+        let data = localStorage.getItem('Aetherfall_SkeleJam');
         if(data) state = JSON.parse(data);
-        checkReset(); refreshUI();
+        checkDailyReset();
+        refreshUI();
     }
 
-    function checkReset() {
+    function checkDailyReset() {
         const now = Date.now();
         if (now - state.lastReset > 86400000) {
             state.missions.forEach(m => m.status = 'none');
             state.lastReset = new Date().setHours(0,0,0,0);
             save();
         }
-    }
-
-    function refreshUI() {
-        document.getElementById('coin-txt').innerText = state.shards;
-        let cl = state.missions.filter(m => m.status === 'claimed').length;
-        document.getElementById('prog-fill').style.width = (cl / 4 * 100) + '%';
-        state.bought.forEach(i => { if(document.getElementById('buy-'+i)) document.getElementById('buy-'+i).innerText = "OWNED"; });
-    }
-
-    function openModal(id) {
-        if(id === 'stage') {
-            document.getElementById('diff-list').innerHTML = Object.keys(diffSettings).map(d => `
-                <button class="av-btn" style="background:#111; border:1px solid #333;" onclick="startRhythm('${d}')">${d}</button>
-            `).join('');
-        }
-        if(id === 'missions') {
-            document.getElementById('mission-list').innerHTML = state.missions.map(m => {
-                let btn = `<button class="av-btn" style="background:#444" disabled>LOCKED</button>`;
-                if(m.status === 'ready') btn = `<button class="av-btn" style="background:var(--accent)" onclick="claimMission(${m.id})">CLAIM</button>`;
-                if(m.status === 'claimed') btn = `<button class="av-btn" style="background:#22c55e" disabled>DONE</button>`;
-                return `<div class="mission-row"><span>${m.label}</span>${btn}</div>`;
-            }).join('');
-        }
-        if(id === 'settings') renderBinds();
-        document.getElementById(id + '-modal').style.display = 'flex';
-    }
-
-    function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); save(); }
-
-    function renderBinds() {
-        document.getElementById('bind-editor').innerHTML = state.keys.map((k, i) => `
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                <span>Lane ${i+1}</span>
-                <input style="width:50px; text-align:center; background:#000; color:var(--accent); border:1px solid #444;" value="${k.toUpperCase()}" onchange="state.keys[${i}]=this.value.toLowerCase()">
-            </div>
-        `).join('');
-    }
-
-    function toggleInputMode() {
-        state.inputMode = state.inputMode === 'pc' ? 'mobile' : 'pc';
-        document.getElementById('mode-toggle').innerText = state.inputMode.toUpperCase() + " MODE";
-    }
-
-    function claimMission(id) {
-        let m = state.missions.find(x => x.id === id);
-        if(m && m.status === 'ready') { m.status = 'claimed'; state.shards += m.reward; save(); refreshUI(); openModal('missions'); }
-    }
-
-    function buy(item, price) {
-        if(state.shards >= price && !state.bought.includes(item)) {
-            state.shards -= price; state.bought.push(item); refreshUI(); save();
-        }
-    }
-
-    // --- ENGINE ---
-    let activeNotes = [], score = 0, combo = 0, isPlaying = false, spawnInt, timerInt, timeLeft = 60;
-    const colors = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00', '#ff4400'];
-
-    function startRhythm(d) {
-        state.curDiff = d; closeModals(); isPlaying = true; score = 0; combo = 0; activeNotes = []; 
-        timeLeft = diffSettings[d].time;
-        document.getElementById('game-screen').style.display = 'block';
-        spawnInt = setInterval(spawnNote, diffSettings[d].rate);
-        timerInt = setInterval(() => { 
-            timeLeft--; 
-            let min = Math.floor(timeLeft/60); let sec = timeLeft % 60;
-            document.getElementById('game-timer-display').innerText = `${min}:${sec.toString().padStart(2,'0')}`; 
-            if(timeLeft<=0) finalizeGame(); 
-        }, 1000);
-        requestAnimationFrame(gameUpdate);
-    }
-
-    function spawnNote() {
-        if(!isPlaying) return;
-        const lane = Math.floor(Math.random() * 5);
-        const el = document.createElement('div');
-        el.className = 'note'; el.style.left = (lane * 20 + 10) + "%"; el.style.color = colors[lane];
-        document.getElementById('note-layer').appendChild(el);
-        activeNotes.push({ el, y: -50, lane, hit: false });
-    }
-
-    function gameUpdate() {
-        if(!isPlaying) return;
-        let spd = diffSettings[state.curDiff].speed * (window.innerHeight / 100);
-        for (let i = activeNotes.length - 1; i >= 0; i--) {
-            let n = activeNotes[i]; n.y += spd; n.el.style.top = n.y + 'px';
-            if(n.y > window.innerHeight) { 
-                if(!n.hit) { combo = 0; score = Math.max(0, score - 150); renderJudg('MISS', '#ff0000'); }
-                n.el.remove(); activeNotes.splice(i, 1);
-            }
-        }
-        document.getElementById('live-score').innerText = score.toString().padStart(6, '0');
-        document.getElementById('combo-txt').innerText = combo;
-        requestAnimationFrame(gameUpdate);
-    }
-
-    function handleHit(lane) {
-        if(!isPlaying) return;
-        const zone = window.innerHeight * 0.9;
-        const idx = activeNotes.findIndex(n => n.lane === lane && !n.hit && Math.abs(n.y - zone) < 150);
-        if(idx !== -1) {
-            let n = activeNotes[idx]; n.hit = true; let off = Math.abs(n.y - zone);
-            n.el.remove(); activeNotes.splice(idx, 1);
-            if(off < 45) { score += 200; combo++; renderJudg('PERFECT', '#0ff'); }
-            else { score += 150; combo++; renderJudg('GOOD', '#c084fc'); }
-        } else { combo = 0; renderJudg('MISS', '#ff0000'); }
-    }
-
-    window.onkeydown = (e) => { if(isPlaying && state.inputMode === 'pc') { const l = state.keys.indexOf(e.key.toLowerCase()); if(l!==-1) handleHit(l); } };
-
-    function renderJudg(t, c) {
-        const d = document.createElement('div'); d.className = 'judgment-msg'; d.innerText = t; d.style.color = c;
-        document.getElementById('game-screen').appendChild(d); setTimeout(() => d.remove(), 400);
-    }
-
-    function finalizeGame() {
-        isPlaying = false; clearInterval(spawnInt); clearInterval(timerInt);
-        state.missions.forEach(m => { if(m.diff === state.curDiff && score >= m.req && m.status === 'none') m.status = 'ready'; });
-        alert(`TRIAL OVER. SCORE: ${score}`);
-        document.getElementById('game-screen').style.display = 'none';
-        document.getElementById('note-layer').innerHTML = '';
-        save(); refreshUI();
     }
 
     setInterval(() => {
@@ -264,6 +187,162 @@
         document.getElementById('reset-timer').innerText = `RESETS IN: ${h}:${m}:${s}`;
     }, 1000);
 
+    function refreshUI() {
+        document.getElementById('coin-txt').innerText = state.coins + "x";
+        let claimed = state.missions.filter(m => m.status === 'claimed').length;
+        document.getElementById('prog-fill').style.width = (claimed / 4 * 100) + '%';
+        state.bought.forEach(i => { if(document.getElementById('buy-'+i)) document.getElementById('buy-'+i).innerText = "OWNED"; });
+    }
+
+    function openModal(id) {
+        if(id === 'stage') renderDiffs();
+        if(id === 'settings') renderBinds();
+        if(id === 'missions') renderMissions();
+        document.getElementById(id + '-modal').style.display = 'flex';
+    }
+    function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); save(); }
+
+    function renderDiffs() {
+        document.getElementById('diff-list').innerHTML = ['easy', 'medium', 'hard', 'expert'].map(d => `
+            <div class="diff-card">
+                <h3 style="text-transform:uppercase">${d}</h3>
+                <p>Best: ${state.bestScores[d]}</p>
+                <button class="av-btn" style="background:var(--accent); padding:10px;" onclick="startRhythm('${d}')">SELECT</button>
+            </div>
+        `).join('');
+    }
+
+    function renderMissions() {
+        document.getElementById('mission-list').innerHTML = state.missions.map(m => {
+            let btn = `<button class="av-btn" style="background:#444" disabled>LOCKED</button>`;
+            if(m.status === 'ready') btn = `<button class="av-btn" style="background:var(--accent)" onclick="claimMission(${m.id})">CLAIM</button>`;
+            if(m.status === 'claimed') btn = `<button class="av-btn" style="background:#22c55e" disabled>CLAIMED</button>`;
+            return `
+                <div class="mission-row">
+                    <span>${m.label} (Score ${m.req}+)</span>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <b style="color:gold">+${m.reward}</b>
+                        ${btn}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function claimMission(id) {
+        let m = state.missions.find(x => x.id === id);
+        if(m && m.status === 'ready') {
+            m.status = 'claimed';
+            state.coins += m.reward;
+            save(); refreshUI(); renderMissions();
+        }
+    }
+
+    function renderBinds() {
+        document.getElementById('bind-editor').innerHTML = state.keys.map((k, i) => `
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <span>Lane ${i+1}</span>
+                <input style="width:60px; text-align:center; background:#000; color:var(--accent); border:1px solid #444;" value="${k.toUpperCase()}" onchange="state.keys[${i}]=this.value.toLowerCase()">
+            </div>
+        `).join('');
+    }
+
+    function toggleInputMode() {
+        state.inputMode = state.inputMode === 'pc' ? 'mobile' : 'pc';
+        document.getElementById('mode-toggle').innerText = state.inputMode.toUpperCase() + " MODE";
+    }
+
+    function buy(item, price) {
+        if(state.coins >= price && !state.bought.includes(item)) {
+            state.coins -= price; state.bought.push(item);
+            refreshUI(); save();
+        }
+    }
+
+    // --- RHYTHM ENGINE ---
+    let activeNotes = [], score = 0, combo = 0, isPlaying = false, spawnInt, timerInt, timeLeft = 60;
+    const laneColors = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00', '#ff4400'];
+
+    function startRhythm(d) {
+        state.currentDiff = d;
+        closeModals();
+        isPlaying = true; score = 0; combo = 0; activeNotes = []; 
+        timeLeft = diffSettings[d].time;
+        document.getElementById('game-screen').style.display = 'block';
+        document.getElementById('mobile-touch-container').style.display = (state.inputMode === 'mobile' ? 'flex' : 'none');
+        document.getElementById('key-hints').innerHTML = state.keys.map(k => `<div style="flex:1; text-align:center; opacity:0.3">${state.inputMode === 'pc' ? k.toUpperCase() : ''}</div>`).join('');
+        
+        spawnInt = setInterval(spawnNote, diffSettings[d].rate);
+        timerInt = setInterval(updateTimer, 1000);
+        requestAnimationFrame(gameUpdate);
+    }
+
+    function updateTimer() {
+        timeLeft--;
+        let m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+        document.getElementById('game-timer-display').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        if(timeLeft <= 0) finalizeGame();
+    }
+
+    function spawnNote() {
+        if(!isPlaying) return;
+        const lane = Math.floor(Math.random() * 5);
+        const el = document.createElement('div');
+        el.className = 'note'; el.style.left = (lane * 20 + 10) + "%"; el.style.color = laneColors[lane];
+        document.getElementById('note-layer').appendChild(el);
+        activeNotes.push({ el, y: -70, lane, hit: false });
+    }
+
+    function gameUpdate() {
+        if(!isPlaying) return;
+        let speed = diffSettings[state.currentDiff].speed;
+        for (let i = activeNotes.length - 1; i >= 0; i--) {
+            let n = activeNotes[i]; n.y += speed; n.el.style.top = n.y + 'px';
+            if(n.y > window.innerHeight && !n.hit) {
+                n.hit = true; combo = 0; score = Math.max(0, score - 150); renderJudg('MISS', '#ff0000');
+                n.el.remove(); activeNotes.splice(i, 1); refreshHUD();
+            }
+        }
+        requestAnimationFrame(gameUpdate);
+    }
+
+    function handleHit(lane) {
+        if(!isPlaying) return;
+        const zone = window.innerHeight * 0.9;
+        const noteIndex = activeNotes.findIndex(n => n.lane === lane && !n.hit && Math.abs(n.y - zone) < 140);
+        if(noteIndex !== -1) {
+            let n = activeNotes[noteIndex]; n.hit = true; let off = Math.abs(n.y - zone);
+            n.el.remove(); activeNotes.splice(noteIndex, 1);
+            if(off < 55) { score += 200; combo++; renderJudg('PERFECT', '#0ff'); }
+            else { score += 150; combo++; renderJudg('GOOD', '#c084fc'); }
+        } else { combo = 0; renderJudg('MISS', '#ff0000'); }
+        refreshHUD();
+    }
+
+    window.onkeydown = (e) => { if(isPlaying && state.inputMode === 'pc') { const l = state.keys.indexOf(e.key.toLowerCase()); if(l!==-1) handleHit(l); } };
+
+    function renderJudg(t, c) {
+        const d = document.createElement('div'); d.className = 'judgment-msg'; d.innerText = t; d.style.color = c;
+        document.getElementById('game-screen').appendChild(d);
+        setTimeout(() => d.remove(), 500);
+    }
+
+    function refreshHUD() {
+        document.getElementById('live-score').innerText = score.toString().padStart(6, '0');
+        document.getElementById('combo-txt').innerText = combo;
+    }
+
+    function finalizeGame() {
+        isPlaying = false; clearInterval(spawnInt); clearInterval(timerInt);
+        let d = state.currentDiff;
+        state.missions.forEach(m => { if(m.diff === d && score >= m.req && m.status === 'none') m.status = 'ready'; });
+        if(score > state.bestScores[d]) state.bestScores[d] = score;
+        alert("GAME OVER. SCORE: " + score);
+        forceExit();
+    }
+
+    function forceExit() { isPlaying = false; clearInterval(spawnInt); clearInterval(timerInt); document.getElementById('game-screen').style.display = 'none'; document.getElementById('note-layer').innerHTML = ''; save(); refreshUI(); }
+    
     window.onload = load;
 </script>
 </body>

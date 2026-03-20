@@ -341,13 +341,13 @@
         document.getElementById('game-screen').style.display = 'block';
         document.getElementById('mobile-touch-container').style.display = (state.inputMode === 'mobile' ? 'flex' : 'none');
         
-        // HINTS AT THE VERY BOTTOM
-        document.getElementById('key-hints').innerHTML = state.keys.map((k, i) => `
-            <div class="key-hint-box">
-                <div class="lane-dot" style="background:${laneColors[i]}"></div>
-                ${state.inputMode === 'pc' ? k.toUpperCase() : ''}
-            </div>
-        `).join('');
+      // Locate this section inside startRhythm(d)
+document.getElementById('key-hints').innerHTML = state.keys.map((k, i) => `
+    <div class="key-hint-box">
+        <div class="lane-dot" style="background:${laneColors[i]}"></div>
+        ${k.toUpperCase()} 
+    </div>
+`).join('');
         
         spawnInt = setInterval(spawnNote, diffSettings[d].rate);
         timerInt = setInterval(updateTimer, 1000);

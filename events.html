@@ -6,182 +6,209 @@
     <title>Aetherfall | Event Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --accent: #c084fc; --bg: #020205; --panel: rgba(13, 13, 25, 0.98);
-        }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root { --accent: #c084fc; --bg: #020205; --panel: #0d0d19; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; overflow: hidden; touch-action: none; }
 
-        /* --- HUB LAYOUT --- */
-        #event-hub { display: flex; width: 100%; height: 100%; padding: 40px; position: relative; }
-        .sidebar { width: 320px; display: flex; flex-direction: column; gap: 20px; z-index: 10; }
-        .event-card {
-            background: rgba(88, 28, 135, 0.2); padding: 20px; display: flex; align-items: center; gap: 15px; 
-            cursor: pointer; border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
-            clip-path: polygon(5% 0, 100% 0, 100% 75%, 95% 100%, 0 100%, 0 25%);
+        /* --- MAIN HUB (Based on Image 2) --- */
+        #event-hub { display: flex; width: 100%; height: 100%; padding: 40px; }
+        .sidebar { width: 300px; display: flex; flex-direction: column; gap: 15px; }
+        .event-title { font-family: 'Orbitron'; font-size: 28px; letter-spacing: 2px; text-decoration: line-through; color: #444; margin-bottom: 5px; }
+        .event-subtitle { font-family: 'Orbitron'; font-size: 24px; color: var(--accent); margin-top: -10px; margin-bottom: 20px;}
+        
+        .active-trial-card {
+            background: rgba(192, 132, 252, 0.1); border-left: 4px solid var(--accent);
+            padding: 15px; width: 220px; font-family: 'Orbitron'; cursor: pointer;
         }
 
-        .main-panel { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding-top: 20px; }
-        .details-box { background: var(--panel); border: 1px solid #333; padding: 40px; width: 100%; max-width: 700px; border-radius: 12px; }
-
-        .bar-bg { width: 100%; height: 12px; background: #111; border-radius: 6px; margin: 15px 0; border: 1px solid #333; }
-        #prog-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #c084fc, #6366f1); transition: 1s ease; }
+        .main-panel { flex: 1; display: flex; justify-content: center; align-items: center; }
+        .hero-box { 
+            background: #11111d; border: 1px solid #222; padding: 40px; width: 550px; 
+            border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: left;
+        }
+        .hero-box h1 { font-family: 'Orbitron'; font-size: 38px; margin: 0; letter-spacing: 3px; }
+        .hero-box p { color: #888; font-size: 18px; line-height: 1.4; margin: 20px 0; }
         
-        .btn-row { display: flex; gap: 15px; margin-top: 30px; }
-        .av-btn { flex: 1; border: none; padding: 18px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 4px; font-size: 16px; transition: 0.2s; color: white; }
-        .av-btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
+        .currency-display { font-family: 'Orbitron'; color: #ffd700; margin-bottom: 25px; font-size: 18px; }
 
-        .bottom-controls { position: fixed; bottom: 30px; left: 30px; display: flex; flex-direction: column; gap: 12px; z-index: 100; }
-        .ctrl-btn { background: #1a1a2e; border: 1px solid #444; color: #888; padding: 10px 20px; cursor: pointer; font-family: 'Orbitron'; font-size: 11px; border-radius: 4px; width: 160px; text-transform: uppercase;}
+        .btn-group { display: flex; gap: 10px; }
+        .hub-btn { 
+            flex: 1; padding: 15px; border: none; font-family: 'Orbitron'; font-weight: 900; 
+            cursor: pointer; text-transform: uppercase; font-size: 14px; border-radius: 3px;
+        }
 
-        /* --- REWORKED MODALS --- */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: #0a0a0f; border: 2px solid #333; padding: 40px; width: 90%; max-width: 900px; min-height: 600px; border-radius: 12px; position: relative; overflow-y: auto; }
+        .bottom-nav { position: fixed; bottom: 30px; left: 30px; display: flex; flex-direction: column; gap: 10px; }
+        .nav-link { 
+            background: #1a1a2e; border: 1px solid #333; color: #fff; padding: 10px 25px; 
+            width: 150px; cursor: pointer; font-family: 'Orbitron'; font-size: 12px; text-align: center;
+        }
+
+        /* --- MODALS --- */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-content { background: #0a0a0f; border: 1px solid #333; padding: 40px; width: 800px; border-radius: 4px; }
         
-        .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 25px; }
-        .shop-item { background: linear-gradient(145deg, #151520, #0a0a0f); border: 1px solid #444; padding: 25px; border-radius: 15px; text-align: center; border-bottom: 4px solid var(--accent); transition: 0.3s; }
-        .shop-item:hover { border-color: white; transform: scale(1.02); }
+        /* Play UI Rework (Vertical List) */
+        .difficulty-selector { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .diff-option { 
+            background: #111; border: 1px solid #333; padding: 20px; display: flex; 
+            justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s;
+        }
+        .diff-option:hover { border-color: var(--accent); background: #1a1520; }
 
-        .mission-list-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-        .mission-row { background: #111; padding: 25px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid var(--accent); box-shadow: 4px 4px 10px rgba(0,0,0,0.3); }
-
-        /* --- RHYTHM ENGINE (FIXED SCALING) --- */
+        /* --- GAME ENGINE (Based on Image 3) --- */
         #game-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 3000; }
         .highway { 
             position: absolute; left: 50%; transform: translateX(-50%); 
-            width: 500px; max-width: 80vw; height: 100%; 
-            background: rgba(5, 5, 8, 0.8); border-inline: 4px solid #333; 
+            width: 450px; height: 100%; border-inline: 2px solid #333; background: #050508;
         }
         
-        /* Note sizing improved for visibility */
+        /* Hit-zone moved to bottom per Image 3 */
+        .hit-line { 
+            position: absolute; bottom: 5%; width: 100%; height: 80px; 
+            border-top: 3px solid var(--accent); border-bottom: 3px solid var(--accent);
+            background: rgba(192, 132, 252, 0.05); display: flex;
+        }
+        .key-label { flex: 1; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron'; opacity: 0.4; font-size: 14px; }
+
+        /* Scoring moved outside to the right */
+        .game-ui-right { 
+            position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+            text-align: left; width: 250px; font-family: 'Orbitron';
+        }
+        .score-val { font-size: 45px; letter-spacing: 5px; display: block; }
+        .combo-box { background: rgba(192, 132, 252, 0.2); padding: 20px; margin-top: 10px; border-radius: 5px; text-align: center; }
+        .combo-val { font-size: 60px; font-weight: 900; display: block; line-height: 1; }
+
         .note { 
-            position: absolute; width: 60px; height: 60px; border-radius: 50%; 
-            transform: translateX(-50%); border: 4px solid #fff; 
-            box-shadow: 0 0 25px currentColor;
-            background: radial-gradient(circle, #fff 0%, currentColor 70%);
-            pointer-events: none; z-index: 3010;
+            position: absolute; width: 55px; height: 55px; border-radius: 50%; 
+            transform: translateX(-50%); border: 4px solid #fff; z-index: 3010;
         }
 
-        /* Hit Zones / Mobile Area */
-        #mobile-touch-container { display: none; position: absolute; bottom: 0; width: 100%; height: 40%; z-index: 3020; }
-        .touch-lane { flex: 1; height: 100%; opacity: 0; background: linear-gradient(to top, var(--accent), transparent); }
-        .touch-lane:active { opacity: 0.3; }
-
-        .judgement-line { position: absolute; bottom: 12%; width: 100%; height: 80px; border-top: 4px solid var(--accent); border-bottom: 4px solid var(--accent); background: rgba(192, 132, 252, 0.1); display: flex; justify-content: space-around; align-items: center; }
-        
-        /* UI moved to the right of highway */
-        .score-ui { position: absolute; top: 50%; transform: translateY(-50%); left: calc(50% + 280px); text-align: left; font-family: 'Orbitron'; width: 300px; pointer-events: none;}
-        #combo-txt { font-size: 100px; color: var(--accent); font-weight: 900; line-height: 0.8; text-shadow: 0 0 20px var(--accent); }
-        #live-score { font-size: 40px; color: #fff; letter-spacing: 2px; }
-
-        #game-timer-display { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); font-family: 'Orbitron'; font-size: 40px; color: var(--accent); z-index: 4005; }
-
-        .judgment-msg { 
-            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); 
-            font-family: 'Orbitron'; font-weight: 900; font-size: 70px; 
-            pointer-events: none; z-index: 5000; 
-            animation: popFeedback 0.4s ease-out forwards; 
+        /* --- MOBILE HIT LAYER --- */
+        #touch-controller {
+            position: absolute; inset: 0; z-index: 4000; display: none;
         }
-        @keyframes popFeedback { 0% { opacity:1; transform: translate(-50%, 0) scale(0.5); } 100% { opacity:0; transform: translate(-50%, -80px) scale(1.3); } }
+        .lane-trigger { height: 100%; flex: 1; pointer-events: auto; }
 
-        @media (max-width: 1000px) {
-            .score-ui { left: 50%; transform: translateX(-50%); top: 15%; text-align: center; }
+        .judgment-text {
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
+            font-family: 'Orbitron'; font-size: 50px; font-weight: 900; pointer-events: none;
+            animation: pop 0.4s ease-out forwards;
         }
+        @keyframes pop { 0% { opacity:1; scale: 0.5; } 100% { opacity:0; scale: 1.5; transform: translate(-50%, -100px); } }
     </style>
 </head>
 <body>
 
 <div id="event-hub">
     <div class="sidebar">
-        <h3 style="font-family:'Orbitron'; color: var(--accent);">CURRENT EVENTS</h3>
-        <div id="reset-timer" style="font-size:12px; color:#666; font-family:'Orbitron';">RESETS IN: --:--:--</div>
-        <div class="event-card">
-            <span style="font-family:'Orbitron'; font-size: 24px; font-weight: 900;">1</span>
-            <div><b>Skele King's Jam Session</b><br><small style="color: #22c55e;">PERMANENT</small></div>
+        <div class="event-title">EVENTS</div>
+        <div class="event-subtitle">REQUIEM</div>
+        <div style="font-size: 12px; color: #555; font-family: 'Orbitron'; margin-bottom: 10px;" id="reset-timer">RESETS IN: --:--:--</div>
+        <div class="active-trial-card">
+            <span style="color:var(--accent)">I</span> &nbsp; HOLLOW KING<br>
+            <small style="color: #22c55e; font-size: 10px;">ACTIVE TRIAL</small>
         </div>
     </div>
 
     <div class="main-panel">
-        <div class="details-box">
-            <h1 style="font-family:'Orbitron'; font-size: 42px; margin:0;">Skele King's Jam Session</h1>
-            <p style="opacity: 0.7; font-size: 20px;">Master the rhythm to defeat the Skele King.</p>
-            <div class="bar-bg"><div id="prog-fill"></div></div>
-            <p style="font-size: 20px;">Owned Event Currency: <span id="coin-txt" style="color: gold; font-weight: bold;">50x</span></p>
-            <div class="btn-row">
-                <button class="av-btn" style="background: #a855f7;" onclick="openModal('shop')">Shop</button>
-                <button class="av-btn" style="background: #22c55e;" onclick="openModal('stage')">Play</button>
-                <button class="av-btn" style="background: #eab308;" onclick="openModal('missions')">Missions</button>
+        <div class="hero-box">
+            <h1>REQUIEM</h1>
+            <p>The final movement has begun. Silence the Hollow King's final movement or be erased by the crescendo.</p>
+            <div class="currency-display">Antique Coins: <span id="coin-txt">0</span></div>
+            <div class="btn-group">
+                <button class="hub-btn" style="background: #a855f7;" onclick="openModal('shop')">Shop</button>
+                <button class="hub-btn" style="background: #22c55e;" onclick="openModal('play')">Play</button>
+                <button class="hub-btn" style="background: #eab308;" onclick="openModal('missions')">Missions</button>
             </div>
         </div>
     </div>
 
-    <div class="bottom-controls">
-        <button class="ctrl-btn" onclick="window.location.href='game.html'">RETURN</button>
-        <button class="ctrl-btn" onclick="openModal('settings')">⚙ SETTINGS</button>
+    <div class="bottom-nav">
+        <div class="nav-link" onclick="window.location.href='index.html'">← RETURN</div>
+        <div class="nav-link" onclick="openModal('settings')">⚙ SETTINGS</div>
     </div>
 </div>
 
-<div id="stage-modal" class="modal-overlay"><div class="modal-content"><h1 style="font-family:'Orbitron'; text-align:center;">SELECT DIFFICULTY</h1><div class="shop-grid" id="diff-list"></div><button class="av-btn" style="background:#222; margin-top:40px; width:100%" onclick="closeModals()">CLOSE</button></div></div>
+<div id="play-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 style="font-family:'Orbitron'; text-align:center;">SELECT DIFFICULTY</h2>
+        <div class="difficulty-selector">
+            <div class="diff-option" onclick="startRhythm('easy')">
+                <span>EASY</span><small id="best-easy">Best: 0</small>
+            </div>
+            <div class="diff-option" onclick="startRhythm('medium')">
+                <span>MEDIUM</span><small id="best-medium">Best: 0</small>
+            </div>
+            <div class="diff-option" onclick="startRhythm('hard')">
+                <span>HARD</span><small id="best-hard">Best: 0</small>
+            </div>
+            <div class="diff-option" onclick="startRhythm('expert')">
+                <span>EXPERT</span><small id="best-expert">Best: 0</small>
+            </div>
+        </div>
+        <button class="hub-btn" style="background:#222; margin-top:20px; width:100%" onclick="closeModals()">CLOSE</button>
+    </div>
+</div>
 
 <div id="shop-modal" class="modal-overlay">
     <div class="modal-content">
-        <h2 style="font-family:'Orbitron'; font-size: 32px; color:var(--accent); text-align:center; border-bottom: 1px solid #333; padding-bottom:10px;">EVENT SHOP</h2>
-        <div class="shop-grid">
-            <div class="shop-item">
-                <div style="font-size: 40px; margin-bottom: 10px;">🎭</div>
-                <h3 style="margin:5px 0;">Requiem [SKIN]</h3>
-                <p style="font-size:14px; opacity:0.6; margin-bottom:20px;">An ethereal skin forged in rhythm.</p>
-                <button class="av-btn" id="buy-skin" style="background:var(--accent)" onclick="buy('skin', 100)">100 COINS</button>
+        <h2 style="font-family:'Orbitron';">EVENT SHOP</h2>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-top:20px;">
+            <div style="background:#111; padding:20px; text-align:center;">
+                <h3>Requiem [SKIN]</h3>
+                <button class="hub-btn" id="buy-skin" style="background:#444" onclick="buy('skin', 100)">100 ANTIQUE COINS</button>
             </div>
-            <div class="shop-item">
-                <div style="font-size: 40px; margin-bottom: 10px;">✨</div>
-                <h3 style="margin:5px 0;">Hollow [VFX]</h3>
-                <p style="font-size:14px; opacity:0.6; margin-bottom:20px;">Spectral particles for every hit.</p>
-                <button class="av-btn" id="buy-vfx" style="background:var(--accent)" onclick="buy('vfx', 150)">150 COINS</button>
+            <div style="background:#111; padding:20px; text-align:center;">
+                <h3>Hollow [VFX]</h3>
+                <button class="hub-btn" id="buy-vfx" style="background:#444" onclick="buy('vfx', 150)">150 ANTIQUE COINS</button>
             </div>
         </div>
-        <button class="av-btn" style="background:#222; margin-top:30px; width:100%" onclick="closeModals()">CLOSE</button>
+        <button class="hub-btn" style="background:#222; margin-top:20px; width:100%" onclick="closeModals()">CLOSE</button>
     </div>
 </div>
 
 <div id="missions-modal" class="modal-overlay">
     <div class="modal-content">
-        <h2 style="font-family:'Orbitron'; font-size: 32px; text-align:center;">QUEST LOG</h2>
-        <div id="mission-list" class="mission-list-container"></div>
-        <button class="av-btn" style="background:#222; margin-top:30px; width:100%" onclick="closeModals()">CLOSE</button>
+        <h2 style="font-family:'Orbitron';">MISSIONS</h2>
+        <div id="mission-list" style="margin-top:20px; display:flex; flex-direction:column; gap:10px;"></div>
+        <button class="hub-btn" style="background:#222; margin-top:20px; width:100%" onclick="closeModals()">CLOSE</button>
     </div>
 </div>
 
-<div id="settings-modal" class="modal-overlay"><div class="modal-content" style="width:450px;"><h2 style="font-family:'Orbitron';">SETTINGS</h2><button id="mode-toggle" class="av-btn" style="background:var(--accent); margin-bottom:20px; width:100%" onclick="toggleInputMode()">PC MODE</button><div id="bind-editor"></div><button class="av-btn" style="background:#22c55e; margin-top:20px; width:100%" onclick="closeModals()">SAVE</button></div></div>
-
 <div id="game-screen">
-    <div id="game-timer-display">00:00</div>
-    
+    <div id="touch-controller">
+        <div class="lane-trigger" onpointerdown="handleHit(0)"></div>
+        <div class="lane-trigger" onpointerdown="handleHit(1)"></div>
+        <div class="lane-trigger" onpointerdown="handleHit(2)"></div>
+        <div class="lane-trigger" onpointerdown="handleHit(3)"></div>
+        <div class="lane-trigger" onpointerdown="handleHit(4)"></div>
+    </div>
+
     <div class="highway">
         <div id="note-layer"></div>
-        <div class="judgement-line" id="key-hints"></div>
-        <div id="mobile-touch-container">
-            <div class="touch-lane" onpointerdown="handleHit(0)"></div>
-            <div class="touch-lane" onpointerdown="handleHit(1)"></div>
-            <div class="touch-lane" onpointerdown="handleHit(2)"></div>
-            <div class="touch-lane" onpointerdown="handleHit(3)"></div>
-            <div class="touch-lane" onpointerdown="handleHit(4)"></div>
+        <div class="hit-line" id="key-hints"></div>
+    </div>
+
+    <div class="game-ui-right">
+        <small style="opacity:0.5">CURRENT SCORE</small>
+        <span class="score-val" id="live-score">000000</span>
+        
+        <div class="combo-box">
+            <span class="combo-val" id="combo-txt">0</span>
+            <small style="letter-spacing:3px">COMBO</small>
         </div>
     </div>
 
-    <div class="score-ui">
-        <div style="font-size:14px; opacity:0.5; margin-bottom: -10px;">CURRENT SCORE</div>
-        <div id="live-score">000000</div>
-        <div id="combo-txt">0</div>
-        <div style="font-size:20px; opacity:0.5; letter-spacing: 5px;">COMBO</div>
-    </div>
-
-    <button style="position:fixed; top:30px; left:30px; z-index:6000; background:rgba(255,0,0,0.2); border:2px solid red; color:white; padding:12px 25px; cursor:pointer; font-family:'Orbitron'; font-weight:bold; border-radius:5px;" onclick="forceExit()">EXIT GAME</button>
+    <button style="position:fixed; top:30px; left:30px; background:none; border:1px solid red; color:red; padding:10px; cursor:pointer; font-family:'Orbitron';" onclick="forceExit()">EXIT</button>
 </div>
 
 <script>
+    // FULL PROGRESS RESET AND NEW SAVE KEY TO FIX BUG
+    const SAVE_KEY = "Aetherfall_Requiem_V2";
+    
     let state = {
-        coins: 50,
+        coins: 0,
         keys: ['q', 'w', 'e', 'r', 't'],
         inputMode: 'pc',
         bought: [],
@@ -202,73 +229,37 @@
         expert: { rate: 350, time: 150, speed: 16 }
     };
 
-    function save() { localStorage.setItem('Aetherfall_SkeleJam', JSON.stringify(state)); }
+    function save() { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }
     function load() {
-        let data = localStorage.getItem('Aetherfall_SkeleJam');
+        let data = localStorage.getItem(SAVE_KEY);
         if(data) state = JSON.parse(data);
-        checkDailyReset();
         refreshUI();
     }
 
-    function checkDailyReset() {
-        const now = Date.now();
-        if (now - state.lastReset > 86400000) {
-            state.missions.forEach(m => m.status = 'none');
-            state.lastReset = new Date().setHours(0,0,0,0);
-            save();
-        }
-    }
-
-    setInterval(() => {
-        const diff = (state.lastReset + 86400000) - Date.now();
-        const h = Math.floor(diff/3600000).toString().padStart(2,'0');
-        const m = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
-        const s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
-        document.getElementById('reset-timer').innerText = `RESETS IN: ${h}:${m}:${s}`;
-    }, 1000);
-
     function refreshUI() {
-        document.getElementById('coin-txt').innerText = state.coins + "x";
-        let claimed = state.missions.filter(m => m.status === 'claimed').length;
-        document.getElementById('prog-fill').style.width = (claimed / 4 * 100) + '%';
+        document.getElementById('coin-txt').innerText = state.coins;
+        document.getElementById('best-easy').innerText = "Best: " + state.bestScores.easy;
+        document.getElementById('best-medium').innerText = "Best: " + state.bestScores.medium;
+        document.getElementById('best-hard').innerText = "Best: " + state.bestScores.hard;
+        document.getElementById('best-expert').innerText = "Best: " + state.bestScores.expert;
         state.bought.forEach(i => { if(document.getElementById('buy-'+i)) document.getElementById('buy-'+i).innerText = "OWNED"; });
     }
 
     function openModal(id) {
-        if(id === 'stage') renderDiffs();
-        if(id === 'settings') renderBinds();
         if(id === 'missions') renderMissions();
         document.getElementById(id + '-modal').style.display = 'flex';
     }
     function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); save(); }
 
-    function renderDiffs() {
-        document.getElementById('diff-list').innerHTML = ['easy', 'medium', 'hard', 'expert'].map(d => `
-            <div class="diff-card">
-                <h3 style="text-transform:uppercase; margin:0; color:var(--accent);">${d}</h3>
-                <p style="font-size:12px; opacity:0.5;">BEST: ${state.bestScores[d]}</p>
-                <button class="av-btn" style="background:var(--accent); padding:10px; margin-top:10px;" onclick="startRhythm('${d}')">START</button>
-            </div>
-        `).join('');
-    }
-
     function renderMissions() {
         document.getElementById('mission-list').innerHTML = state.missions.map(m => {
-            let btn = `<button class="av-btn" style="background:#222; max-width:120px;" disabled>LOCKED</button>`;
-            if(m.status === 'ready') btn = `<button class="av-btn" style="background:var(--accent); max-width:120px;" onclick="claimMission(${m.id})">CLAIM</button>`;
-            if(m.status === 'claimed') btn = `<button class="av-btn" style="background:#22c55e; max-width:120px;" disabled>DONE</button>`;
-            return `
-                <div class="mission-row">
-                    <div>
-                        <b style="font-size:18px;">${m.label}</b><br>
-                        <small style="opacity:0.6">Reach ${m.req} score on ${m.diff}</small>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <b style="color:gold">+${m.reward}</b>
-                        ${btn}
-                    </div>
-                </div>
-            `;
+            let btn = `<button class="hub-btn" style="background:#222; flex:none; width:100px;" disabled>LOCKED</button>`;
+            if(m.status === 'ready') btn = `<button class="hub-btn" style="background:var(--accent); flex:none; width:100px;" onclick="claimMission(${m.id})">CLAIM</button>`;
+            if(m.status === 'claimed') btn = `<button class="hub-btn" style="background:#22c55e; flex:none; width:100px;" disabled>DONE</button>`;
+            return `<div style="background:#111; padding:15px; display:flex; justify-content:space-between; align-items:center;">
+                <span>${m.label} (Req: ${m.req})</span>
+                <div style="display:flex; align-items:center; gap:10px;"><b style="color:gold">+${m.reward}</b> ${btn}</div>
+            </div>`;
         }).join('');
     }
 
@@ -281,20 +272,6 @@
         }
     }
 
-    function renderBinds() {
-        document.getElementById('bind-editor').innerHTML = state.keys.map((k, i) => `
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                <span>Lane ${i+1}</span>
-                <input style="width:60px; text-align:center; background:#000; color:var(--accent); border:1px solid #444;" value="${k.toUpperCase()}" onchange="state.keys[${i}]=this.value.toLowerCase()">
-            </div>
-        `).join('');
-    }
-
-    function toggleInputMode() {
-        state.inputMode = state.inputMode === 'pc' ? 'mobile' : 'pc';
-        document.getElementById('mode-toggle').innerText = state.inputMode.toUpperCase() + " MODE";
-    }
-
     function buy(item, price) {
         if(state.coins >= price && !state.bought.includes(item)) {
             state.coins -= price; state.bought.push(item);
@@ -303,28 +280,20 @@
     }
 
     // --- ENGINE ---
-    let activeNotes = [], score = 0, combo = 0, isPlaying = false, spawnInt, timerInt, timeLeft = 60;
+    let activeNotes = [], score = 0, combo = 0, isPlaying = false, spawnInt, timerInt, timeLeft = 0;
     const laneColors = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00', '#ff4400'];
 
     function startRhythm(d) {
         state.currentDiff = d;
         closeModals();
-        isPlaying = true; score = 0; combo = 0; activeNotes = []; 
+        isPlaying = true; score = 0; combo = 0; activeNotes = [];
         timeLeft = diffSettings[d].time;
         document.getElementById('game-screen').style.display = 'block';
-        document.getElementById('mobile-touch-container').style.display = (state.inputMode === 'mobile' ? 'flex' : 'none');
-        document.getElementById('key-hints').innerHTML = state.keys.map(k => `<div style="flex:1; text-align:center; opacity:0.3; font-weight:bold;">${state.inputMode === 'pc' ? k.toUpperCase() : ''}</div>`).join('');
+        document.getElementById('touch-controller').style.display = 'flex'; // Mobile always active
+        document.getElementById('key-hints').innerHTML = state.keys.map(k => `<div class="key-label">${k.toUpperCase()}</div>`).join('');
         
         spawnInt = setInterval(spawnNote, diffSettings[d].rate);
-        timerInt = setInterval(updateTimer, 1000);
         requestAnimationFrame(gameUpdate);
-    }
-
-    function updateTimer() {
-        timeLeft--;
-        let m = Math.floor(timeLeft / 60), s = timeLeft % 60;
-        document.getElementById('game-timer-display').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-        if(timeLeft <= 0) finalizeGame();
     }
 
     function spawnNote() {
@@ -333,7 +302,7 @@
         const el = document.createElement('div');
         el.className = 'note'; el.style.left = (lane * 20 + 10) + "%"; el.style.color = laneColors[lane];
         document.getElementById('note-layer').appendChild(el);
-        activeNotes.push({ el, y: -70, lane, hit: false });
+        activeNotes.push({ el, y: -60, lane, hit: false });
     }
 
     function gameUpdate() {
@@ -341,9 +310,9 @@
         let speed = diffSettings[state.currentDiff].speed;
         for (let i = activeNotes.length - 1; i >= 0; i--) {
             let n = activeNotes[i]; n.y += speed; n.el.style.top = n.y + 'px';
-            if(n.y > window.innerHeight && !n.hit) {
-                n.hit = true; combo = 0; score = Math.max(0, score - 150); renderJudg('MISS', '#ff0000');
-                n.el.remove(); activeNotes.splice(i, 1); refreshHUD();
+            if(n.y > window.innerHeight) {
+                if(!n.hit) { combo = 0; renderJudg('MISS', '#ff0000'); refreshHUD(); }
+                n.el.remove(); activeNotes.splice(i, 1);
             }
         }
         requestAnimationFrame(gameUpdate);
@@ -351,30 +320,30 @@
 
     function handleHit(lane) {
         if(!isPlaying) return;
-        const zone = window.innerHeight * 0.88; // Center of judgement line
-        // Finding notes within a generous hit window (150px)
-        const noteIndex = activeNotes.findIndex(n => n.lane === lane && !n.hit && Math.abs(n.y - zone) < 150);
+        const zone = window.innerHeight * 0.92; // Judgement line center
+        const noteIdx = activeNotes.findIndex(n => n.lane === lane && !n.hit && Math.abs(n.y - zone) < 150);
         
-        if(noteIndex !== -1) {
-            let n = activeNotes[noteIndex]; n.hit = true; let off = Math.abs(n.y - zone);
-            n.el.remove(); activeNotes.splice(noteIndex, 1);
+        if(noteIdx !== -1) {
+            let n = activeNotes[noteIdx]; n.hit = true;
+            let off = Math.abs(n.y - zone);
+            n.el.style.opacity = 0;
             if(off < 60) { score += 200; combo++; renderJudg('PERFECT', '#0ff'); }
             else { score += 100; combo++; renderJudg('GOOD', '#c084fc'); }
         } else {
-            // Only punish if they tap and there is actually a note nearby that they missed, 
-            // otherwise rapid tapping wouldn't instantly kill the combo.
-            const nearbyNote = activeNotes.find(n => n.lane === lane && !n.hit && Math.abs(n.y - zone) < 300);
-            if(nearbyNote) {
-                combo = 0; renderJudg('MISS', '#ff0000');
-            }
+            combo = 0; renderJudg('MISS', '#ff0000');
         }
         refreshHUD();
     }
 
-    window.onkeydown = (e) => { if(isPlaying && state.inputMode === 'pc') { const l = state.keys.indexOf(e.key.toLowerCase()); if(l!==-1) handleHit(l); } };
+    window.onkeydown = (e) => { 
+        if(isPlaying) {
+            const l = state.keys.indexOf(e.key.toLowerCase());
+            if(l !== -1) handleHit(l);
+        }
+    };
 
     function renderJudg(t, c) {
-        const d = document.createElement('div'); d.className = 'judgment-msg'; d.innerText = t; d.style.color = c;
+        const d = document.createElement('div'); d.className = 'judgment-text'; d.innerText = t; d.style.color = c;
         document.getElementById('game-screen').appendChild(d);
         setTimeout(() => d.remove(), 400);
     }
@@ -385,17 +354,29 @@
     }
 
     function finalizeGame() {
-        isPlaying = false; clearInterval(spawnInt); clearInterval(timerInt);
+        isPlaying = false; clearInterval(spawnInt);
         let d = state.currentDiff;
         state.missions.forEach(m => { if(m.diff === d && score >= m.req && m.status === 'none') m.status = 'ready'; });
         if(score > state.bestScores[d]) state.bestScores[d] = score;
-        alert("GAME OVER. SCORE: " + score);
+        save();
+        alert("GAME OVER! Final Score: " + score);
         forceExit();
     }
 
-    function forceExit() { isPlaying = false; clearInterval(spawnInt); clearInterval(timerInt); document.getElementById('game-screen').style.display = 'none'; document.getElementById('note-layer').innerHTML = ''; save(); refreshUI(); }
+    function forceExit() { isPlaying = false; clearInterval(spawnInt); document.getElementById('game-screen').style.display = 'none'; document.getElementById('note-layer').innerHTML = ''; refreshUI(); }
     
     window.onload = load;
+
+    // Reset Timer Logic
+    setInterval(() => {
+        let now = new Date();
+        let reset = new Date(); reset.setHours(24,0,0,0);
+        let diff = reset - now;
+        let h = Math.floor(diff/3600000).toString().padStart(2,'0');
+        let m = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
+        let s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
+        document.getElementById('reset-timer').innerText = `RESETS IN: ${h}:${m}:${s}`;
+    }, 1000);
 </script>
 </body>
 </html>
